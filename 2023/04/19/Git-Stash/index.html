@@ -24,7 +24,7 @@
 <meta property="og:description" content="为了简化本地测试代码的过程，往往会对一些代码&#x2F;配置进行修改。例如设置日志级别，开启Bean的懒加载，关闭一些不必要的服务。这些修改只发生在本地工作区(Working Directory)，不会commit到本地仓库(Repository)，更不会push到远程仓库(Remote repositories)。由于在IDEA中，默认没有启用暂存区(Staging Area&#x2F;Index)，因此">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-04-19T07:18:53.000Z">
-<meta property="article:modified_time" content="2023-04-19T08:50:54.703Z">
+<meta property="article:modified_time" content="2023-04-20T03:05:33.192Z">
 <meta property="article:author" content="DracoYu">
 <meta property="article:tag" content="Git">
 <meta property="article:tag" content="Stash">
@@ -285,7 +285,7 @@
 <h2 id="commit"><a href="#commit" class="headerlink" title="commit"></a>commit</h2><p>前面提到，这些修改本身是不想<code>commit</code>的，因为下次<code>push</code>时会默认将这个<code>commit</code>推送到远程仓库。实际情况中不会选择这种方案。</p>
 <p>在<code>commit</code>之后，<code>工作区</code>、<code>本地仓库</code>就保持一致了，不存在未保存的信息。此时<code>checkout</code>到别的分支时没有任何报错。从别的分支再返回时，也能恢复这部分<code>工作区</code>修改。</p>
 <p>如果需要在别的分支上也应用这部分修改，那么就需要合并分支，也就是<code>merge</code>和<code>rebase</code>。由于两个分支存在<code>冲突</code>，在合并时会需要先解决<code>冲突</code>。但这样做，在两个分支上都会有这部分修改的commit。</p>
-<h2 id="stash"><a href="#stash" class="headerlink" title="stash"></a>stash</h2><p><code>stash</code>是一个<code>git</code>命令，通过<code>stash</code>指令，可以将未提交的<code>工作区</code>和<code>暂存区</code>中的修改保存起来，并恢复到上一次<code>commit</code>的状态，像是将工作区<code>reset --hard</code>到了<code>HEAD</code>所指的版本。但修改部分的内容并没有丢失，像是有一个隐藏的临时<code>commit</code>。由于此时<code>工作区</code>和<code>本地仓库</code>保持一致，<code>check</code>到别的分支不会有任何问题。</p>
+<h2 id="stash"><a href="#stash" class="headerlink" title="stash"></a>stash</h2><p><code>stash</code>是一个<code>git</code>命令，通过<code>stash</code>指令，可以将未提交的<code>工作区</code>和<code>暂存区</code>中的修改保存起来，并恢复到上一次<code>commit</code>的状态，像是将工作区<code>reset --hard</code>到了<code>HEAD</code>所指的版本。但修改部分的内容并没有丢失，像是有一个隐藏的临时<code>commit</code>。由于此时<code>工作区</code>和<code>本地仓库</code>保持一致，<code>checkout</code>到别的分支不会有任何问题。</p>
 <p>在下次<code>checkout</code>回此分支时，可以通过<code>git stash pop</code>将<code>工作区</code>还原回之前的状态。像是<code>reset</code>回了之前的隐藏临时<code>commit</code>。如果在别的分支使用<code>git stash pop</code>，那么会发生<code>冲突</code>，但不会因此产生合并的<code>commit</code>。</p>
 <h2 id="IDEA-Shelve"><a href="#IDEA-Shelve" class="headerlink" title="IDEA Shelve"></a>IDEA Shelve</h2><p><code>IDEA</code>提供了一个功能上和<code>stash</code>几乎一样的<code>Shelve</code>。略微有些区别是stash默认操作整个<code>工作区</code>，而<code>Shelve</code>可以通过<code>GUI</code>选择单个文件或<code>Changelist</code>。<code>Changelist</code>是<code>IDEA</code>提供的将未提交修改分组的功能。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>只有在<code>工作区</code>，<code>暂存区</code>和<code>版本库</code>一致时，也就是<code>working tree clean</code>时，才能<code>checkout</code>到别的分支。我们使用的<code>IDE</code>可以自动<code>stash</code>或<code>Shelve</code>，使得这三者不一致时也能<code>checkout</code>。但如果发生<code>冲突</code>，就需要手动解决<code>冲突</code>。</p>
