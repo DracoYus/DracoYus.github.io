@@ -16,24 +16,23 @@
   <meta name="author" content="DracoYu">
   <meta name="keywords" content="学习笔记,Java,JavaScript,后端,前端">
   
-    <meta name="description" content="为了简化本地测试代码的过程，往往会对一些代码&#x2F;配置进行修改。例如设置日志级别，开启Bean的懒加载，关闭一些不必要的服务。这些修改只发生在本地工作区(Working Directory)，不会commit到本地仓库(Repository)，更不会push到远程仓库(Remote repositories)。由于在IDEA中，默认没有启用暂存区(Staging Area&#x2F;Index)，因此">
+    <meta name="description" content="最近在工作中频繁使用到了Git。虽然之前基本把《Pro Git》读完了，但在实际使用中还是遇到不少问题。 究其原因，这可能因为国内的Git教程普遍基于命令行，并且只教最基础的使用。而大部分的开发人员往往使用集成在IDE中的Git，并且对于Git背后的原理和设计思路并不了解。 上一篇讲到当未commit的修改和将要进入的分支有conflict时，该怎么保存这些修改。这里将进入的分支可以是checko">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Git-Stash">
-<meta property="og:url" content="http://example.com/2023/04/19/Git-Stash/index.html">
+<meta property="og:title" content="Git-Conflict">
+<meta property="og:url" content="http://example.com/2023/04/27/Git-Conflict/index.html">
 <meta property="og:site_name" content="DracoYu&#39;s MindCache">
-<meta property="og:description" content="为了简化本地测试代码的过程，往往会对一些代码&#x2F;配置进行修改。例如设置日志级别，开启Bean的懒加载，关闭一些不必要的服务。这些修改只发生在本地工作区(Working Directory)，不会commit到本地仓库(Repository)，更不会push到远程仓库(Remote repositories)。由于在IDEA中，默认没有启用暂存区(Staging Area&#x2F;Index)，因此">
+<meta property="og:description" content="最近在工作中频繁使用到了Git。虽然之前基本把《Pro Git》读完了，但在实际使用中还是遇到不少问题。 究其原因，这可能因为国内的Git教程普遍基于命令行，并且只教最基础的使用。而大部分的开发人员往往使用集成在IDE中的Git，并且对于Git背后的原理和设计思路并不了解。 上一篇讲到当未commit的修改和将要进入的分支有conflict时，该怎么保存这些修改。这里将进入的分支可以是checko">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-04-19T07:18:53.000Z">
-<meta property="article:modified_time" content="2023-04-20T03:05:33.192Z">
+<meta property="article:published_time" content="2023-04-27T10:49:13.000Z">
+<meta property="article:modified_time" content="2023-04-28T11:07:38.951Z">
 <meta property="article:author" content="DracoYu">
 <meta property="article:tag" content="Git">
-<meta property="article:tag" content="Stash">
-<meta property="article:tag" content="Shelve">
+<meta property="article:tag" content="Conflict">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>Git-Stash - DracoYu&#39;s MindCache</title>
+  <title>Git-Conflict - DracoYu&#39;s MindCache</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -199,7 +198,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Git-Stash"></span>
+            <span id="subtitle" data-typed-text="Git-Conflict"></span>
           
         </div>
 
@@ -210,8 +209,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-04-19 15:18" pubdate>
-          2023年4月19日 下午
+        <time datetime="2023-04-27 18:49" pubdate>
+          2023年4月27日 晚上
         </time>
       </span>
     
@@ -222,7 +221,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.4k 字
+          2.8k 字
         
       </span>
     
@@ -233,7 +232,7 @@
         
         
         
-          12 分钟
+          24 分钟
         
       </span>
     
@@ -271,25 +270,54 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Git-Stash</h1>
+            <h1 style="display: none">Git-Conflict</h1>
             
             
               <div class="markdown-body">
                 
-                <p>为了简化本地测试代码的过程，往往会对一些代码&#x2F;配置进行修改。例如设置日志级别，开启Bean的懒加载，关闭一些不必要的服务。这些修改只发生在本地<code>工作区(Working Directory)</code>，不会<code>commit</code>到<code>本地仓库(Repository)</code>，更不会<code>push</code>到<code>远程仓库(Remote repositories)</code>。由于在<code>IDEA</code>中，默认没有启用<code>暂存区(Staging Area/Index)</code>，因此主要讨论的是<code>工作区</code>和<code>仓库</code>。</p>
-<p>当<code>工作区</code>存在一些未<code>commit</code>的修改，并需要<code>checkout</code>到别的分支，并且这个分支也对被修改的文件做了其他修改，就会导致<code>冲突(conflict)</code>发生。</p>
-<p>如果在<code>IDEA</code>中，发生了这样的冲突，则会不允许<code>checkout</code>。检查<code>IDEA</code>中的<code>git console</code>，错误信息如下：</p>
-<figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs bash">error: Your <span class="hljs-built_in">local</span> changes to the following files would be overwritten by checkout:<br>	SomeFile.txt<br>Please commit your changes or stash them before you switch branches.<br>Aborting<br></code></pre></td></tr></table></figure>
+                <p>最近在工作中频繁使用到了<code>Git</code>。虽然之前基本把<a target="_blank" rel="noopener" href="https://git-scm.com/book/en/v2">《Pro Git》</a>读完了，但在实际使用中还是遇到不少问题。</p>
+<p>究其原因，这可能因为国内的<code>Git</code>教程普遍基于命令行，并且只教最基础的使用。而大部分的开发人员往往使用集成在<code>IDE</code>中的<code>Git</code>，并且对于<code>Git</code>背后的原理和设计思路并不了解。</p>
+<p>上一篇讲到当未<code>commit</code>的修改和将要进入的分支有<code>conflict</code>时，该怎么保存这些修改。这里将进入的分支可以是<code>checkout</code>到别的分支，或者是将要<code>update</code>、<code>rebase</code>、<code>merge</code>的分支。其中<code>checkout</code>引起的矛盾只有<code>IDE</code>才会发生，原生的命令行<code>Git</code>在那种情况下根本不允许<code>checkout</code>。但未详细说明什么是<code>conflict</code>，以及什么情况下会发生。</p>
+<p>在<code>Git</code><a target="_blank" rel="noopener" href="https://git-scm.com/book/en/v2/Git-Branching-Basic-Branching-and-Merging#_basic_merge_conflicts">官方文档</a>中，对于冲突只有一句简单的解释。</p>
+<blockquote>
+<p>If you changed the same part of the same file differently in the two branches you’re merging, Git won’t be able to merge them cleanly.</p>
+</blockquote>
+<p>冲突发生在修改同一个文件同一个位置。同一个文件好理解，但修改是指什么，同一个位置又指什么？由于这部分内容实在未找到详细的文档，只能通过实验测试，来验证这两个到底指的什么意思。</p>
+<h2 id="实验"><a href="#实验" class="headerlink" title="实验"></a>实验</h2><p>实验设置很简单，初始化一个空的<code>Git</code>库，并在其中建立一个<code>txt</code>文本文件，通过进行不同的位置，不同类型的修改，观察是否触发<code>conflict</code>，来尝试找出其中规律。</p>
+<p>修改的类型，主要是增加和删除两种，修改可以看作是删除和修改同时进行。</p>
+<p>同一个位置，可以是同一光标，同一行，相邻行，或者间隔更大的行。</p>
+<h3 id="修改类型初始化设置"><a href="#修改类型初始化设置" class="headerlink" title="修改类型初始化设置"></a>修改类型初始化设置</h3><p>基于此，新建一个<code>ConflictTest.txt</code>文本文件，并初始化为如下。</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs txt">The first line<br></code></pre></td></tr></table></figure>
 
-<p>提示也十分明确，解决方法包括<code>commit</code>和<code>stash</code>。接下来就具体说明每一种方式是怎么解决的。</p>
-<h2 id="commit"><a href="#commit" class="headerlink" title="commit"></a>commit</h2><p>前面提到，这些修改本身是不想<code>commit</code>的，因为下次<code>push</code>时会默认将这个<code>commit</code>推送到远程仓库。实际情况中不会选择这种方案。</p>
-<p>在<code>commit</code>之后，<code>工作区</code>、<code>本地仓库</code>就保持一致了，不存在未保存的信息。此时<code>checkout</code>到别的分支时没有任何报错。从别的分支再返回时，也能恢复这部分<code>工作区</code>修改。</p>
-<p>如果需要在别的分支上也应用这部分修改，那么就需要合并分支，也就是<code>merge</code>和<code>rebase</code>。由于两个分支存在<code>冲突</code>，在合并时会需要先解决<code>冲突</code>。但这样做，在两个分支上都会有这部分修改的commit。</p>
-<h2 id="stash"><a href="#stash" class="headerlink" title="stash"></a>stash</h2><p><code>stash</code>是一个<code>git</code>命令，通过<code>stash</code>指令，可以将未提交的<code>工作区</code>和<code>暂存区</code>中的修改保存起来，并恢复到上一次<code>commit</code>的状态，像是将工作区<code>reset --hard</code>到了<code>HEAD</code>所指的版本。但修改部分的内容并没有丢失，像是有一个隐藏的临时<code>commit</code>。由于此时<code>工作区</code>和<code>本地仓库</code>保持一致，<code>checkout</code>到别的分支不会有任何问题。</p>
-<p>在下次<code>checkout</code>回此分支时，可以通过<code>git stash pop</code>将<code>工作区</code>还原回之前的状态。像是<code>reset</code>回了之前的隐藏临时<code>commit</code>。如果在别的分支使用<code>git stash pop</code>，那么会发生<code>冲突</code>，但不会因此产生合并的<code>commit</code>。</p>
-<h2 id="IDEA-Shelve"><a href="#IDEA-Shelve" class="headerlink" title="IDEA Shelve"></a>IDEA Shelve</h2><p><code>IDEA</code>提供了一个功能上和<code>stash</code>几乎一样的<code>Shelve</code>。略微有些区别是stash默认操作整个<code>工作区</code>，而<code>Shelve</code>可以通过<code>GUI</code>选择单个文件或<code>Changelist</code>。<code>Changelist</code>是<code>IDEA</code>提供的将未提交修改分组的功能。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>只有在<code>工作区</code>，<code>暂存区</code>和<code>版本库</code>一致时，也就是<code>working tree clean</code>时，才能<code>checkout</code>到别的分支。我们使用的<code>IDE</code>可以自动<code>stash</code>或<code>Shelve</code>，使得这三者不一致时也能<code>checkout</code>。但如果发生<code>冲突</code>，就需要手动解决<code>冲突</code>。</p>
-<p>对于一些便于测试的代码&#x2F;配置修改，相较于<code>commit</code>更推荐<code>stash</code>或<code>Shelve</code>。如果使用的是<code>IDEA</code>，那么更推荐<code>Shelve</code>，因为其提供了<code>GUI</code>，并且可以方便地指定暂存部分修改。</p>
+<p><code>commit</code>后，新建分支<code>branch1</code>和<code>branch2</code>。</p>
+<h3 id="同时增删"><a href="#同时增删" class="headerlink" title="同时增删"></a>同时增删</h3><p>从直觉上讲，如果两个分支同时对一行代码进行了增加和删除，那么此时必然会发生冲突，因为两个分支上的改动是互相矛盾的，必须决定这些改动的去留。实验也证实了这一点。在实验中，一个分支将**first <strong>删除，另一个分支在行末添加了</strong>.<strong>，并触发了<code>conflict</code>。结果也不会智能地合成</strong>The line.**。如果在同一行地不同位置进行了增删都会触发<code>conflict</code>，那在同一光标就更无疑问地会触发了。</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs txt">The line<br>===============<br>The first line.<br></code></pre></td></tr></table></figure>
+
+<p>在提到智能地合成**The line.**，其实默认了一种改动去留的规则，也就是将两个分支的改动都保留。而实际情况，根据对A，B分支改动的去留，共有四种情况，解决冲突的过程本质就是在绝对，对于这些发生在同一位置的改动，是都留，都舍弃，还是只保留其中一侧的改动。</p>
+<h3 id="同时删除"><a href="#同时删除" class="headerlink" title="同时删除"></a>同时删除</h3><p>同时删除不同内容会触发<code>conflict</code>，而删除相同内容不会触发<code>conflict</code>，这也很符合直观理解。因为删除相同内容后，两个文件在这个位置地内容是完全相同的，不需要考虑改动的去留。</p>
+<h3 id="同时增加"><a href="#同时增加" class="headerlink" title="同时增加"></a>同时增加</h3><p>同时增加是有些争议的地方。添加相同内容不会触发冲突，这点原理和删除相同内容一样。但同时添加不同内容<code>Git</code>会如何处理就有些无法确定，<code>Git</code>是否会将两部分添加都保留。这种情况非常常见，例如两个人同时在代码文件最末尾添加了新的函数。</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs txt">The first line<br>The second line 1<br>===============<br>The first line<br>The second line 2<br></code></pre></td></tr></table></figure>
+
+<p>两个分支分别在文件末添加了不同的内容，实验结果触发了<code>conflict</code>。对于多人开发的场景，解决冲突的方式更多是将两个人的修改都保留。</p>
+<h3 id="一侧改动，另一侧没改动"><a href="#一侧改动，另一侧没改动" class="headerlink" title="一侧改动，另一侧没改动"></a>一侧改动，另一侧没改动</h3><p>上面实验给人的感觉是，如果两个分支的文件内容不同，则发生冲突。但有一种情况两个文件不同时也会发生<code>conflict</code>。也就是当对一侧（分支）文件没有改动，另一侧没改动时。对此猜测，可能其中一侧的文件快照是另一侧的父&#x2F;祖节点时（Git底层使用树的结构存储信息），则以更新的子节点为准。</p>
+<p>为了验证这个猜测，对没改动的一侧进行了改动并提交，随后再进行一次改动，恢复初始状态并提交。此时原来没改动的一侧因为两次<code>commit</code>，文件的状态和另一侧不再是父&#x2F;祖关系。此时合并两个分支，也没触发<code>conflict</code>。所以否定了两个文件不同时，父&#x2F;祖关系可以避免<code>conflict</code>。</p>
+<p>并且上面的测试，提交修改一次，再提交返回修改前状态，这也和矛盾最原始的定义有矛盾。即发生了同一文件同一位置的修改，但没<code>conflict</code>。</p>
+<p>基于上述实验，本人猜测<code>Git</code>并不是对比了两个分支的文件，而是将两个文件和他们的共同祖先状态进行了对比。通过<code>diff</code>算法，计算了每个分支所做的修改。<code>Git</code>本身带有<code>diff</code>工具，但对其内部原理没有深究。通过对比两个分支的修改，如果修改发生在同一位置，那么则触发<code>conflict</code>。并且<code>IDE</code>提供的解决冲突的界面，三路合并，其中两路是两个分支的最新状态，另外一路是两个分支的共同祖先。这变相地也证明了对比的可能是两者从相同状态后，发生的差异。由于此部分内容没有查到详细资料，可能存在一定误解。</p>
+<h3 id="修改位置初始化"><a href="#修改位置初始化" class="headerlink" title="修改位置初始化"></a>修改位置初始化</h3><p>新建一个<code>ConflictTest.txt</code>文本文件，并初始化为如下。</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs txt">The first line<br>The second line<br>The third line<br></code></pre></td></tr></table></figure>
+
+<p><code>commit</code>后，新建分支<code>branch1</code>和<code>branch2</code>。</p>
+<h3 id="修改位置"><a href="#修改位置" class="headerlink" title="修改位置"></a>修改位置</h3><p>修改位置的实验相对简单。对其中一侧进行第一行修改，对另一侧进行第二&#x2F;三行修改时，发生了不同结果（同一行已在之前测试）。第二行触发了<code>conflict</code>而第三行没有。如果简单点说，这样可能就把问题解决了，相同位置指的是相邻行。</p>
+<p>但往复杂了说，怎么样定义相邻行。原本相邻的行，通过插入换行符，使得其不在相邻，再进行修改，这会引起冲突吗？</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs txt">The first line 1<br>The second line<br>The third line<br>===============<br>The first line<br><br><br>The second line 2<br>The third line<br></code></pre></td></tr></table></figure>
+
+<p>答案是会。这可能因为差异是基于原祖先文件计算。一侧变动修改了第1行，另一侧变动修改了第2行，并且1行和2和之间插入了内容（空行）。这样看改动仍然发生在相邻行。</p>
+<p>另外还有一种情况。</p>
+<figure class="highlight txt"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs txt">branch1<br>The first line<br>The second line<br>The third line<br>===============<br>The first line<br>branch2<br>The second line<br>The third line<br></code></pre></td></tr></table></figure>
+
+<p>此时在原来第1行之前、之后插入了内容。从某种程度上也算是相邻行，但没有触发<code>conflict</code>。所以说相邻行的解释也不够完备。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><code>Git</code>在合并不同分支时，如果两个分支的同一文件状态不一致，则会计算其与共同祖先的差异。如果差异发生在相对于祖先文件的同一行或相邻行，则会引起<code>conflict</code>。</p>
+<p>在解决冲突时，需要针对每个位置，决定是否舍弃和保留每个分支的改动。</p>
 
                 
               </div>
@@ -325,9 +353,7 @@
       
         <a href="/tags/Git/">#Git</a>
       
-        <a href="/tags/Stash/">#Stash</a>
-      
-        <a href="/tags/Shelve/">#Shelve</a>
+        <a href="/tags/Conflict/">#Conflict</a>
       
     </div>
   
@@ -339,8 +365,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Git-Stash</div>
-      <div>http://example.com/2023/04/19/Git-Stash/</div>
+      <div>Git-Conflict</div>
+      <div>http://example.com/2023/04/27/Git-Conflict/</div>
     </div>
     <div class="license-meta">
       
@@ -352,7 +378,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年4月19日</div>
+          <div>2023年4月27日</div>
         </div>
       
       
@@ -384,18 +410,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/04/27/Git-Conflict/" title="Git-Conflict">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Git-Conflict</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/04/17/SpringBoot-Configuration/" title="SpringBoot-Configuration">
-                        <span class="hidden-mobile">SpringBoot-Configuration</span>
+                      <a href="/2023/04/19/Git-Stash/" title="Git-Stash">
+                        <span class="hidden-mobile">Git-Stash</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
