@@ -4,6 +4,35 @@
   
   
   <entry>
+    <title>SpringBoot-Lazy-Initialization</title>
+    <link href="/2023/05/04/SpringBoot-Lazy-Initialization/"/>
+    <url>/2023/05/04/SpringBoot-Lazy-Initialization/</url>
+    
+    <content type="html"><![CDATA[<p>在<a href="/2023/04/13/SpringBoot-Testing/" title="SpringBoot-Testing">SpringBoot-Testing</a>提到，使用<code>Junit</code>测试<code>SpringBoot</code>项目时，需要使用<code>@SpringBootTest</code>来创建一个<code>Spring容器</code>。而当<code>@SpringBootTest</code>标注的测试类没有使用内嵌<code>@Configuration</code>注解时，会自动使用<code>@SpringBootConfiguration</code>上的配置。</p><blockquote><p>Automatically searches for a @SpringBootConfiguration when nested @Configuration is not used, and no explicit classes are specified.</p></blockquote><h2 id="SpringBootConfiguration"><a href="#SpringBootConfiguration" class="headerlink" title="@SpringBootConfiguration"></a><code>@SpringBootConfiguration</code></h2><p><code>@SpringBootConfiguration</code>本身是一个合成注解，包含三个注解：</p><ol><li><code>@SpringBootConfiguration</code></li><li><code>@EnableAutoConfiguration</code></li><li><code>@ComponentScan</code></li></ol><p>其中，<code>@SpringBootConfiguration</code>本身也包含<code>@Configuration</code>，也就是可以在类中通过<code>@bean</code>注解往容器中添加<code>bean</code>。<code>@EnableAutoConfiguration</code>为自动配置功能，可以根据pom文件中的依赖，自动向容器中添加<code>bean</code>。<code>@ComponentScan</code>组件扫描在<a href="/2023/04/17/SpringBoot-Configuration/" title="SpringBoot-Configuration">SpringBoot-Configuration</a>已经阐述过。</p><p>测试往往只针对某个新写的方法，但默认的配置需要将整个应用程序环境都启动，会导致测试程序启动缓慢。一个很直观的解决方法就是使用自定义的配置类，而不是使用默认的主应用的程序环境。</p><h2 id="自定义配置类"><a href="#自定义配置类" class="headerlink" title="自定义配置类"></a>自定义配置类</h2><p>前面提到<code>@SpringBootTest</code>标注如果带有内嵌<code>@Configuration</code>注解，则不会使用<code>@SpringBootConfiguration</code>上的配置。因此如果需要使用自定义配置类，需要在测试类上添加<code>@Configuration</code>或通过<code>@SpringBootTest</code>的<code>classes</code>属性指定自定义配置类。</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Configuration</span><br><span class="hljs-keyword">static</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TestConfiguration</span> &#123;<br>&#125;<br></code></pre></td></tr></table></figure><p>内嵌自定义配置类需要定义在测试类中，并且使用<code>static</code>关键词修饰。</p><blockquote><p>static, non-private, non-final, nested classes annotated with @Configuration</p></blockquote><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@SpringBootTest(classes = TestConfiguration.class)</span><br></code></pre></td></tr></table></figure><p>在自定义配置类中，可以如<a href="/2023/04/17/SpringBoot-Configuration/" title="SpringBoot-Configuration">SpringBoot-Configuration</a>中往容器中添加<code>bean</code></p><h2 id="懒加载"><a href="#懒加载" class="headerlink" title="懒加载"></a>懒加载</h2><p>虽然Spring可以通过<code>Auto-configured Tests</code>和<code>@ComponentScan</code>来控制自动配置和包扫描规则，来避免不必要的bean导入。</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@ComponentScan(excludeFilters = &#123;@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = &#123;SomeExcludeClass.class&#125;)&#125;)</span><br></code></pre></td></tr></table></figure><p>但有时很难分清哪些被使用到，哪些没有被使用到，因为bean之间的依赖关系错综复杂。手动去控制自动配置规则和扫描规则太过繁琐。因此更直觉、简便的解决方法是使用懒加载。<a href="https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.spring-application.lazy-initialization">官方文档</a></p><blockquote><p><code>SpringApplication</code> allows an application to be initialized lazily. When lazy initialization is enabled, beans are created as they are needed rather than during application startup. As a result, enabling lazy initialization can reduce the time that it takes your application to start.</p></blockquote><p>懒加载就是在<code>bean</code>被使用时才去实例化，而不是程序一启动就把所有的<code>bean</code>都实例化。因此可以加快程序的启动时间，但会增加用户使用时的延迟。</p><p>对于生产中的设备来说，启动时间（只启动一次，往往在半夜没用户使用时）、内存消耗是可以忽略的，但用户体验至关重要。因此生产实践中通常不开启懒加载。</p><blockquote><p>Lazy initialization can be enabled programmatically using the <code>lazyInitialization</code> method on <code>SpringApplicationBuilder</code> or the <code>setLazyInitialization</code> method on <code>SpringApplication</code>. Alternatively, it can be enabled using the <code>spring.main.lazy-initialization</code> property</p></blockquote><p>由于单元测试中容器是自动创建的，<code>lazyInitialization</code>和<code>setLazyInitialization</code>的方法无法执行，因此使用<code>application.properties</code>配置文件的方式是最简单优雅的。</p><figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs properties"><span class="hljs-attr">spring.main.lazy-initialization</span>=<span class="hljs-string">true</span><br></code></pre></td></tr></table></figure><p>如果测试类需要使用独立的配置文件，可以在测试上使用<code>@TestPropertySource</code>注解来指定。</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@TestPropertySource(&quot;classpath:application-test.properties&quot;)</span><br></code></pre></td></tr></table></figure><h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><code>@SpringBootTest</code>标注的测试类，默认情况会使用<code>@SpringBootConfiguration</code>的环境设置。</p><p>如果需要使用自定义配置可以使用内嵌<code>@Configuration</code>或<code>@SpringBootTest</code>的<code>classes</code>属性。</p><p>懒加载是个加速程序启动的简单且有效方法。原理是将<code>bean</code>的实例化过程推迟到使用时才实例化。避免了测试过程中大部分<code>bean</code>都用不到，但会被实例化的问题。</p><p>在单元测试中，简单且优雅的方式是通过<code>application.properties</code>配置文件来开启懒加载。为了避免影响生产，通常采用测试独立的配置文件，并通过<code>@TestPropertySource</code>来指定。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>Java</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Java</tag>
+      
+      <tag>SpringBoot</tag>
+      
+      <tag>Lazy Initialization</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Git-Conflict</title>
     <link href="/2023/04/27/Git-Conflict/"/>
     <url>/2023/04/27/Git-Conflict/</url>
