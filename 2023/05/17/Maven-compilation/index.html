@@ -19,12 +19,12 @@
     <meta name="description" content="由于公司Java项目代码量庞大，使用Maven作为构建工具进行编译时，往往会花费较长时间。 进行代码测试时，修改一行代码，可能会引起整个项目重新编译。这是Maven的默认行为，一旦检测到代码变更，便重新编译改变文件对应的模块。但其实那些没有改动的代码，复用以前的编译结果即可。为此，引入了增量编译。 增量编译增量编译(Incremental Compilation)是指，只重新编译修改的代码文件。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Maven-compilation">
-<meta property="og:url" content="http://example.com/2023/05/17/Maven-incremental-compilation/index.html">
+<meta property="og:url" content="http://example.com/2023/05/17/Maven-compilation/index.html">
 <meta property="og:site_name" content="DracoYu&#39;s MindCache">
 <meta property="og:description" content="由于公司Java项目代码量庞大，使用Maven作为构建工具进行编译时，往往会花费较长时间。 进行代码测试时，修改一行代码，可能会引起整个项目重新编译。这是Maven的默认行为，一旦检测到代码变更，便重新编译改变文件对应的模块。但其实那些没有改动的代码，复用以前的编译结果即可。为此，引入了增量编译。 增量编译增量编译(Incremental Compilation)是指，只重新编译修改的代码文件。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-05-17T07:12:51.000Z">
-<meta property="article:modified_time" content="2023-05-17T08:51:20.276Z">
+<meta property="article:modified_time" content="2023-05-19T03:21:13.282Z">
 <meta property="article:author" content="DracoYu">
 <meta property="article:tag" content="Incremental Compilation">
 <meta property="article:tag" content="Test Compilation">
@@ -221,7 +221,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.4k 字
+          2.5k 字
         
       </span>
     
@@ -303,7 +303,7 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs Maven">[INFO] Changes detected - recompiling the module!<br></code></pre></td></tr></table></figure>
 
 <p>这种情况一般发生在整个文件都被注释的情况。</p>
-<h2 id="测试编译和跳过测试"><a href="#测试编译和跳过测试" class="headerlink" title="测试编译和跳过测试"></a>测试编译和跳过测试</h2><p>在使用<code>Maven</code>进行<code>clean compile</code>后，运行单元测试，发现IDEA又将项目代码编译了一遍。重新编译使用了<code>IDEA</code>原生构建工具。未设置<strong>将IDE构建&#x2F;运行操作委托给Maven</strong>。</p>
+<h2 id="测试编译和跳过测试"><a href="#测试编译和跳过测试" class="headerlink" title="测试编译和跳过测试"></a>测试编译和跳过测试</h2><p>在使用<code>Maven</code>进行<code>clean compile</code>后，运行单元测试，发现IDEA又将项目代码编译了一遍。由于未设置<strong>将IDE构建&#x2F;运行操作委托给Maven</strong>，重新编译使用了<code>IDEA</code>原生构建工具。</p>
 <p>研究后发现，<code>Maven</code>的<code>compile</code>阶段并不包括测试的编译，这可以从执行<code>mvn clean compile</code>命令后，<code>target</code>文件夹中并不会有<code>test-classes</code>文件夹生成可以看出。</p>
 <p>因此在运行时，<code>IDEA</code>没有找到单元测试的<code>.class</code>文件，会再重新编译。</p>
 <p>因此如果要编译整个项目，包括测试，需要使用<code>clean test</code>。但<code>test</code>阶段还默认绑定了单元测试运行，会将项目测试代码中带有<code>@Test</code>的方法都执行一遍，并生成测试报告。这也是日常开发不需要的，因此需要设置跳过测试运行。</p>
@@ -312,7 +312,8 @@
 <li>-DskipTests</li>
 <li>-Dmaven.test.skip&#x3D;true</li>
 </ul>
-<p>这两条都可以跳过测试运行，区别是<code>-Dmaven.test.skip=true</code>还会额外跳过测试编译。为了保证<code>Maven</code>编译完后可以直接运行单元测试，应该选择<code>-DskipTests</code>。</p>
+<p>这两条都可以跳过测试运行，区别是<code>-Dmaven.test.skip=true</code>还会额外跳过测试阶段，而<code>-DskipTests</code>只是跳过了测试阶段中的测试运行目标。</p>
+<p>为了保证<code>Maven</code>编译完后可以直接运行单元测试，应该选择<code>-DskipTests</code>。</p>
 <h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><code>Maven</code>是最常用的构建工具，为了开启增量编译功能，需要在<code>pom</code>文件中将<code>compile</code>插件的<code>useIncrementalcompilation</code>属性设置为false。</p>
 <p>如果希望<code>Maven</code>编译完后可以直接运行单元测试，需要至少使用<code>test</code>而不是<code>compile</code>。如果只希望编译测试代码，但跳过测试运行，需要设置运行参数<code>-DskipTests</code>。</p>
 
@@ -363,7 +364,7 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>Maven-compilation</div>
-      <div>http://example.com/2023/05/17/Maven-incremental-compilation/</div>
+      <div>http://example.com/2023/05/17/Maven-compilation/</div>
     </div>
     <div class="license-meta">
       
