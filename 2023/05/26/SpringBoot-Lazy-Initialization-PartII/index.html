@@ -16,23 +16,24 @@
   <meta name="author" content="DracoYu">
   <meta name="keywords" content="学习笔记,Java,JavaScript,后端,前端">
   
-    <meta name="description" content="由于公司Java项目代码量庞大，使用Maven作为构建工具进行编译时，往往会花费较长时间。 进行代码测试时，修改一行代码，可能会引起整个项目重新编译。这是Maven的默认行为，一旦检测到代码变更，便重新编译改变文件对应的模块。但其实那些没有改动的代码，复用以前的编译结果即可。为此，引入了增量编译。 增量编译增量编译(Incremental Compilation)是指，只重新编译修改的代码文件。">
+    <meta name="description" content="在SpringBoot-Lazy-Initialization提到，懒加载可以延迟容器中单实例的创建时机，从容器启动时延迟到实例被使用时。 在实际设置懒加载时，遇到了一些问题，在此记录并分析。 静态方法访问如果试图调用一个类的静态方法，而此方法依赖的静态变量需要通过实例去进行设置，启用全局懒加载就会导致NPE（NullPointerException）报错。 常见的场景是，编写一个SpringCo">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Maven-compilation">
-<meta property="og:url" content="http://example.com/2023/05/17/Maven-compilation/index.html">
+<meta property="og:title" content="SpringBoot-Lazy_Initialization_PartII">
+<meta property="og:url" content="http://example.com/2023/05/26/SpringBoot-Lazy-Initialization-PartII/index.html">
 <meta property="og:site_name" content="DracoYu&#39;s MindCache">
-<meta property="og:description" content="由于公司Java项目代码量庞大，使用Maven作为构建工具进行编译时，往往会花费较长时间。 进行代码测试时，修改一行代码，可能会引起整个项目重新编译。这是Maven的默认行为，一旦检测到代码变更，便重新编译改变文件对应的模块。但其实那些没有改动的代码，复用以前的编译结果即可。为此，引入了增量编译。 增量编译增量编译(Incremental Compilation)是指，只重新编译修改的代码文件。">
+<meta property="og:description" content="在SpringBoot-Lazy-Initialization提到，懒加载可以延迟容器中单实例的创建时机，从容器启动时延迟到实例被使用时。 在实际设置懒加载时，遇到了一些问题，在此记录并分析。 静态方法访问如果试图调用一个类的静态方法，而此方法依赖的静态变量需要通过实例去进行设置，启用全局懒加载就会导致NPE（NullPointerException）报错。 常见的场景是，编写一个SpringCo">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-05-17T07:12:51.000Z">
-<meta property="article:modified_time" content="2023-05-19T03:21:13.282Z">
+<meta property="article:published_time" content="2023-05-26T03:20:27.000Z">
+<meta property="article:modified_time" content="2023-05-26T08:53:08.318Z">
 <meta property="article:author" content="DracoYu">
-<meta property="article:tag" content="Incremental Compilation">
-<meta property="article:tag" content="Test Compilation">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="SpringBoot">
+<meta property="article:tag" content="Lazy Initialization">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>Maven-compilation - DracoYu&#39;s MindCache</title>
+  <title>SpringBoot-Lazy_Initialization_PartII - DracoYu&#39;s MindCache</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -198,7 +199,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Maven-compilation"></span>
+            <span id="subtitle" data-typed-text="SpringBoot-Lazy_Initialization_PartII"></span>
           
         </div>
 
@@ -209,8 +210,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-05-17 15:12" pubdate>
-          2023年5月17日 下午
+        <time datetime="2023-05-26 11:20" pubdate>
+          2023年5月26日 上午
         </time>
       </span>
     
@@ -221,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.5k 字
+          2.1k 字
         
       </span>
     
@@ -232,7 +233,7 @@
         
         
         
-          21 分钟
+          18 分钟
         
       </span>
     
@@ -270,52 +271,36 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Maven-compilation</h1>
+            <h1 style="display: none">SpringBoot-Lazy_Initialization_PartII</h1>
             
             
               <div class="markdown-body">
                 
-                <p>由于公司<code>Java</code>项目代码量庞大，使用<code>Maven</code>作为构建工具进行编译时，往往会花费较长时间。</p>
-<p>进行代码测试时，修改一行代码，可能会引起整个项目重新编译。这是<code>Maven</code>的默认行为，一旦检测到代码变更，便重新编译改变文件对应的模块。但其实那些没有改动的代码，复用以前的编译结果即可。为此，引入了增量编译。</p>
-<h2 id="增量编译"><a href="#增量编译" class="headerlink" title="增量编译"></a>增量编译</h2><p>增量编译(Incremental Compilation)是指，只重新编译修改的代码文件。</p>
-<p>大部分<code>Java</code>开发人员都使用<code>IDEA</code>作为<code>IDE</code>。<code>IDEA</code>自带的构建工具默认支持增量编译，<a target="_blank" rel="noopener" href="https://www.jetbrains.com/help/idea/compiling-applications.html#compile_module">官方文档</a>。</p>
-<blockquote>
-<p>When you change any class inside the build target and then execute the build action, IntelliJ IDEA performs the incremental build that compiles only the changed classes. IntelliJ IDEA also recursively builds the classes’ dependencies.</p>
-</blockquote>
-<p><code>IDEA</code>还会进行依赖分析，以确定是否需要连带重新编译其他文件。</p>
-<p>而<code>Maven</code>则默认不开启增量编译，<a target="_blank" rel="noopener" href="https://maven.apache.org/plugins/maven-compiler-plugin/compile-mojo.html#optional-parameters">官方文档</a>。</p>
-<blockquote>
-<p>to enable&#x2F;disable incremental compilation feature.</p>
-<p>This leads to two different modes depending on the underlying compiler. The default javac compiler does the following:</p>
-<ul>
-<li>true <strong>(default)</strong> in this mode the compiler plugin determines whether any JAR files the current module depends on have changed in the current build run; or any source file was added, removed or changed since the last compilation. If this is the case, the compiler plugin recompiles all sources.</li>
-<li>false <strong>(not recommended)</strong> this only compiles source files which are newer than their corresponding class files, namely which have changed since the last compilation. This does not recompile other classes which use the changed class, potentially leaving them with references to methods that no longer exist, leading to errors at runtime.</li>
-</ul>
-</blockquote>
-<p><code>Maven</code>通过设置<code>&lt;useIncrementalcompilation&gt;</code>标签来控制增量编译行为。比较坑的地方是，选项的实际行为不符合常规理解。设置为<code>true</code>时，关闭增量编译，这是默认行为；设置为<code>false</code>时，开启增量编译。</p>
-<p>根据官方文档，<code>Maven</code>会比较源文件(<code>.java</code>)和编译文件(<code>.class</code>)的时间戳。如果源文件的修改时间晚于编译文件，意味着上次编译后源文件发生了变动，文件需要重新编译。默认不推荐增量编译是因为<code>Maven</code>不会进行依赖检查，因此如果修改的位置删除了一个函数，而这个函数在别的源文件中被引用，会导致运行时出错。</p>
-<h2 id="无文件变动"><a href="#无文件变动" class="headerlink" title="无文件变动"></a>无文件变动</h2><p>无论是否开启增量编译，当所有源文件都没有发生改动时，编译并不会使任何文件重新编译。</p>
-<p>Maven会有如下提示：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs Maven">[INFO] Nothing to compile - all classes are up to date<br></code></pre></td></tr></table></figure>
+                <p>在<a href="/2023/05/04/SpringBoot-Lazy-Initialization/" title="SpringBoot-Lazy-Initialization">SpringBoot-Lazy-Initialization</a>提到，懒加载可以延迟容器中单实例的创建时机，从容器启动时延迟到实例被使用时。</p>
+<p>在实际设置懒加载时，遇到了一些问题，在此记录并分析。</p>
+<h2 id="静态方法访问"><a href="#静态方法访问" class="headerlink" title="静态方法访问"></a>静态方法访问</h2><p>如果试图调用一个类的静态方法，而此方法依赖的静态变量需要通过实例去进行设置，启用全局懒加载就会导致<code>NPE（NullPointerException）</code>报错。</p>
+<p>常见的场景是，编写一个<code>SpringContextUtil</code>工具类，用于从容器中根据条件（名称、类型）获取<code>bean</code>。<code>SpringContextUtil</code>通过实现<code>ApplicationContextAware</code>接口，来设置静态成员变量，并通过公共静态方法来向外暴露。一个典型的<code>SpringContextUtil</code>代码如下。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Component</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">SpringContextUtil</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">ApplicationContextAware</span> &#123;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> ApplicationContext applicationContext;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setApplicationContext</span><span class="hljs-params">(ApplicationContext context)</span> <span class="hljs-keyword">throws</span> BeansException &#123;<br>        applicationContext = context;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Object <span class="hljs-title function_">getBean</span><span class="hljs-params">(String beanName)</span> &#123;<br>        <span class="hljs-keyword">return</span> applicationContext.getBean(beanName);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p>但在实际使用时，可能会出现一种情况：明明无文件变动，但导致了项目重新编译。这是因为项目代码中存在空文件。</p>
-<p>空文件是指一个<code>.java</code>文件中，没有声明<code>public class</code>，使其并不会生成对应的<code>.class</code>文件。因此在进行时间戳对比时，会提示文件修改，导致项目重新编译。Maven提示如下:</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs Maven">[INFO] Changes detected - recompiling the module!<br></code></pre></td></tr></table></figure>
+<p>在<code>SpringContextUtil</code>实例化时，通过<code>ApplicationContextAwareProcessor</code>后置处理器调用<code>setApplicationContext</code>方法，完成属性注入。具体的注入时机引用源代码注释。</p>
+<blockquote>
+<p>Invoked after population of normal bean properties but before an init callback.</p>
+</blockquote>
+<p>问题在于，静态方法属于类，在懒加载的情况下，调用静态方法并不会引起类实例化，也因此不会对静态成员变量<code>applicationContext</code>进行设置，其值为引用类型的默认值<code>null</code>。此时调用静态方法<code>getBean</code>就会返回<code>NPE</code>。</p>
+<p>解决的办法也很简单，就是将<code>SpringContextUtil</code>单独设置为非懒加载。由于<code>SpringContextUtil</code>是通过<code>@Component</code>注解，被组件扫描载入容器中，一种方法便是在<code>@ComponentScan</code>中设置<code>excludeFilters</code>属性。另一种更为简单优雅的做法是直接在<code>SpringContextUtil</code>类定义上添加<code>@lazy(false)</code>的注解。根据就近原则，会覆盖掉全局设置。</p>
+<p>实际上<code>@lazy</code>有着很灵活的用法，可以添加在很多地方，在此不过多赘述。</p>
+<h2 id="Mybatis扫描懒加载"><a href="#Mybatis扫描懒加载" class="headerlink" title="Mybatis扫描懒加载"></a>Mybatis扫描懒加载</h2><p>开启懒加载的另一种方式是通过设置<code>@ComponentScan</code>的<code>lazyInit</code>属性，将通过组件扫描载入的<code>bean</code>设置为懒加载。这么做是合理的。对于大型项目来说，通过组件扫描载入的<code>bean</code>数量远大于其他方式，而且是些影响范围较小的<code>bean</code>(相对于框架层)。这么设置可以较大程度加快程序启动，又尽可能避免了bug延迟暴露的问题。</p>
+<p>但如此设置后，发现项目中的<code>Mybatis Mapper</code>并不会开启懒加载。研究后发现，<code>Mapper</code>扫描和组件扫描使用的并不是同一个扫描器。</p>
+<p>查询<code>Mybatis</code>懒加载相关资料后，发现存在歧义。在<code>MyBatis</code>中，懒加载表示按需进行关联查询，这显然与<code>SpringBoot</code>中懒加载的含义不同。因此无法通过在<code>Mybatis</code>配置文件中，开启我们需要的<code>bean</code>懒加载功能。</p>
+<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">setting</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;lazyLoadingEnabled&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;true&quot;</span>/&gt;</span><br></code></pre></td></tr></table></figure>
 
-<p>这种情况一般发生在整个文件都被注释的情况。</p>
-<h2 id="测试编译和跳过测试"><a href="#测试编译和跳过测试" class="headerlink" title="测试编译和跳过测试"></a>测试编译和跳过测试</h2><p>在使用<code>Maven</code>进行<code>clean compile</code>后，运行单元测试，发现IDEA又将项目代码编译了一遍。由于未设置<strong>将IDE构建&#x2F;运行操作委托给Maven</strong>，重新编译使用了<code>IDEA</code>原生构建工具。</p>
-<p>研究后发现，<code>Maven</code>的<code>compile</code>阶段并不包括测试的编译，这可以从执行<code>mvn clean compile</code>命令后，<code>target</code>文件夹中并不会有<code>test-classes</code>文件夹生成可以看出。</p>
-<p>因此在运行时，<code>IDEA</code>没有找到单元测试的<code>.class</code>文件，会再重新编译。</p>
-<p>因此如果要编译整个项目，包括测试，需要使用<code>clean test</code>。但<code>test</code>阶段还默认绑定了单元测试运行，会将项目测试代码中带有<code>@Test</code>的方法都执行一遍，并生成测试报告。这也是日常开发不需要的，因此需要设置跳过测试运行。</p>
-<p>如果去百度，可以搜到两条有关测试跳过的运行参数。</p>
-<ul>
-<li>-DskipTests</li>
-<li>-Dmaven.test.skip&#x3D;true</li>
-</ul>
-<p>这两条都可以跳过测试运行，区别是<code>-Dmaven.test.skip=true</code>还会额外跳过测试阶段，而<code>-DskipTests</code>只是跳过了测试阶段中的测试运行目标。</p>
-<p>为了保证<code>Maven</code>编译完后可以直接运行单元测试，应该选择<code>-DskipTests</code>。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><code>Maven</code>是最常用的构建工具，为了开启增量编译功能，需要在<code>pom</code>文件中将<code>compile</code>插件的<code>useIncrementalcompilation</code>属性设置为false。</p>
-<p>如果希望<code>Maven</code>编译完后可以直接运行单元测试，需要至少使用<code>test</code>而不是<code>compile</code>。如果只希望编译测试代码，但跳过测试运行，需要设置运行参数<code>-DskipTests</code>。</p>
+<p>而<code>Mapper</code>扫描使用的是<code>ClassPathMapperScanner</code>。在<code>Mybatis</code>中，可以通过<code>@MapperScan</code>的<code>lazyInitialization</code>属性，设置<code>Mapper Bean</code>的懒加载。</p>
+<p>但公司框架中使用的是<code>通用mapper</code>，<code>maven</code>坐标如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs pom">&lt;dependency&gt;<br>    &lt;groupId&gt;tk.mybatis&lt;/groupId&gt;<br>    &lt;artifactId&gt;mapper&lt;/artifactId&gt;<br>&lt;/dependency&gt;<br></code></pre></td></tr></table></figure>
+
+<p>由于公司使用的<code>通用mapper</code>版本较早，仍未添加懒加载功能。新增懒加载的<a target="_blank" rel="noopener" href="https://github.com/abel533/Mapper/pull/874">PR</a>。</p>
+<p>因此无法开启懒加载，只能使用全局懒加载。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在实际开发过程中，总会遇到预料之外的情况。调试、分析、学习的过程中积累的经验，远重要于解决问题本身。经过这次问题解决，对<code>Spring</code>、<code>Mybatis</code>框架的理解又更深入了一步。</p>
 
                 
               </div>
@@ -334,7 +319,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/Maven/" class="category-chain-item">Maven</a>
+  <a href="/categories/Java/" class="category-chain-item">Java</a>
   
   
 
@@ -349,9 +334,11 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/Incremental-Compilation/">#Incremental Compilation</a>
+        <a href="/tags/Java/">#Java</a>
       
-        <a href="/tags/Test-Compilation/">#Test Compilation</a>
+        <a href="/tags/SpringBoot/">#SpringBoot</a>
+      
+        <a href="/tags/Lazy-Initialization/">#Lazy Initialization</a>
       
     </div>
   
@@ -363,8 +350,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Maven-compilation</div>
-      <div>http://example.com/2023/05/17/Maven-compilation/</div>
+      <div>SpringBoot-Lazy_Initialization_PartII</div>
+      <div>http://example.com/2023/05/26/SpringBoot-Lazy-Initialization-PartII/</div>
     </div>
     <div class="license-meta">
       
@@ -376,7 +363,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年5月17日</div>
+          <div>2023年5月26日</div>
         </div>
       
       
@@ -408,18 +395,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/05/26/SpringBoot-Lazy-Initialization-PartII/" title="SpringBoot-Lazy_Initialization_PartII">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">SpringBoot-Lazy_Initialization_PartII</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/05/12/Git-Commit-Message/" title="Git-Commit-Message">
-                        <span class="hidden-mobile">Git-Commit-Message</span>
+                      <a href="/2023/05/17/Maven-compilation/" title="Maven-compilation">
+                        <span class="hidden-mobile">Maven-compilation</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
