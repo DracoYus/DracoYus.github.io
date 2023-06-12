@@ -16,24 +16,22 @@
   <meta name="author" content="DracoYu">
   <meta name="keywords" content="学习笔记,Java,JavaScript,后端,前端">
   
-    <meta name="description" content="在SpringBoot-Lazy-Initialization提到，懒加载可以延迟容器中单实例的创建时机，从容器启动时延迟到实例被使用时。 在实际设置懒加载时，遇到了一些问题，在此记录并分析。 静态方法访问如果试图调用一个类的静态方法，而此方法依赖的静态变量需要通过实例去进行设置，启用全局懒加载就会导致NPE（NullPointerException）报错。 常见的场景是，编写一个SpringCo">
+    <meta name="description" content="最近半个月，结合视频和书籍，把设计模式反反复复看了好几遍。 编写设计模式的笔记和分享，确实具有一定难度。首先，设计模式本身是抽象的，是对实践经验的总结。这意味着，对于每个设计模式，并没有完全确定的规范，不同的人有着不同的经验，也会有不同的实现。这意味着设计模式本质是一种思想，是不同实现中的相同部分，而思想本身很难用文字来完整表述。其次，笔记很容易变成网络上已有资料的复制。因为从头思考每个概念，琢磨">
 <meta property="og:type" content="article">
-<meta property="og:title" content="SpringBoot-Lazy_Initialization_PartII">
-<meta property="og:url" content="http://example.com/2023/05/26/SpringBoot-Lazy-Initialization-PartII/index.html">
+<meta property="og:title" content="Design-Pattern-Relationships-Between-Objects">
+<meta property="og:url" content="http://example.com/2023/06/12/Design-Pattern-Relationships-Between-Objects/index.html">
 <meta property="og:site_name" content="DracoYu&#39;s MindCache">
-<meta property="og:description" content="在SpringBoot-Lazy-Initialization提到，懒加载可以延迟容器中单实例的创建时机，从容器启动时延迟到实例被使用时。 在实际设置懒加载时，遇到了一些问题，在此记录并分析。 静态方法访问如果试图调用一个类的静态方法，而此方法依赖的静态变量需要通过实例去进行设置，启用全局懒加载就会导致NPE（NullPointerException）报错。 常见的场景是，编写一个SpringCo">
+<meta property="og:description" content="最近半个月，结合视频和书籍，把设计模式反反复复看了好几遍。 编写设计模式的笔记和分享，确实具有一定难度。首先，设计模式本身是抽象的，是对实践经验的总结。这意味着，对于每个设计模式，并没有完全确定的规范，不同的人有着不同的经验，也会有不同的实现。这意味着设计模式本质是一种思想，是不同实现中的相同部分，而思想本身很难用文字来完整表述。其次，笔记很容易变成网络上已有资料的复制。因为从头思考每个概念，琢磨">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-05-26T03:20:27.000Z">
-<meta property="article:modified_time" content="2023-05-26T08:53:08.318Z">
+<meta property="article:published_time" content="2023-06-12T02:09:32.000Z">
+<meta property="article:modified_time" content="2023-06-12T09:50:33.748Z">
 <meta property="article:author" content="DracoYu">
-<meta property="article:tag" content="Java">
-<meta property="article:tag" content="SpringBoot">
-<meta property="article:tag" content="Lazy Initialization">
+<meta property="article:tag" content="学习笔记,Java,JavaScript,后端,前端">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>SpringBoot-Lazy_Initialization_PartII - DracoYu&#39;s MindCache</title>
+  <title>Design-Pattern-Relationships-Between-Objects - DracoYu&#39;s MindCache</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -199,7 +197,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="SpringBoot-Lazy_Initialization_PartII"></span>
+            <span id="subtitle" data-typed-text="Design-Pattern-Relationships-Between-Objects"></span>
           
         </div>
 
@@ -210,8 +208,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-05-26 11:20" pubdate>
-          2023年5月26日 上午
+        <time datetime="2023-06-12 10:09" pubdate>
+          2023年6月12日 上午
         </time>
       </span>
     
@@ -222,7 +220,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.1k 字
+          2.3k 字
         
       </span>
     
@@ -233,7 +231,7 @@
         
         
         
-          18 分钟
+          20 分钟
         
       </span>
     
@@ -271,36 +269,34 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">SpringBoot-Lazy_Initialization_PartII</h1>
+            <h1 style="display: none">Design-Pattern-Relationships-Between-Objects</h1>
             
             
               <div class="markdown-body">
                 
-                <p>在<a href="/2023/05/04/SpringBoot-Lazy-Initialization/" title="SpringBoot-Lazy-Initialization">SpringBoot-Lazy-Initialization</a>提到，懒加载可以延迟容器中单实例的创建时机，从容器启动时延迟到实例被使用时。</p>
-<p>在实际设置懒加载时，遇到了一些问题，在此记录并分析。</p>
-<h2 id="静态方法访问"><a href="#静态方法访问" class="headerlink" title="静态方法访问"></a>静态方法访问</h2><p>如果试图调用一个类的静态方法，而此方法依赖的静态变量需要通过实例去进行设置，启用全局懒加载就会导致<code>NPE（NullPointerException）</code>报错。</p>
-<p>常见的场景是，编写一个<code>SpringContextUtil</code>工具类，用于从容器中根据条件（名称、类型）获取<code>bean</code>。<code>SpringContextUtil</code>通过实现<code>ApplicationContextAware</code>接口，来设置静态成员变量，并通过公共静态方法来向外暴露。一个典型的<code>SpringContextUtil</code>代码如下。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Component</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">SpringContextUtil</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">ApplicationContextAware</span> &#123;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> ApplicationContext applicationContext;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setApplicationContext</span><span class="hljs-params">(ApplicationContext context)</span> <span class="hljs-keyword">throws</span> BeansException &#123;<br>        applicationContext = context;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Object <span class="hljs-title function_">getBean</span><span class="hljs-params">(String beanName)</span> &#123;<br>        <span class="hljs-keyword">return</span> applicationContext.getBean(beanName);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<p>在<code>SpringContextUtil</code>实例化时，通过<code>ApplicationContextAwareProcessor</code>后置处理器调用<code>setApplicationContext</code>方法，完成属性注入。具体的注入时机引用源代码注释。</p>
-<blockquote>
-<p>Invoked after population of normal bean properties but before an init callback.</p>
-</blockquote>
-<p>问题在于，静态方法属于类，在懒加载的情况下，调用静态方法并不会引起类实例化，也因此不会对静态成员变量<code>applicationContext</code>进行设置，其值为引用类型的默认值<code>null</code>。此时调用静态方法<code>getBean</code>就会返回<code>NPE</code>。</p>
-<p>解决的办法也很简单，就是将<code>SpringContextUtil</code>单独设置为非懒加载。由于<code>SpringContextUtil</code>是通过<code>@Component</code>注解，被组件扫描载入容器中，一种方法便是在<code>@ComponentScan</code>中设置<code>excludeFilters</code>属性。另一种更为简单优雅的做法是直接在<code>SpringContextUtil</code>类定义上添加<code>@lazy(false)</code>的注解。根据就近原则，会覆盖掉全局设置。</p>
-<p>实际上<code>@lazy</code>有着很灵活的用法，可以添加在很多地方，在此不过多赘述。</p>
-<h2 id="Mybatis扫描懒加载"><a href="#Mybatis扫描懒加载" class="headerlink" title="Mybatis扫描懒加载"></a>Mybatis扫描懒加载</h2><p>开启懒加载的另一种方式是通过设置<code>@ComponentScan</code>的<code>lazyInit</code>属性，将通过组件扫描载入的<code>bean</code>设置为懒加载。这么做是合理的。对于大型项目来说，通过组件扫描载入的<code>bean</code>数量远大于其他方式，而且是些影响范围较小的<code>bean</code>(相对于框架层)。这么设置可以较大程度加快程序启动，又尽可能避免了bug延迟暴露的问题。</p>
-<p>但如此设置后，发现项目中的<code>Mybatis Mapper</code>并不会开启懒加载。研究后发现，<code>Mapper</code>扫描和组件扫描使用的并不是同一个扫描器。</p>
-<p>查询<code>Mybatis</code>懒加载相关资料后，发现存在歧义。在<code>MyBatis</code>中，懒加载表示按需进行关联查询，这显然与<code>SpringBoot</code>中懒加载的含义不同。因此无法通过在<code>Mybatis</code>配置文件中，开启我们需要的<code>bean</code>懒加载功能。</p>
-<figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">setting</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;lazyLoadingEnabled&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;true&quot;</span>/&gt;</span><br></code></pre></td></tr></table></figure>
-
-<p>而<code>Mapper</code>扫描使用的是<code>ClassPathMapperScanner</code>。在<code>Mybatis</code>中，可以通过<code>@MapperScan</code>的<code>lazyInitialization</code>属性，设置<code>Mapper Bean</code>的懒加载。</p>
-<p>但公司框架中使用的是<code>通用mapper</code>，<code>maven</code>坐标如下：</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs pom">&lt;dependency&gt;<br>    &lt;groupId&gt;tk.mybatis&lt;/groupId&gt;<br>    &lt;artifactId&gt;mapper&lt;/artifactId&gt;<br>&lt;/dependency&gt;<br></code></pre></td></tr></table></figure>
-
-<p>由于公司使用的<code>通用mapper</code>版本较早，仍未添加懒加载功能。新增懒加载的<a target="_blank" rel="noopener" href="https://github.com/abel533/Mapper/pull/874">PR</a>。</p>
-<p>因此无法开启懒加载，只能使用全局懒加载。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在实际开发过程中，总会遇到预料之外的情况。调试、分析、学习的过程中积累的经验，远重要于解决问题本身。经过这次问题解决，对<code>Spring</code>、<code>Mybatis</code>框架的理解又更深入了一步。</p>
+                <p>最近半个月，结合视频和书籍，把<code>设计模式</code>反反复复看了好几遍。</p>
+<p>编写<code>设计模式</code>的笔记和分享，确实具有一定难度。首先，<code>设计模式</code>本身是抽象的，是对实践经验的总结。这意味着，对于每个<code>设计模式</code>，并没有完全确定的规范，不同的人有着不同的经验，也会有不同的实现。这意味着<code>设计模式</code>本质是一种思想，是不同实现中的相同部分，而思想本身很难用文字来完整表述。其次，笔记很容易变成网络上已有资料的复制。因为从头思考每个概念，琢磨其间关系，设计表达，本身事件很麻烦的事情，为了偷懒就会去复制别人的表述。最后，笔者也不一定保证自己的理解是准确的。但在刚刚学习完，一定是印象最深刻的。所以趁此机会做下记录。</p>
+<p><code>设计模式</code>是基于<code>面向对象编程(Object-Oriented Programming, OOP)</code>的。对于面向对象的思想和四大特性在此不赘述，直接从对象之间关系开始聊起。</p>
+<h2 id="对象之间的关系"><a href="#对象之间的关系" class="headerlink" title="对象之间的关系"></a>对象之间的关系</h2><p>对象&#x2F;类之间（因为大部分类最后都会实例化，因此不加区分地使用类&#x2F;对象）的关系包括，<code>实现</code>、<code>继承</code>、<code>依赖</code>、<code>关联</code>、<code>聚合</code>、<code>组合</code>。</p>
+<p>值得一提的是，不同编程语言对于<code>OOP</code>的支持也不同，例如<code>Python</code>中要定义抽象类&#x2F;接口，需要继承<code>ABC抽象基类</code>，而<code>Java</code>中可以通过<code>abstract class</code>来定义抽象类，通过<code>interface</code>来定义接口；<code>Java</code>中可以定义内部类，而<code>PHP</code>则不支持内部类。对象之间的关系是脱离于语言的，本文以<code>Java</code>为例，描述对象之间的关系在<code>Java</code>中的体现。</p>
+<h3 id="继承和实现"><a href="#继承和实现" class="headerlink" title="继承和实现"></a>继承和实现</h3><p><code>继承</code>和<code>实现</code>的特征比较明显，容易区分。</p>
+<p><code>继承</code>通常描述两个类中，其中一个类可以复制另一个类的<code>属性/成员变量</code>和<code>方法</code>。</p>
+<p>通常来说，继承是为了提高代码复用性。如果有A、B两个类，在他们的定义中，都有一些相同的属性和方法，那么可以将这部分属性和方法抽取到C类中，并将A、B类都继承自C，那么A、B就拥有了C中定义的属性和方法。如果修改C类，那么A、B类会相应发生变动。而A&#x2F;B中，可以在C的基础上新增<code>属性</code>和<code>方法</code>，或者重写C中定义的<code>方法</code>，以此来区分C和A&#x2F;B。C和A、B类的关系就是继承，称C为<code>父类</code>，A&#x2F;B为<code>子类</code>。</p>
+<p><code>实现</code>通常描述一个<code>类</code>实现了另一个<code>接口</code>的所有方法的过程。当一个<code>类</code>实现了一个<code>接口</code>时，它必须提供<code>接口</code>中定义的所有方法的具体实现。<code>接口</code>通常是一个特殊的<code>类</code>，不能包含<code>属性</code>、<code>构造方法</code>，且方法只有签名声明。</p>
+<p><code>接口</code>通常定义不同对象间交互的规范，而<code>实现</code>则是提供规范的具体实施过程。如果有两个类A、B，在他们定义中，包含同名且功能类似但不完全相同的方法，则可以将这些同名函数抽取到一个<code>接口</code>C中，且只需声明函数签名即可。通过实现接口C，A&#x2F;B必须提供C中声明的所有方法的具体实现。</p>
+<p>从此处看，<code>实现</code>本身没有提供额外的功能，也没有降低代码的冗余度。但可以利用多态的动态性，降低代码的耦合度。可以将代码中对A、B类的引用，都改成对接口C的引用。接口C的引用，可以指向所有实现了接口C的一堆类。调用C中声明的方法时，会动态根据对象具体类型，调用对应的实现。通过改成对接口C的引用，使得用到A、B的地方，不仅仅局限于只能使用A&#x2F;B。有一种某个变量的类型是一堆具体类的集合感觉。</p>
+<h3 id="依赖、关联、聚合、组合"><a href="#依赖、关联、聚合、组合" class="headerlink" title="依赖、关联、聚合、组合"></a>依赖、关联、聚合、组合</h3><p><code>依赖</code>也是容易区分的。因为其他所有的关系，都必然是<code>依赖</code>关系。如果修改一个类的定义可能会造成另一个类的变化，那么这两个类之间就存在<code>依赖</code>关系。</p>
+<p>在一个类的代码中，只要见到了另一个类的代码，通常这两个类就是依赖关系。但不包含另一个类的代码，也可能是<code>依赖</code>关系，例如对象A依赖了对象B，而对象B依赖了对象C。根据定义，修改C的代码，可能会导致B的行为变动，从而引起对象A的变化。这样看大部分类之间都包含<code>依赖</code>关系。幸运的是，对于大部分的<code>依赖关系</code>我们不需要刻意关注。</p>
+<p><code>关联</code>可视为一种特殊类型的<code>依赖</code>，即一个对象总是拥有访问与其交互的对象的权限，而简单的依赖关系并不会在对象间建立永久性的联系。</p>
+<p>在<code>Java</code>中，方法形参、局部变量是存在于栈中，方法返回后，其引用就会随着弹出而销毁。因此这种关系通常是临时的，通常使用<code>依赖</code>描述。而<code>成员变量</code>，在对象整个生命周期、不同方法中，都可以访问，关系是永久性的，因此使用<code>关联</code>描述。</p>
+<p>在<code>关联</code>中，又可以细分为<code>聚合</code>和<code>组合</code>。在许多教材中，<code>组合</code>是一种特殊的<code>聚合</code>，即<code>聚合</code>包含<code>组合</code>。但在实际术语使用中，<code>聚合</code>通常指<code>聚合</code>中不包含<code>组合</code>的那部分，因此通俗地说两者不是包含关系，而是并列关系。</p>
+<p><code>关联</code>描述了一个对象A，通过成员变量的形式，拥有了另一个对象B的访问权限。在此基础上，如果对象A控制着对象B的生命周期，则A与B是<code>组合</code>关系，否则则是<code>聚合</code>关系。</p>
+<p>常见的控制生命周期的形式，便是在构造函数中对成员变量进行实例化赋值，并且不提供<code>setter</code>方法。如此对象A在实例化时，便会完成对成员变量B的实例化，并且外部无法去替换成员变量的引用。对象A销毁时，由于全局不会再有对B的引用，因此B也会被销毁。<code>组</code>合体现出A和B“同生共死”的关系。</p>
+<p>如果成员变量可以被外部替换，或者两者的生命周期可以不一致时，通常就是<code>聚合</code>关系。值得一提的是，<code>Spring</code>框架中，通过<code>@Autowired</code>注解自动注入的成员变量，通常是<code>聚合</code>关系，因为其生命周期不一致，被引用对象也可以作为其他对象的成员变量，并且也可以通过某些方式替换这些成员变量。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>对象之间的关系包括<code>实现</code>、<code>继承</code>、<code>依赖</code>、<code>关联</code>、<code>聚合</code>、<code>组合</code>。</p>
+<p>其中<code>实现</code>、<code>继承</code>容易区分和识别。</p>
+<p><code>依赖</code>是最弱的关系表示，剩下五种关系都是<code>关联</code>关系。</p>
+<p><code>关联</code>在<code>Java</code>中，通常使用成员变量来表示。他包含两种具体情况。如果两个对象同生共死，则为<code>组合关系</code>，否则则是<code>聚合</code>关系。</p>
 
                 
               </div>
@@ -309,38 +305,6 @@
             <div>
               <div class="post-metas my-3">
   
-    <div class="post-meta mr-3 d-flex align-items-center">
-      <i class="iconfont icon-category"></i>
-      
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/Java/" class="category-chain-item">Java</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-    </div>
-  
-  
-    <div class="post-meta">
-      <i class="iconfont icon-tags"></i>
-      
-        <a href="/tags/Java/">#Java</a>
-      
-        <a href="/tags/SpringBoot/">#SpringBoot</a>
-      
-        <a href="/tags/Lazy-Initialization/">#Lazy Initialization</a>
-      
-    </div>
   
 </div>
 
@@ -350,8 +314,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>SpringBoot-Lazy_Initialization_PartII</div>
-      <div>http://example.com/2023/05/26/SpringBoot-Lazy-Initialization-PartII/</div>
+      <div>Design-Pattern-Relationships-Between-Objects</div>
+      <div>http://example.com/2023/06/12/Design-Pattern-Relationships-Between-Objects/</div>
     </div>
     <div class="license-meta">
       
@@ -363,7 +327,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年5月26日</div>
+          <div>2023年6月12日</div>
         </div>
       
       
@@ -395,18 +359,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/06/12/Design-Pattern-Relationships-Between-Objects/" title="Design-Pattern-Relationships-Between-Objects">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Design-Pattern-Relationships-Between-Objects</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/05/17/Maven-compilation/" title="Maven-compilation">
-                        <span class="hidden-mobile">Maven-compilation</span>
+                      <a href="/2023/05/26/SpringBoot-Lazy-Initialization-PartII/" title="SpringBoot-Lazy_Initialization_PartII">
+                        <span class="hidden-mobile">SpringBoot-Lazy_Initialization_PartII</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
