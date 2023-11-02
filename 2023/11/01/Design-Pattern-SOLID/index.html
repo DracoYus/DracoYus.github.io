@@ -16,23 +16,23 @@
   <meta name="author" content="DracoYu">
   <meta name="keywords" content="学习笔记,Java,JavaScript,后端,前端">
   
-    <meta name="description" content="最近工作比较繁忙，没有太多时间学习和写笔记，忙里偷闲写下了这篇。 在大型Java项目中，通常会有多个主应用。主应用是指具有诸如public static void main程序入口，可以被java执行的模块。Maven概念中一个packing属性不为pom的pom文件对应一个模块，可以单独编译、测试和打包。与应用相对的概念是库，不包含程序入口，但可以提供特定功能和服务被其他应用调用。在一个项目中，">
+    <meta name="description" content="距离上一次写博客已经过去了三个多月，一直忙于工作。 上次说到，设计原则是使得代码拥有更好复用性和拓展性的指南针，是一种基于优秀代码的经验总结。既然是经验总结，不同学者必然存在着不同归纳角度。上次提到的封装变化、面向接口而不是面向实现、组合优于继承原则是一种归纳，这次要讲的SOLID原则也是一种归纳。这些原则本是并列关系，但实际又会觉得互相关联、交融。因为本身可能都是对同一件事情，不同角度的描述。">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Maven-Single-Module-Compilation">
-<meta property="og:url" content="http://example.com/2023/07/18/Maven-Single-Module-Compilation/index.html">
+<meta property="og:title" content="Design-Pattern-SOLID">
+<meta property="og:url" content="http://example.com/2023/11/01/Design-Pattern-SOLID/index.html">
 <meta property="og:site_name" content="DracoYu&#39;s MindCache">
-<meta property="og:description" content="最近工作比较繁忙，没有太多时间学习和写笔记，忙里偷闲写下了这篇。 在大型Java项目中，通常会有多个主应用。主应用是指具有诸如public static void main程序入口，可以被java执行的模块。Maven概念中一个packing属性不为pom的pom文件对应一个模块，可以单独编译、测试和打包。与应用相对的概念是库，不包含程序入口，但可以提供特定功能和服务被其他应用调用。在一个项目中，">
+<meta property="og:description" content="距离上一次写博客已经过去了三个多月，一直忙于工作。 上次说到，设计原则是使得代码拥有更好复用性和拓展性的指南针，是一种基于优秀代码的经验总结。既然是经验总结，不同学者必然存在着不同归纳角度。上次提到的封装变化、面向接口而不是面向实现、组合优于继承原则是一种归纳，这次要讲的SOLID原则也是一种归纳。这些原则本是并列关系，但实际又会觉得互相关联、交融。因为本身可能都是对同一件事情，不同角度的描述。">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-07-18T09:03:20.000Z">
-<meta property="article:modified_time" content="2023-07-20T08:18:05.951Z">
+<meta property="article:published_time" content="2023-11-01T02:20:18.000Z">
+<meta property="article:modified_time" content="2023-11-02T07:27:38.912Z">
 <meta property="article:author" content="DracoYu">
-<meta property="article:tag" content="Maven">
-<meta property="article:tag" content="Single Module Compilation">
+<meta property="article:tag" content="DesignPattern">
+<meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>Maven-Single-Module-Compilation - DracoYu&#39;s MindCache</title>
+  <title>Design-Pattern-SOLID - DracoYu&#39;s MindCache</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -198,7 +198,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Maven-Single-Module-Compilation"></span>
+            <span id="subtitle" data-typed-text="Design-Pattern-SOLID"></span>
           
         </div>
 
@@ -209,8 +209,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-07-18 17:03" pubdate>
-          2023年7月18日 下午
+        <time datetime="2023-11-01 10:20" pubdate>
+          2023年11月1日 上午
         </time>
       </span>
     
@@ -221,7 +221,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.9k 字
+          3.5k 字
         
       </span>
     
@@ -232,7 +232,7 @@
         
         
         
-          25 分钟
+          30 分钟
         
       </span>
     
@@ -270,51 +270,59 @@
         <div id="board">
           <article class="post-content mx-auto">
             <!-- SEO header -->
-            <h1 style="display: none">Maven-Single-Module-Compilation</h1>
+            <h1 style="display: none">Design-Pattern-SOLID</h1>
             
             
               <div class="markdown-body">
                 
-                <p>最近工作比较繁忙，没有太多时间学习和写笔记，忙里偷闲写下了这篇。</p>
-<p>在大型<code>Java</code>项目中，通常会有多个主应用。<strong>主应用</strong>是指具有诸如<code>public static void main</code>程序入口，可以被<code>java</code>执行的模块。<code>Maven</code>概念中一个<code>packing</code>属性不为<code>pom</code>的<code>pom</code>文件对应一个模块，可以单独编译、测试和打包。与应用相对的概念是<strong>库</strong>，不包含程序入口，但可以提供特定功能和服务被其他应用调用。在一个项目中，不同主应用之间独立运行又相互协作。例如常规<code>SpringBoot</code>应用提供页面操作接口，可以添加自动任务，而自动任务应用间隔扫描任务列表，并根据任务状态来执行对应操作。</p>
-<p>当修改代码的范围只影响项目中一个应用，只需打包部署对应应用及其依赖即可。</p>
-<p>在<code>IDEA</code>的<code>Maven</code>菜单界面中，有列出项目中的所有<code>pom</code>文件。如果选择其中某个主应用执行<code>mvn clean package</code>，则可能会提示无法找到依赖的项目中的其他模块，或者打包后发现受影响的依赖库没有更新。</p>
-<p>解决问题最简单的方法是在所有模块的根<code>pom</code>执行<code>mvn clean package</code>，这样所有的模块都会进行编译。当然会得到正确的<code>jar</code>包，但不受影响的库和应用也进行了重新编译，增加了编译过程的耗时。</p>
-<p>会出现这种问题的原因是，模块之间并不互相认识，因此在编译时无法区分其依赖是项目中的其他模块，还是在本地库中的第三方模块。为了说明这个情况，需要了解<strong>项目继承</strong>和<strong>项目聚合</strong>。</p>
-<h2 id="项目继承"><a href="#项目继承" class="headerlink" title="项目继承"></a>项目继承</h2><p>项目继承(Project Inheritance)<a target="_blank" rel="noopener" href="https://maven.apache.org/guides/introduction/introduction-to-the-pom.html#project-inheritance">官方文档</a>。</p>
-<p>通俗来说，项目继承就是在<code>pom</code>文件中，通过 <code>&lt;parent&gt;</code>标签指定父<code>pom</code>。具体可以通过<code>artifactId</code>或相对路径来指定。父<code>pom</code>可以来自于同一个项目，也可以来自其他第三方<code>pom</code>。如果来自于同一项目且使用<code>artifactId</code>时，则需要父<code>pom</code>文件位于子<code>pom</code>的上一级目录。</p>
-<p>项目继承使得子<code>pom</code>可以继承父<code>pom</code>中的标签属性值。当然也不是所有的属性都会被继承，可以被继承的属性可以参考官方文档。</p>
-<blockquote>
-<p>Elements in the POM that are merged are the following:</p>
-<ul>
-<li>dependencies</li>
-<li>developers and contributors</li>
-<li>plugin lists (including reports)</li>
-<li>plugin executions with matching ids</li>
-<li>plugin configuration</li>
-<li>resources</li>
-</ul>
+                <p>距离上一次写博客已经过去了三个多月，一直忙于工作。</p>
+<p>上次说到，设计原则是使得代码拥有更好复用性和拓展性的指南针，是一种基于优秀代码的经验总结。既然是经验总结，不同学者必然存在着不同归纳角度。上次提到的<strong>封装变化</strong>、<strong>面向接口而不是面向实现</strong>、<strong>组合优于继承</strong>原则是一种归纳，这次要讲的<strong>SOLID</strong>原则也是一种归纳。这些原则本是并列关系，但实际又会觉得互相关联、交融。因为本身可能都是对同一件事情，不同角度的描述。</p>
+<p>SOLID原则是五条原则的简称，首次提出于罗伯特·马丁的著作《敏捷软件开发：原则、模式与实践》。每次遇到这类把多个原则或者理论，缩写成某个单词，我总是想，这是作者先想出来，然后发现这些原则凑巧就能拼成一个单词，还是在想原则名的时候，就在往这个单词上凑。</p>
+<h2 id="Single-Responsibility-Principle-单一职责原则"><a href="#Single-Responsibility-Principle-单一职责原则" class="headerlink" title="Single Responsibility Principle 单一职责原则"></a>Single Responsibility Principle 单一职责原则</h2><blockquote>
+<p>一个类应该只有一个引起它变化的原因，或者说一个类应该只有一个职责。</p>
 </blockquote>
-<p>这意味着如果在子<code>pom</code>中，不显式地给某个属性赋值时，会默认使用父<code>pom</code>中的值。常见的作用是<a target="_blank" rel="noopener" href="https://maven.apache.org/guides/introduction/introduction-to-dependency-mechanism.html#dependency-management">依赖管理</a>。如果项目中多个模块会使用到同一个第三方库，依赖的版本不一致可能会出现问题。此时在父<code>pom</code>中进行了依赖版本的设定，那么在子<code>pom</code>中无需指定依赖的版本，会默认使用父<code>pom</code>中设定的版本。这样可以在单个<code>pom</code>文件中，进行整个项目用到的第三方库的版本管理。</p>
-<h2 id="项目聚合"><a href="#项目聚合" class="headerlink" title="项目聚合"></a>项目聚合</h2><p>项目聚合（Project Aggregation）<a target="_blank" rel="noopener" href="https://maven.apache.org/guides/introduction/introduction-to-the-pom.html#project-aggregation">官方文档</a>。</p>
-<p>通俗来说，项目聚合就是在父<code>pom</code>文件中，通过<code>&lt;modules</code>&gt;标签指定其包含的模块。当在父<code>pom</code>处调用<code>maven</code>命令，如<code>mvn clean install</code>，则会递归地在其所有模块中调用相同命令。在项目根<code>pom</code>中调用可以编译所有模块使用的就是这个机制。此外还需要将父<code>pom</code>的<code>&lt;packaging&gt;</code>标签属性设置为<code>pom</code>。</p>
-<p>值得一提的是，虽然使用了父<code>pom</code>这个概念，但项目聚合本身不必须进行项目继承。也就是在子<code>pom</code>中不必须指定<code>&lt;parent&gt;</code>。但通常项目聚合和项目继承会一起使用。其中项目继承常用来控制版本，项目聚合用来管理不同模块的递归编译。</p>
-<h2 id="问题原因"><a href="#问题原因" class="headerlink" title="问题原因"></a>问题原因</h2><p>在主应用所在的<code>pom</code>处执行<code>mvn clean package</code>，由于其没有子模块，因此不符合项目聚合的条件。所以并不知道其依赖来自于同一个项目，还是本地库。默认所有依赖都会去本地库中查找。如果本地库中存在同一个项目的模块上次打包的<code>jar</code>包，则会使用这个<code>jar</code>包，否则则会报错无法找到依赖。由于上次打包的<code>jar</code>包并不包含项目中现有的代码变动，因此会产生明明代码改了但没生效的情况。</p>
-<p>一个直观的想法便是，在编译某个主应用前，手动将所有其他依赖的项目中的模块重新打包安装到本地库。确实可以解决问题，但这样会麻烦，而且模块之间的依赖和依赖传递关系靠手动分析很容易出错。</p>
-<p>这个问题显然和项目聚合相关，而不是项目继承。出现这个问题的原因是，项目聚合只能在父<code>pom</code>处调用。父<code>pom</code>可以通过递归访问子模块信息，来组织子模块间的依赖关系。子<code>pom</code>无法通过递归访问父<code>pom</code>来了解父<code>pom</code>的其他模块信息。前文提到项目聚合不必须进行项目继承，也就是子<code>pom</code>可能都不知道父<code>pom</code>是谁，父<code>pom</code>有没有自己这个孩子。也就是说项目聚合的递归调用只能是从根到子节点，而不能是子节点向根（<code>pom</code>通过树的形式组织）。子<code>pom</code>所在的模块，项目中的其他模块对其来说是不可见的。</p>
-<h2 id="解决方法"><a href="#解决方法" class="headerlink" title="解决方法"></a>解决方法</h2><p>要能满足只编译主应用及其依赖模块，根据项目聚合的特性，只能在主应用和依赖模块的共同祖先节点处执行<code>maven</code>命令。不管项目具体结构如何，根目录一定满足这个共同祖先这个要求。所以为了解决这个问题通常还是会在根<code>pom</code>处执行<code>maven</code>命令。</p>
-<p>而在根<code>pom</code>直接执行<code>maven</code>命令，默认行为会对所有模块执行。因此<code>maven</code>提供了一组参数来控制这个过程。</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs mvn">-pl, --projects<br>        Comma-delimited list of specified reactor projects to build instead of all projects. A project can be specified by [groupId]:artifactId or by its relative path<br>-am, --also-make<br>        If project list is specified, also build projects required by the list<br></code></pre></td></tr></table></figure>
-
-<p><code>-pl</code>参数指定了编译的具体模块。指定后<code>maven</code>命令不再对所有模块执行。-am参数指定了目标模块如果依赖项目中其他模块，那会递归编译。</p>
-<p>如果目标应用<code>pom</code>和根<code>pom</code>在文件目录上不是直接父子目录关系，通常使用<code>[groupId]:artifactId</code>的方式来指定具体模块。通常<code>[groupId]</code>可以省略，所以常见的写法是。</p>
-<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs shell">mvn clean install -pl :some-app -am<br></code></pre></td></tr></table></figure>
-
-<p>把<code>some-app</code>替换为具体目标应用的<code>groupId</code>即可。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><code>maven</code>中项目继承和项目聚合是两个非常常用的功能。但由于都涉及父子关系的概念，很容易将两者混淆。</p>
-<p>项目继承是指子<code>pom</code>通过 <code>&lt;parent&gt;</code>标签指定父<code>pom</code>。这样子<code>pom</code>就可以从父<code>pom</code>中获得很多属性的默认值。例如在依赖管理中，可以在父<code>pom</code>中指定依赖的版本，在子<code>pom</code>中就不需要指定依赖的版本号。</p>
-<p>项目聚合是指在一个父<code>pom</code>中指定其拥有的模块，并将<code>&lt;packaging&gt;</code>标签属性设置为<code>pom</code>。此后在父<code>pom</code>中调用<code>maven</code>命令时，默认会在所有子模块中递归执行。执行顺序取决于子模块间的依赖关系。</p>
-<p>项目聚合默认会对所有子模块执行，如果只相对其中某个应用执行，则可以通过<code>-pl am</code>参数来指定目标模块。</p>
+<p><strong>改变的原因</strong>非常拗口，这是马丁对于职责的定义。使用更为通俗的说法，一个类应该只有一组互相关联的功能和属性（好像更复杂了）。如果一个类里面，不同的方法和属性没有互相依赖的关系，那么可以认为这个类具有了多个职责，可以将这些没有依赖的平行关系，拆分成多个类。</p>
+<p>但这个原则最令人困惑，也是最模棱两可的地方，是很难界定某些功能和属性是否归属于相同职责。职责的界定依赖于人们对功能的主观理解，和划分的粒度。</p>
+<p>不论如何，这个原则所表达的思想是，一个类里如果代码太多，可能就需要考虑是不是能拆成多个类。这与<strong>封装变化原则</strong>有相似的地方。封装变化原则将变化部分抽取为方法或类。有一种类内变化的部分负责一个职责，不变的部分负责另一个职责的感觉，最终实现单一职责原则的效果。</p>
+<p>拆分成多个类的好处是：</p>
+<ol>
+<li>提高代码可读性。当你想要了解一个功能时，需要关注的内容变得更少</li>
+<li>降低变更风险。修改代码时，可以减少影响到其他职责的风险。</li>
+<li>增加代码的复用性。拆分出的类可以在多处被使用，而不用担心引入了过多不需要的功能。</li>
+</ol>
+<h2 id="Open-x2F-closed-Principle-开闭原则"><a href="#Open-x2F-closed-Principle-开闭原则" class="headerlink" title="Open&#x2F;closed Principle 开闭原则"></a>Open&#x2F;closed Principle 开闭原则</h2><blockquote>
+<p>对于扩展，类应该是“开放”的；对于修改，类则应是“封闭”的</p>
+</blockquote>
+<p>开闭原则关注在对代码扩展功能时，保持原有功能不发生变动。<strong>开放</strong>意味着拓展功能应该是容易且方便的，<strong>封闭</strong>意味着拓展时不应该改动已有代码的运行结果。</p>
+<p>代码开发过程中，经常性会对已有功能进行拓展。拓展可能会对已有功能进行破坏，需要通过回归测试来确认改动的影响。一种解决办法是，每次拓展功能时都新增代码，不使用任何已经存在的代码。这样可以确保拓展的功能与源代码互不影响，但会导致代码复用率低。编程通常采用模块化编程和分层模型，就是为了提高代码的复用率。因此基本不采用这种办法。</p>
+<p>比较合理的解决办法是，可以通过<strong>定义接口</strong>的形式，在方法中使用接口类型来接受变量。这样无需改动方法体本身，通过改变传入方法的参数，即可改变方法的实际行为，对功能进行了拓展，原有的功能也不会受到影响。这其实也体现了<strong>面向接口而不是面向实现</strong>的原则。另一种方法是<strong>使用继承</strong>，使得子类可以复用父类中的定义的方法，并在父类基础上进行调整。</p>
+<p>开闭原则最关键的好处：</p>
+<p>1.减少了回归测试的任务量</p>
+<p>2.提高了代码的复用率</p>
+<p>3.拓展新功能方便。如果在定义方法&#x2F;成语变量时，使用接口作为参数类型，那么拓展功能只需改变传入方法或构造函数的参数，即可完成功能拓展。</p>
+<h2 id="Liskov-Substitution-Principle-里氏替换原则"><a href="#Liskov-Substitution-Principle-里氏替换原则" class="headerlink" title="Liskov Substitution Principle 里氏替换原则"></a>Liskov Substitution Principle 里氏替换原则</h2><blockquote>
+<p>派生类（子类）对象可以在程式中代替其基类（超类）对象。</p>
+</blockquote>
+<p>里氏替换原则是针对继承特性的原则。程序员通过继承，可以进行代码复用，在子类中复用其父类中定义的方法。在代码中，主要是通过调用父类中定义的公共方法，使用父类实例。里氏替换原则要求使用父类对象的地方，替换成子类对象，程序表现一致。</p>
+<p>根据多态的特性，子类的对象可以赋值给父类的变量类型，并且只允许调用父类中定义的公共方法。如果子类中对父类定义的方法进行了重写，则实际会调用子类中重写的方法。要保证替换后程序行为一致，这意味着父类中实现的公共方法，不应该被子类重写。</p>
+<p>稍宽松些，允许子类重写，需要保证逻辑符合父类中的定义，其方法的参数列表应该一致或更宽松，其返回类型应该兼容父类方法的返回类型。也就是父类方法中接受的参数，需要可以赋值给子类方法，子类方法中返回的对象，需要可以赋值给父类的返回类型。还有子类不能抛出比父类更多的异常类型、子类不应该加强其前置条件、子类不能削弱其后置条件等等要求。</p>
+<p>由于在子类中重写父类方法会处处受限，因此更多的做法是不重写。或者直接将父类的方法定义为抽象方法，这样代码中就不会存在父类对象（抽象类不可实例化），自然也不涉及替换的问题了。</p>
+<p>在开闭原则中提到，继承是一种遵循开闭原则的拓展类功能的方法。在代码中使用多态特性的地方很多，里氏替换原则保证了这些使用多态的地方，不会因为实际对象类型是父类还是子类，影响程序正常运行。在组合优于继承中提到，组合通常能达到和继承相同的作用，同时更灵活，但这也不是绝对的。实话说这很让人感到疑惑，前面说继承不好，现在又说使用继承应该注意的事项，不用不就行了吗？经验总结就会出现的情况是，归纳时通常只是针对某些特殊情况，虽然归纳本身已经是宽泛的理解。组合的优势在于，可以避免多维度继承带来的类数量爆炸，避免选择性继承的难题。如果不涉及多级继承，或者组合的对象数量不多，继承通常也是可以的选择。实际开发中可以根据继承层级、功能是否可分，以及是否需要动态性，选择使用组合和继承。</p>
+<h2 id="Interface-Segregation-Principle-接口隔离原则"><a href="#Interface-Segregation-Principle-接口隔离原则" class="headerlink" title="Interface Segregation Principle 接口隔离原则"></a>Interface Segregation Principle 接口隔离原则</h2><blockquote>
+<p>客户端不应被强迫依赖于其不使用的方法</p>
+</blockquote>
+<p>尽量缩小接口的范围，使得客户端的类不必实现其不需要的行为。</p>
+<p>不同于继承，实现可以一次性实现多个接口，因此可以将功能过于复杂的接口，拆分成多个简单接口。这样在实现时可以选择性的实现，避免去实现那些用不到的方法（接口要求其实现类必须实现其定义的抽象方法）。</p>
+<p>这一看和单一职责原则很像，都在表述需要将复杂的东西进行细分。但是单一职责原则针对类，而接口隔离原则针对接口。如果没有做好接口隔离原则，对接口进行细分，并且类中实现了接口定义的方法，那么通常这个类也是不满足单一职责原则的。</p>
+<h2 id="Dependency-Inversion-Principle-依赖倒置原则"><a href="#Dependency-Inversion-Principle-依赖倒置原则" class="headerlink" title="Dependency Inversion Principle 依赖倒置原则"></a>Dependency Inversion Principle 依赖倒置原则</h2><blockquote>
+<p>高层次的类不应该依赖于低层次的类。 两者都应该依赖于抽象接口。 抽象接口不应依赖于具体实现。 具体实现应该依赖于抽象接口</p>
+</blockquote>
+<p>常规开发模式下，高层次类会调用低层次类提供的函数，体现出高层次类依赖低层次类的关系。在这种模式下，如果对低层次类进行改动，可能会对高层次类的运行产生影响。或者需要替换另一种低层次类的实现，例如数据不是从本地硬盘，而是从网络中获取，需要变动高层次类中的相关代码。</p>
+<p>依赖倒置的<strong>倒置</strong>，指的就是改变这种高层次类直接依赖低层次类的关系。通过增加抽象层，依赖方向变成了两者都依赖抽象层。抽象层通常是通过接口，定义一组通用的方法或协议。高层次类直接依赖接口，低层次类通过实现的方式依赖接口。这样子分层的设计降低了层与层之间的耦合度。当需要更新低层次类，或者拓展出新的低层次类，只要保证低层次类实现了接口，在高层次类中的调用代码就无需改变。这也体现了开闭原则。</p>
+<p>此外，由于高层次类中通过接口依赖低层次类。程序在运行时需要确定被引用的具体低层次类对象，这个创建低层次类对象，并将其赋值给高层次类对象的过程，通常是通过容器框架的依赖注入功能。这也和之前聊到的<code>Spring</code>框架的功能联系到了一起。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>SOLID原则是一组优秀代码的经验总结。</p>
+<p>单一职责原则是指，一个类只负责一系列相关功能，需要把过于复杂的类，根据功能划分，拆分成小的类。开闭原则是指程序设计，应该有良好的拓展性，拓展的同时又能保证已有功能不受影响，通常是通过继承或接口来实现。里氏替换原则限制了子类尽量不要重写父类中实现的公共方法，避免将子类对象赋值给父类类型时，可能会导致程序出错的情况。接口隔离是指定义接口时，如果存在实现类实现了不必要的方法的情况，可以考虑把接口进行拆分，使得实现类可以在实现时有选择进行实现。依赖倒置原则是指，高层次类不应该直接依赖低层次类，而是将依赖关系改成高层次类和低层次类都依赖于抽象类。在运行时，这些类的实际依赖通常通过框架的依赖注入来完成。</p>
+<p>虽然这些原则广为人知，在写代码时仍要根据实际情况，决定是否遵循原则。例如可以思考未来是否会对其进行同类型功能的拓展；一个类行数比较多了是否要进行重构；改了一处代码，处处受影响。遇到这些情况时，就应该想起这些设计原则，并用于指导代码编写和重构。</p>
 
                 
               </div>
@@ -333,7 +341,7 @@
     
       <span class="category-chain">
         
-  <a href="/categories/Maven/" class="category-chain-item">Maven</a>
+  <a href="/categories/DesignPattern/" class="category-chain-item">DesignPattern</a>
   
   
 
@@ -348,9 +356,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/Maven/">#Maven</a>
+        <a href="/tags/DesignPattern/">#DesignPattern</a>
       
-        <a href="/tags/Single-Module-Compilation/">#Single Module Compilation</a>
+        <a href="/tags/Java/">#Java</a>
       
     </div>
   
@@ -362,8 +370,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Maven-Single-Module-Compilation</div>
-      <div>http://example.com/2023/07/18/Maven-Single-Module-Compilation/</div>
+      <div>Design-Pattern-SOLID</div>
+      <div>http://example.com/2023/11/01/Design-Pattern-SOLID/</div>
     </div>
     <div class="license-meta">
       
@@ -375,7 +383,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年7月18日</div>
+          <div>2023年11月1日</div>
         </div>
       
       
@@ -407,18 +415,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/11/01/Design-Pattern-SOLID/" title="Design-Pattern-SOLID">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Design-Pattern-SOLID</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/07/04/JVM-String-Pool/" title="JVM-String-Pool">
-                        <span class="hidden-mobile">JVM-String-Pool</span>
+                      <a href="/2023/07/18/Maven-Single-Module-Compilation/" title="Maven-Single-Module-Compilation">
+                        <span class="hidden-mobile">Maven-Single-Module-Compilation</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
