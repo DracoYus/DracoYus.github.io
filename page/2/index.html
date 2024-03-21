@@ -61,7 +61,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -105,7 +105,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/">
+              <a class="nav-link" href="/" target="_self">
                 <i class="iconfont icon-home-fill"></i>
                 <span>首页</span>
               </a>
@@ -117,7 +117,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/archives/">
+              <a class="nav-link" href="/archives/" target="_self">
                 <i class="iconfont icon-archive-fill"></i>
                 <span>归档</span>
               </a>
@@ -129,7 +129,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/categories/">
+              <a class="nav-link" href="/categories/" target="_self">
                 <i class="iconfont icon-category-fill"></i>
                 <span>分类</span>
               </a>
@@ -141,7 +141,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/tags/">
+              <a class="nav-link" href="/tags/" target="_self">
                 <i class="iconfont icon-tags-fill"></i>
                 <span>标签</span>
               </a>
@@ -153,7 +153,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/about/">
+              <a class="nav-link" href="/about/" target="_self">
                 <i class="iconfont icon-user-fill"></i>
                 <span>关于</span>
               </a>
@@ -225,17 +225,17 @@
     
     
     <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
+      <h2 class="index-header">
         
         <a href="/2023/05/12/Git-Commit-Message/" target="_self">
           Git-Commit-Message
         </a>
-      </h1>
+      </h2>
 
       
       <a class="index-excerpt index-excerpt__noimg" href="/2023/05/12/Git-Commit-Message/" target="_self">
         <div>
-          Git在commit时，必须输入commit message，来表示对提交内容的说明。没有则无法提交。 理论上，commit message可以输入任意内容。但如果参与多人协作开发和持续开发，就会有相应的规范，帮助程序员快速理解别人写的提交，或者回顾自己以前提交的作用。 目前应用最为广泛的规范是前端框架Angular提出的Angular提交信息规范（简称规范）。 Angular Commit Me
+          Git在commit时，必须输入commit message，来表示对提交内容的说明。没有则无法提交。 理论上，commit message可以输入任意内容。但如果参与多人协作开发和持续开发，就会有相应的规范，帮助程序员快速理解别人写的提交，或者回顾自己以前提交的作用。 目前应用最为广泛的规范是前端框架Angular提出的Angular提交信息规范（简称规范）。 Angular Commit
         </div>
       </a>
 
@@ -288,17 +288,17 @@
     
     
     <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
+      <h2 class="index-header">
         
         <a href="/2023/05/04/SpringBoot-Lazy-Initialization/" target="_self">
           SpringBoot-Lazy-Initialization
         </a>
-      </h1>
+      </h2>
 
       
       <a class="index-excerpt index-excerpt__noimg" href="/2023/05/04/SpringBoot-Lazy-Initialization/" target="_self">
         <div>
-          在SpringBoot-Testing提到，使用Junit测试SpringBoot项目时，需要使用@SpringBootTest来创建一个Spring容器。而当@SpringBootTest标注的测试类没有使用内嵌@Configuration注解时，会自动使用@SpringBootConfiguration上的配置。  Automatically searches for a @SpringBoo
+          在SpringBoot-Testing提到，使用Junit测试SpringBoot项目时，需要使用@SpringBootTest来创建一个Spring容器。而当@SpringBootTest标注的测试类没有使用内嵌@Configuration注解时，会自动使用@SpringBootConfiguration上的配置。  Automatically searches for a @SpringB
         </div>
       </a>
 
@@ -353,17 +353,17 @@
     
     
     <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
+      <h2 class="index-header">
         
         <a href="/2023/04/27/Git-Conflict/" target="_self">
           Git-Conflict
         </a>
-      </h1>
+      </h2>
 
       
       <a class="index-excerpt index-excerpt__noimg" href="/2023/04/27/Git-Conflict/" target="_self">
         <div>
-          最近在工作中频繁使用到了Git。虽然之前基本把《Pro Git》读完了，但在实际使用中还是遇到不少问题。 究其原因，这可能因为国内的Git教程普遍基于命令行，并且只教最基础的使用。而大部分的开发人员往往使用集成在IDE中的Git，并且对于Git背后的原理和设计思路并不了解。 上一篇讲到当未commit的修改和将要进入的分支有conflict时，该怎么保存这些修改。这里将进入的分支可以是checko
+          最近在工作中频繁使用到了Git。虽然之前基本把《Pro Git》读完了，但在实际使用中还是遇到不少问题。 究其原因，这可能因为国内的Git教程普遍基于命令行，并且只教最基础的使用。而大部分的开发人员往往使用集成在IDE中的Git，并且对于Git背后的原理和设计思路并不了解。 上一篇讲到当未commit的修改和将要进入的分支有conflict时，该怎么保存这些修改。这里将进入的分支可以是che
         </div>
       </a>
 
@@ -416,17 +416,17 @@
     
     
     <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
+      <h2 class="index-header">
         
         <a href="/2023/04/19/Git-Stash/" target="_self">
           Git-Stash
         </a>
-      </h1>
+      </h2>
 
       
       <a class="index-excerpt index-excerpt__noimg" href="/2023/04/19/Git-Stash/" target="_self">
         <div>
-          为了简化本地测试代码的过程，往往会对一些代码&#x2F;配置进行修改。例如设置日志级别，开启Bean的懒加载，关闭一些不必要的服务。这些修改只发生在本地工作区(Working Directory)，不会commit到本地仓库(Repository)，更不会push到远程仓库(Remote repositories)。由于在IDEA中，默认没有启用暂存区(Staging Area/Index)，因此
+          为了简化本地测试代码的过程，往往会对一些代码/配置进行修改。例如设置日志级别，开启Bean的懒加载，关闭一些不必要的服务。这些修改只发生在本地工作区(Working Directory)，不会commit到本地仓库(Repository)，更不会push到远程仓库(Remote repositories)。由于在IDEA中，默认没有启用暂存区(Staging Area/Index)，因此主要讨论的
         </div>
       </a>
 
@@ -481,17 +481,17 @@
     
     
     <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
+      <h2 class="index-header">
         
         <a href="/2023/04/17/SpringBoot-Configuration/" target="_self">
           SpringBoot-Configuration
         </a>
-      </h1>
+      </h2>
 
       
       <a class="index-excerpt index-excerpt__noimg" href="/2023/04/17/SpringBoot-Configuration/" target="_self">
         <div>
-          前面提到，对于Spring项目来说，项目的功能取决于Spring容器中有哪些bean，每一个bean都是一个功能模块的实例化对象。所以问题就来到了如何向Spring容器中添加bean。 XML 配置文件XML配置文件是最原始的添加bean的方式。使用XML配置文件符合了配置文件分离的原则。可以通过修改XML配置文件直接修改程序的功能，而不需要将项目重新编译。 在XML配置文件中通过&lt;bean
+          前面提到，对于Spring项目来说，项目的功能取决于Spring容器中有哪些bean，每一个bean都是一个功能模块的实例化对象。所以问题就来到了如何向Spring容器中添加bean。 XML 配置文件 XML配置文件是最原始的添加bean的方式。使用XML配置文件符合了配置文件分离的原则。可以通过修改XML配置文件直接修改程序的功能，而不需要将项目重新编译。 在XML配置文件中通过&lt;
         </div>
       </a>
 
@@ -546,17 +546,17 @@
     
     
     <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
+      <h2 class="index-header">
         
         <a href="/2023/04/13/SpringBoot-Testing/" target="_self">
           SpringBoot-Testing
         </a>
-      </h1>
+      </h2>
 
       
       <a class="index-excerpt index-excerpt__noimg" href="/2023/04/13/SpringBoot-Testing/" target="_self">
         <div>
-          在写上一篇IoC和DI之前，本来想记录的是SpringBoot如何完成AutoConfiguration自动配置，但因为篇幅直接分离出来了一篇。这次又把Testing给分离了出来。 事情的起因是，写项目代码时，常常需要对自己写的部分进行测试和调试。根据自己以往的编程经验，个人习惯于写一点就运行一点，并通过断点调试来确认内存的运行状态，避免犯一些低级的逻辑错误。虽然公司有专门的测试岗位，但从代码提交
+          在写上一篇IoC和DI之前，本来想记录的是SpringBoot如何完成AutoConfiguration自动配置，但因为篇幅直接分离出来了一篇。这次又把Testing给分离了出来。 事情的起因是，写项目代码时，常常需要对自己写的部分进行测试和调试。根据自己以往的编程经验，个人习惯于写一点就运行一点，并通过断点调试来确认内存的运行状态，避免犯一些低级的逻辑错误。虽然公司有专门的测试岗位，但从代码提
         </div>
       </a>
 
@@ -611,17 +611,17 @@
     
     
     <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
+      <h2 class="index-header">
         
         <a href="/2023/04/13/SpringBoot-IoC-DI/" target="_self">
           SpringBoot-IoC-DI
         </a>
-      </h1>
+      </h2>
 
       
       <a class="index-excerpt index-excerpt__noimg" href="/2023/04/13/SpringBoot-IoC-DI/" target="_self">
         <div>
-          在讨论Spring框架时，其中最核心的组件莫过于 Spring Core。而Spring Core完成了两个关键概念：IoC（Inversion of Control，控制反转）和DI（Dependency Injection，依赖注入）。 IoCIoC是一种设计模式，它将对象的创建和管理的控制从应用程序代码转移到了容器中。在Java当中，为了提高代码的复用率和可维护性，我们采用模块化编程，将功能
+          在讨论Spring框架时，其中最核心的组件莫过于 Spring Core。而Spring Core完成了两个关键概念：IoC（Inversion of Control，控制反转）和DI（Dependency Injection，依赖注入）。 IoC IoC是一种设计模式，它将对象的创建和管理的控制从应用程序代码转移到了容器中。在Java当中，为了提高代码的复用率和可维护性，我们采用模块化
         </div>
       </a>
 
@@ -678,17 +678,17 @@
     
     
     <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
+      <h2 class="index-header">
         
         <a href="/2023/04/07/SpringBoot-ConfigurationProperties/" target="_self">
           SpringBoot-ConfigurationProperties
         </a>
-      </h1>
+      </h2>
 
       
       <a class="index-excerpt index-excerpt__noimg" href="/2023/04/07/SpringBoot-ConfigurationProperties/" target="_self">
         <div>
-          写代码时，常会在代码中使用配置相关的常量。 对于这些配置常量，最佳实践是配置文件分离，即将这些配置常量写入一个配置文件中。常见的配置文件包括如properties、XML文件、JSON文件、YAML文件。这样每次修改配置时，不需要改动源文件并重新编译，也不需要通过命令行传参，只需改动配置文件中对应属性即可。而且把配置信息放在一起会使代码可读性，可维护性更好。 Java中的配置文件Java的常用配置
+          写代码时，常会在代码中使用配置相关的常量。 对于这些配置常量，最佳实践是配置文件分离，即将这些配置常量写入一个配置文件中。常见的配置文件包括如properties、XML文件、JSON文件、YAML文件。这样每次修改配置时，不需要改动源文件并重新编译，也不需要通过命令行传参，只需改动配置文件中对应属性即可。而且把配置信息放在一起会使代码可读性，可维护性更好。 Java中的配置文件 Java的
         </div>
       </a>
 
@@ -743,17 +743,17 @@
     
     
     <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
+      <h2 class="index-header">
         
         <a href="/2023/04/06/remove-highlight-javascript/" target="_self">
           去除/高亮页面元素的JS脚本
         </a>
-      </h1>
+      </h2>
 
       
       <a class="index-excerpt index-excerpt__noimg" href="/2023/04/06/remove-highlight-javascript/" target="_self">
         <div>
-          最近开发了一个基于TamperMonkey的JS脚本，其主要功能为去除特定页面中的广告、Header等无效信息元素，并根据逻辑高亮其中重要信息元素。 Github 从解决需求角度出发，常见的去除页面中的广告可以通过CSS植入，并利用样式选择器将广告元素的display属性设置为none。但需要根据逻辑高亮元素（如经过元素内文本排序后，对前n位进行高亮），简单的CSS植入无法满足这个需求。因此最后采
+          最近开发了一个基于TamperMonkey的JS脚本，其主要功能为去除特定页面中的广告、Header等无效信息元素，并根据逻辑高亮其中重要信息元素。 Github 从解决需求角度出发，常见的去除页面中的广告可以通过CSS植入，并利用样式选择器将广告元素的display属性设置为none。但需要根据逻辑高亮元素（如经过元素内文本排序后，对前n位进行高亮），简单的CSS植入无法满足这个需求。因此最
         </div>
       </a>
 
@@ -812,17 +812,17 @@
     
     
     <article class="col-12 col-md-12 mx-auto index-info">
-      <h1 class="index-header">
+      <h2 class="index-header">
         
         <a href="/2023/04/06/hello-world/" target="_self">
           Hello World
         </a>
-      </h1>
+      </h2>
 
       
       <a class="index-excerpt index-excerpt__noimg" href="/2023/04/06/hello-world/" target="_self">
         <div>
-          Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick
+          Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub.
         </div>
       </a>
 

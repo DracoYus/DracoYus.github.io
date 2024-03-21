@@ -16,12 +16,12 @@
   <meta name="author" content="DracoYu">
   <meta name="keywords" content="学习笔记,Java,JavaScript,后端,前端">
   
-    <meta name="description" content="Git在commit时，必须输入commit message，来表示对提交内容的说明。没有则无法提交。 理论上，commit message可以输入任意内容。但如果参与多人协作开发和持续开发，就会有相应的规范，帮助程序员快速理解别人写的提交，或者回顾自己以前提交的作用。 目前应用最为广泛的规范是前端框架Angular提出的Angular提交信息规范（简称规范）。 Angular Commit Me">
+    <meta name="description" content="Git在commit时，必须输入commit message，来表示对提交内容的说明。没有则无法提交。 理论上，commit message可以输入任意内容。但如果参与多人协作开发和持续开发，就会有相应的规范，帮助程序员快速理解别人写的提交，或者回顾自己以前提交的作用。 目前应用最为广泛的规范是前端框架Angular提出的Angular提交信息规范（简称规范）。 Angular Commit">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Git-Commit-Message">
 <meta property="og:url" content="http://example.com/2023/05/12/Git-Commit-Message/index.html">
 <meta property="og:site_name" content="DracoYu&#39;s MindCache">
-<meta property="og:description" content="Git在commit时，必须输入commit message，来表示对提交内容的说明。没有则无法提交。 理论上，commit message可以输入任意内容。但如果参与多人协作开发和持续开发，就会有相应的规范，帮助程序员快速理解别人写的提交，或者回顾自己以前提交的作用。 目前应用最为广泛的规范是前端框架Angular提出的Angular提交信息规范（简称规范）。 Angular Commit Me">
+<meta property="og:description" content="Git在commit时，必须输入commit message，来表示对提交内容的说明。没有则无法提交。 理论上，commit message可以输入任意内容。但如果参与多人协作开发和持续开发，就会有相应的规范，帮助程序员快速理解别人写的提交，或者回顾自己以前提交的作用。 目前应用最为广泛的规范是前端框架Angular提出的Angular提交信息规范（简称规范）。 Angular Commit">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://example.com/img/commit-log.png">
 <meta property="article:published_time" content="2023-05-12T01:54:03.000Z">
@@ -72,7 +72,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -116,7 +116,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/">
+              <a class="nav-link" href="/" target="_self">
                 <i class="iconfont icon-home-fill"></i>
                 <span>首页</span>
               </a>
@@ -128,7 +128,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/archives/">
+              <a class="nav-link" href="/archives/" target="_self">
                 <i class="iconfont icon-archive-fill"></i>
                 <span>归档</span>
               </a>
@@ -140,7 +140,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/categories/">
+              <a class="nav-link" href="/categories/" target="_self">
                 <i class="iconfont icon-category-fill"></i>
                 <span>分类</span>
               </a>
@@ -152,7 +152,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/tags/">
+              <a class="nav-link" href="/tags/" target="_self">
                 <i class="iconfont icon-tags-fill"></i>
                 <span>标签</span>
               </a>
@@ -164,7 +164,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/about/">
+              <a class="nav-link" href="/about/" target="_self">
                 <i class="iconfont icon-user-fill"></i>
                 <span>关于</span>
               </a>
@@ -223,7 +223,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.9k 字
+          665 字
         
       </span>
     
@@ -234,7 +234,7 @@
         
         
         
-          17 分钟
+          6 分钟
         
       </span>
     
@@ -271,36 +271,41 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <!-- SEO header -->
-            <h1 style="display: none">Git-Commit-Message</h1>
+            <h1 id="seo-header">Git-Commit-Message</h1>
             
             
               <div class="markdown-body">
                 
                 <p><code>Git</code>在<code>commit</code>时，必须输入<code>commit message</code>，来表示对提交内容的说明。没有则无法提交。</p>
 <p>理论上，<code>commit message</code>可以输入任意内容。但如果参与多人协作开发和持续开发，就会有相应的规范，帮助程序员快速理解别人写的提交，或者回顾自己以前提交的作用。</p>
-<p>目前应用最为广泛的规范是前端框架<code>Angular</code>提出的<a target="_blank" rel="noopener" href="https://github.com/angular/angular/blob/main/CONTRIBUTING.md#-commit-message-format">Angular提交信息规范</a>（简称规范）。</p>
-<h2 id="Angular-Commit-Message-Format"><a href="#Angular-Commit-Message-Format" class="headerlink" title="Angular Commit Message Format"></a>Angular Commit Message Format</h2><p>总的来说，规范要求，每次提交信息包含三部分。</p>
+<p>目前应用最为广泛的规范是前端框架<code>Angular</code>提出的<a
+target="_blank" rel="noopener" href="https://github.com/angular/angular/blob/main/CONTRIBUTING.md#-commit-message-format">Angular提交信息规范</a>（简称规范）。</p>
+<h2 id="angular-commit-message-format">Angular Commit Message
+Format</h2>
+<p>总的来说，规范要求，每次提交信息包含三部分。</p>
 <p>1.信息头(<code>header</code>)</p>
 <p>2.信息体(<code>body</code>)</p>
 <p>3.信息尾(<code>footer</code>)</p>
 <p>三个部分用空行间隔，来区分。其中<code>body</code>和<code>footer</code>为可选部分。</p>
 <figure class="highlight plaintext"><figcaption><span>Message</span></figcaption><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs Commit">&lt;header&gt;<br>&lt;BLANK LINE&gt;<br>&lt;body&gt;<br>&lt;BLANK LINE&gt;<br>&lt;footer&gt;<br></code></pre></td></tr></table></figure>
-
-<h3 id="header"><a href="#header" class="headerlink" title="header"></a>header</h3><p>header是三个部分中最复杂的。包含三个区域<code>&lt;type&gt;</code>、<code>&lt;scope&gt;</code>和<code>&lt;short summary&gt;</code>。</p>
+<h3 id="header">header</h3>
+<p>header是三个部分中最复杂的。包含三个区域<code>&lt;type&gt;</code>、<code>&lt;scope&gt;</code>和<code>&lt;short summary&gt;</code>。</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs header">&lt;type&gt;(&lt;scope&gt;): &lt;short summary&gt;<br>  │       │             │<br>  │       │             └─⫸ Summary in present tense. Not capitalized. No period at the end.<br>  │       │<br>  │       └─⫸ Commit Scope: animations|bazel|benchpress|common|compiler|compiler-cli|core|<br>  │                          elements|forms|http|language-service|localize|platform-browser|<br>  │                          platform-browser-dynamic|platform-server|router|service-worker|<br>  │                          upgrade|zone.js|packaging|changelog|docs-infra|migrations|<br>  │                          devtools<br>  │<br>  └─⫸ Commit Type: build|ci|docs|feat|fix|perf|refactor|test<br></code></pre></td></tr></table></figure>
-
 <p>其中，<code>&lt;type&gt;</code>为必须项，所有可能的取值和意义如下。</p>
 <blockquote>
 <ul>
-<li><strong>build</strong>: Changes that affect the build system or external dependencies (example scopes: gulp, broccoli, npm)</li>
-<li><strong>ci</strong>: Changes to our CI configuration files and scripts (examples: CircleCi, SauceLabs)</li>
+<li><strong>build</strong>: Changes that affect the build system or
+external dependencies (example scopes: gulp, broccoli, npm)</li>
+<li><strong>ci</strong>: Changes to our CI configuration files and
+scripts (examples: CircleCi, SauceLabs)</li>
 <li><strong>docs</strong>: Documentation only changes</li>
 <li><strong>feat</strong>: A new feature</li>
 <li><strong>fix</strong>: A bug fix</li>
 <li><strong>perf</strong>: A code change that improves performance</li>
-<li><strong>refactor</strong>: A code change that neither fixes a bug nor adds a feature</li>
-<li><strong>test</strong>: Adding missing tests or correcting existing tests</li>
+<li><strong>refactor</strong>: A code change that neither fixes a bug
+nor adds a feature</li>
+<li><strong>test</strong>: Adding missing tests or correcting existing
+tests</li>
 </ul>
 </blockquote>
 <p>其中用的最多的应该是<code>feat</code>、<code>fix</code>和<code>test</code>。</p>
@@ -308,18 +313,26 @@
 <p><code>&lt;short summary&gt;</code>为必须项。用一句话概括此次提交。此部分的要求如下。</p>
 <blockquote>
 <ul>
-<li>use the imperative, present tense: “change” not “changed” nor “changes”</li>
-<li>don’t capitalize the first letter</li>
+<li>use the imperative, present tense: "change" not "changed" nor
+"changes"</li>
+<li>don't capitalize the first letter</li>
 <li>no dot (.) at the end</li>
 </ul>
 </blockquote>
 <p>这样子设置header的好处是，在查看<code>commit</code>历史记录时，可以选择只显示第一行内容。可以很快地理解每次提交的性质。</p>
-<p><img src="/img/commit-log.png" srcset="/img/loading.gif" lazyload alt="commit-log"></p>
-<h3 id="body"><a href="#body" class="headerlink" title="body"></a>body</h3><p>这一部分详细描述提交的内容，比如所做修改的动机，所做修改的思路，改动前后程序表现的对比。</p>
+<figure>
+<img src="/img/commit-log.png" srcset="/img/loading.gif" lazyload alt="commit-log" />
+<figcaption aria-hidden="true">commit-log</figcaption>
+</figure>
+<h3 id="body">body</h3>
+<p>这一部分详细描述提交的内容，比如所做修改的动机，所做修改的思路，改动前后程序表现的对比。</p>
 <p>规范相对于<code>header</code>来说很简单，仅仅是使用祈使句和现在时。</p>
-<h3 id="footer"><a href="#footer" class="headerlink" title="footer"></a>footer</h3><p>这一部分一般是使用Github时才会较多使用，主要用来引用提交所针对得<code>PR</code>或<code>issue</code>，另外也可以用来说明重大更改和弃用说明。</p>
-<p>由于这一部分在公司内使用不多，大部分情况下为空即可，因此不过多介绍，详见<a target="_blank" rel="noopener" href="https://github.com/angular/angular/blob/main/CONTRIBUTING.md#commit-message-footer">官方文档</a>。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>使用<code>git commit</code>时需要输入<code>commit message</code>，目前最常用的规范是<code>AngularJS commit message format</code>。</p>
+<h3 id="footer">footer</h3>
+<p>这一部分一般是使用Github时才会较多使用，主要用来引用提交所针对得<code>PR</code>或<code>issue</code>，另外也可以用来说明重大更改和弃用说明。</p>
+<p>由于这一部分在公司内使用不多，大部分情况下为空即可，因此不过多介绍，详见<a
+target="_blank" rel="noopener" href="https://github.com/angular/angular/blob/main/CONTRIBUTING.md#commit-message-footer">官方文档</a>。</p>
+<h2 id="总结">总结</h2>
+<p>使用<code>git commit</code>时需要输入<code>commit message</code>，目前最常用的规范是<code>AngularJS commit message format</code>。</p>
 <p>此规范包含三部分，其中最重要的部分为<code>header</code>。<code>header</code>中需要指明修改的类型、影响的范围和简单的一句话概括。</p>
 
                 
@@ -354,9 +367,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/Git/">#Git</a>
+        <a href="/tags/Git/" class="print-no-link">#Git</a>
       
-        <a href="/tags/Commit/">#Commit</a>
+        <a href="/tags/Commit/" class="print-no-link">#Commit</a>
       
     </div>
   
@@ -392,7 +405,7 @@
             
               
               
-                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
                   <span class="hint--top hint--rounded" aria-label="BY - 署名">
                     <i class="iconfont icon-by"></i>
                   </span>
@@ -481,6 +494,12 @@
 
 
   
+
+
+  
+  
+
+
 
 
 
@@ -674,6 +693,49 @@
 
 
   <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
 
   <script  src="/js/local-search.js" ></script>
 

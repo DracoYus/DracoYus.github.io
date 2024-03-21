@@ -16,12 +16,12 @@
   <meta name="author" content="DracoYu">
   <meta name="keywords" content="学习笔记,Java,JavaScript,后端,前端">
   
-    <meta name="description" content="距离上一次写博客已经过去了三个多月，一直忙于工作。 上次说到，设计原则是使得代码拥有更好复用性和拓展性的指南针，是一种基于优秀代码的经验总结。既然是经验总结，不同学者必然存在着不同归纳角度。上次提到的封装变化、面向接口而不是面向实现、组合优于继承原则是一种归纳，这次要讲的SOLID原则也是一种归纳。这些原则本是并列关系，但实际又会觉得互相关联、交融。因为本身可能都是对同一件事情，不同角度的描述。">
+    <meta name="description" content="距离上一次写博客已经过去了三个多月，一直忙于工作。 上次说到，设计原则是使得代码拥有更好复用性和拓展性的指南针，是一种基于优秀代码的经验总结。既然是经验总结，不同学者必然存在着不同归纳角度。上次提到的封装变化、面向接口而不是面向实现、组合优于继承原则是一种归纳，这次要讲的SOLID原则也是一种归纳。这些原则本是并列关系，但实际又会觉得互相关联、交融。因为本身可能都是对同一件事情，不同角度的描述。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Design-Pattern-SOLID">
 <meta property="og:url" content="http://example.com/2023/11/01/Design-Pattern-SOLID/index.html">
 <meta property="og:site_name" content="DracoYu&#39;s MindCache">
-<meta property="og:description" content="距离上一次写博客已经过去了三个多月，一直忙于工作。 上次说到，设计原则是使得代码拥有更好复用性和拓展性的指南针，是一种基于优秀代码的经验总结。既然是经验总结，不同学者必然存在着不同归纳角度。上次提到的封装变化、面向接口而不是面向实现、组合优于继承原则是一种归纳，这次要讲的SOLID原则也是一种归纳。这些原则本是并列关系，但实际又会觉得互相关联、交融。因为本身可能都是对同一件事情，不同角度的描述。">
+<meta property="og:description" content="距离上一次写博客已经过去了三个多月，一直忙于工作。 上次说到，设计原则是使得代码拥有更好复用性和拓展性的指南针，是一种基于优秀代码的经验总结。既然是经验总结，不同学者必然存在着不同归纳角度。上次提到的封装变化、面向接口而不是面向实现、组合优于继承原则是一种归纳，这次要讲的SOLID原则也是一种归纳。这些原则本是并列关系，但实际又会觉得互相关联、交融。因为本身可能都是对同一件事情，不同角度的描述。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-11-01T02:20:18.000Z">
 <meta property="article:modified_time" content="2023-11-02T07:27:38.912Z">
@@ -70,7 +70,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -114,7 +114,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/">
+              <a class="nav-link" href="/" target="_self">
                 <i class="iconfont icon-home-fill"></i>
                 <span>首页</span>
               </a>
@@ -126,7 +126,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/archives/">
+              <a class="nav-link" href="/archives/" target="_self">
                 <i class="iconfont icon-archive-fill"></i>
                 <span>归档</span>
               </a>
@@ -138,7 +138,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/categories/">
+              <a class="nav-link" href="/categories/" target="_self">
                 <i class="iconfont icon-category-fill"></i>
                 <span>分类</span>
               </a>
@@ -150,7 +150,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/tags/">
+              <a class="nav-link" href="/tags/" target="_self">
                 <i class="iconfont icon-tags-fill"></i>
                 <span>标签</span>
               </a>
@@ -162,7 +162,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/about/">
+              <a class="nav-link" href="/about/" target="_self">
                 <i class="iconfont icon-user-fill"></i>
                 <span>关于</span>
               </a>
@@ -221,7 +221,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          3.5k 字
+          3.1k 字
         
       </span>
     
@@ -232,7 +232,7 @@
         
         
         
-          30 分钟
+          26 分钟
         
       </span>
     
@@ -269,8 +269,7 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <!-- SEO header -->
-            <h1 style="display: none">Design-Pattern-SOLID</h1>
+            <h1 id="seo-header">Design-Pattern-SOLID</h1>
             
             
               <div class="markdown-body">
@@ -278,19 +277,23 @@
                 <p>距离上一次写博客已经过去了三个多月，一直忙于工作。</p>
 <p>上次说到，设计原则是使得代码拥有更好复用性和拓展性的指南针，是一种基于优秀代码的经验总结。既然是经验总结，不同学者必然存在着不同归纳角度。上次提到的<strong>封装变化</strong>、<strong>面向接口而不是面向实现</strong>、<strong>组合优于继承</strong>原则是一种归纳，这次要讲的<strong>SOLID</strong>原则也是一种归纳。这些原则本是并列关系，但实际又会觉得互相关联、交融。因为本身可能都是对同一件事情，不同角度的描述。</p>
 <p>SOLID原则是五条原则的简称，首次提出于罗伯特·马丁的著作《敏捷软件开发：原则、模式与实践》。每次遇到这类把多个原则或者理论，缩写成某个单词，我总是想，这是作者先想出来，然后发现这些原则凑巧就能拼成一个单词，还是在想原则名的时候，就在往这个单词上凑。</p>
-<h2 id="Single-Responsibility-Principle-单一职责原则"><a href="#Single-Responsibility-Principle-单一职责原则" class="headerlink" title="Single Responsibility Principle 单一职责原则"></a>Single Responsibility Principle 单一职责原则</h2><blockquote>
+<h2 id="single-responsibility-principle-单一职责原则">Single
+Responsibility Principle 单一职责原则</h2>
+<blockquote>
 <p>一个类应该只有一个引起它变化的原因，或者说一个类应该只有一个职责。</p>
 </blockquote>
 <p><strong>改变的原因</strong>非常拗口，这是马丁对于职责的定义。使用更为通俗的说法，一个类应该只有一组互相关联的功能和属性（好像更复杂了）。如果一个类里面，不同的方法和属性没有互相依赖的关系，那么可以认为这个类具有了多个职责，可以将这些没有依赖的平行关系，拆分成多个类。</p>
 <p>但这个原则最令人困惑，也是最模棱两可的地方，是很难界定某些功能和属性是否归属于相同职责。职责的界定依赖于人们对功能的主观理解，和划分的粒度。</p>
 <p>不论如何，这个原则所表达的思想是，一个类里如果代码太多，可能就需要考虑是不是能拆成多个类。这与<strong>封装变化原则</strong>有相似的地方。封装变化原则将变化部分抽取为方法或类。有一种类内变化的部分负责一个职责，不变的部分负责另一个职责的感觉，最终实现单一职责原则的效果。</p>
 <p>拆分成多个类的好处是：</p>
-<ol>
+<ol type="1">
 <li>提高代码可读性。当你想要了解一个功能时，需要关注的内容变得更少</li>
 <li>降低变更风险。修改代码时，可以减少影响到其他职责的风险。</li>
 <li>增加代码的复用性。拆分出的类可以在多处被使用，而不用担心引入了过多不需要的功能。</li>
 </ol>
-<h2 id="Open-x2F-closed-Principle-开闭原则"><a href="#Open-x2F-closed-Principle-开闭原则" class="headerlink" title="Open&#x2F;closed Principle 开闭原则"></a>Open&#x2F;closed Principle 开闭原则</h2><blockquote>
+<h2 id="openclosed-principle-开闭原则">Open/closed Principle
+开闭原则</h2>
+<blockquote>
 <p>对于扩展，类应该是“开放”的；对于修改，类则应是“封闭”的</p>
 </blockquote>
 <p>开闭原则关注在对代码扩展功能时，保持原有功能不发生变动。<strong>开放</strong>意味着拓展功能应该是容易且方便的，<strong>封闭</strong>意味着拓展时不应该改动已有代码的运行结果。</p>
@@ -299,8 +302,10 @@
 <p>开闭原则最关键的好处：</p>
 <p>1.减少了回归测试的任务量</p>
 <p>2.提高了代码的复用率</p>
-<p>3.拓展新功能方便。如果在定义方法&#x2F;成语变量时，使用接口作为参数类型，那么拓展功能只需改变传入方法或构造函数的参数，即可完成功能拓展。</p>
-<h2 id="Liskov-Substitution-Principle-里氏替换原则"><a href="#Liskov-Substitution-Principle-里氏替换原则" class="headerlink" title="Liskov Substitution Principle 里氏替换原则"></a>Liskov Substitution Principle 里氏替换原则</h2><blockquote>
+<p>3.拓展新功能方便。如果在定义方法/成语变量时，使用接口作为参数类型，那么拓展功能只需改变传入方法或构造函数的参数，即可完成功能拓展。</p>
+<h2 id="liskov-substitution-principle-里氏替换原则">Liskov Substitution
+Principle 里氏替换原则</h2>
+<blockquote>
 <p>派生类（子类）对象可以在程式中代替其基类（超类）对象。</p>
 </blockquote>
 <p>里氏替换原则是针对继承特性的原则。程序员通过继承，可以进行代码复用，在子类中复用其父类中定义的方法。在代码中，主要是通过调用父类中定义的公共方法，使用父类实例。里氏替换原则要求使用父类对象的地方，替换成子类对象，程序表现一致。</p>
@@ -308,19 +313,25 @@
 <p>稍宽松些，允许子类重写，需要保证逻辑符合父类中的定义，其方法的参数列表应该一致或更宽松，其返回类型应该兼容父类方法的返回类型。也就是父类方法中接受的参数，需要可以赋值给子类方法，子类方法中返回的对象，需要可以赋值给父类的返回类型。还有子类不能抛出比父类更多的异常类型、子类不应该加强其前置条件、子类不能削弱其后置条件等等要求。</p>
 <p>由于在子类中重写父类方法会处处受限，因此更多的做法是不重写。或者直接将父类的方法定义为抽象方法，这样代码中就不会存在父类对象（抽象类不可实例化），自然也不涉及替换的问题了。</p>
 <p>在开闭原则中提到，继承是一种遵循开闭原则的拓展类功能的方法。在代码中使用多态特性的地方很多，里氏替换原则保证了这些使用多态的地方，不会因为实际对象类型是父类还是子类，影响程序正常运行。在组合优于继承中提到，组合通常能达到和继承相同的作用，同时更灵活，但这也不是绝对的。实话说这很让人感到疑惑，前面说继承不好，现在又说使用继承应该注意的事项，不用不就行了吗？经验总结就会出现的情况是，归纳时通常只是针对某些特殊情况，虽然归纳本身已经是宽泛的理解。组合的优势在于，可以避免多维度继承带来的类数量爆炸，避免选择性继承的难题。如果不涉及多级继承，或者组合的对象数量不多，继承通常也是可以的选择。实际开发中可以根据继承层级、功能是否可分，以及是否需要动态性，选择使用组合和继承。</p>
-<h2 id="Interface-Segregation-Principle-接口隔离原则"><a href="#Interface-Segregation-Principle-接口隔离原则" class="headerlink" title="Interface Segregation Principle 接口隔离原则"></a>Interface Segregation Principle 接口隔离原则</h2><blockquote>
+<h2 id="interface-segregation-principle-接口隔离原则">Interface
+Segregation Principle 接口隔离原则</h2>
+<blockquote>
 <p>客户端不应被强迫依赖于其不使用的方法</p>
 </blockquote>
 <p>尽量缩小接口的范围，使得客户端的类不必实现其不需要的行为。</p>
 <p>不同于继承，实现可以一次性实现多个接口，因此可以将功能过于复杂的接口，拆分成多个简单接口。这样在实现时可以选择性的实现，避免去实现那些用不到的方法（接口要求其实现类必须实现其定义的抽象方法）。</p>
 <p>这一看和单一职责原则很像，都在表述需要将复杂的东西进行细分。但是单一职责原则针对类，而接口隔离原则针对接口。如果没有做好接口隔离原则，对接口进行细分，并且类中实现了接口定义的方法，那么通常这个类也是不满足单一职责原则的。</p>
-<h2 id="Dependency-Inversion-Principle-依赖倒置原则"><a href="#Dependency-Inversion-Principle-依赖倒置原则" class="headerlink" title="Dependency Inversion Principle 依赖倒置原则"></a>Dependency Inversion Principle 依赖倒置原则</h2><blockquote>
-<p>高层次的类不应该依赖于低层次的类。 两者都应该依赖于抽象接口。 抽象接口不应依赖于具体实现。 具体实现应该依赖于抽象接口</p>
+<h2 id="dependency-inversion-principle-依赖倒置原则">Dependency
+Inversion Principle 依赖倒置原则</h2>
+<blockquote>
+<p>高层次的类不应该依赖于低层次的类。 两者都应该依赖于抽象接口。
+抽象接口不应依赖于具体实现。 具体实现应该依赖于抽象接口</p>
 </blockquote>
 <p>常规开发模式下，高层次类会调用低层次类提供的函数，体现出高层次类依赖低层次类的关系。在这种模式下，如果对低层次类进行改动，可能会对高层次类的运行产生影响。或者需要替换另一种低层次类的实现，例如数据不是从本地硬盘，而是从网络中获取，需要变动高层次类中的相关代码。</p>
 <p>依赖倒置的<strong>倒置</strong>，指的就是改变这种高层次类直接依赖低层次类的关系。通过增加抽象层，依赖方向变成了两者都依赖抽象层。抽象层通常是通过接口，定义一组通用的方法或协议。高层次类直接依赖接口，低层次类通过实现的方式依赖接口。这样子分层的设计降低了层与层之间的耦合度。当需要更新低层次类，或者拓展出新的低层次类，只要保证低层次类实现了接口，在高层次类中的调用代码就无需改变。这也体现了开闭原则。</p>
 <p>此外，由于高层次类中通过接口依赖低层次类。程序在运行时需要确定被引用的具体低层次类对象，这个创建低层次类对象，并将其赋值给高层次类对象的过程，通常是通过容器框架的依赖注入功能。这也和之前聊到的<code>Spring</code>框架的功能联系到了一起。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>SOLID原则是一组优秀代码的经验总结。</p>
+<h2 id="总结">总结</h2>
+<p>SOLID原则是一组优秀代码的经验总结。</p>
 <p>单一职责原则是指，一个类只负责一系列相关功能，需要把过于复杂的类，根据功能划分，拆分成小的类。开闭原则是指程序设计，应该有良好的拓展性，拓展的同时又能保证已有功能不受影响，通常是通过继承或接口来实现。里氏替换原则限制了子类尽量不要重写父类中实现的公共方法，避免将子类对象赋值给父类类型时，可能会导致程序出错的情况。接口隔离是指定义接口时，如果存在实现类实现了不必要的方法的情况，可以考虑把接口进行拆分，使得实现类可以在实现时有选择进行实现。依赖倒置原则是指，高层次类不应该直接依赖低层次类，而是将依赖关系改成高层次类和低层次类都依赖于抽象类。在运行时，这些类的实际依赖通常通过框架的依赖注入来完成。</p>
 <p>虽然这些原则广为人知，在写代码时仍要根据实际情况，决定是否遵循原则。例如可以思考未来是否会对其进行同类型功能的拓展；一个类行数比较多了是否要进行重构；改了一处代码，处处受影响。遇到这些情况时，就应该想起这些设计原则，并用于指导代码编写和重构。</p>
 
@@ -356,9 +367,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/DesignPattern/">#DesignPattern</a>
+        <a href="/tags/DesignPattern/" class="print-no-link">#DesignPattern</a>
       
-        <a href="/tags/Java/">#Java</a>
+        <a href="/tags/Java/" class="print-no-link">#Java</a>
       
     </div>
   
@@ -394,7 +405,7 @@
             
               
               
-                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
                   <span class="hint--top hint--rounded" aria-label="BY - 署名">
                     <i class="iconfont icon-by"></i>
                   </span>
@@ -483,6 +494,12 @@
 
 
   
+
+
+  
+  
+
+
 
 
 
@@ -676,6 +693,49 @@
 
 
   <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
 
   <script  src="/js/local-search.js" ></script>
 

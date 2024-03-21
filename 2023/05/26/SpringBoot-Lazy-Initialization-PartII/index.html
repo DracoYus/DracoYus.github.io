@@ -16,12 +16,12 @@
   <meta name="author" content="DracoYu">
   <meta name="keywords" content="学习笔记,Java,JavaScript,后端,前端">
   
-    <meta name="description" content="在SpringBoot-Lazy-Initialization提到，懒加载可以延迟容器中单实例的创建时机，从容器启动时延迟到实例被使用时。 在实际设置懒加载时，遇到了一些问题，在此记录并分析。 静态方法访问如果试图调用一个类的静态方法，而此方法依赖的静态变量需要通过实例去进行设置，启用全局懒加载就会导致NPE（NullPointerException）报错。 常见的场景是，编写一个SpringCo">
+    <meta name="description" content="在SpringBoot-Lazy-Initialization提到，懒加载可以延迟容器中单实例的创建时机，从容器启动时延迟到实例被使用时。 在实际设置懒加载时，遇到了一些问题，在此记录并分析。 静态方法访问 如果试图调用一个类的静态方法，而此方法依赖的静态变量需要通过实例去进行设置，启用全局懒加载就会导致NPE（NullPointerException）报错。 常见的场景是，编写一个Spr">
 <meta property="og:type" content="article">
 <meta property="og:title" content="SpringBoot-Lazy-Initialization-PartII">
 <meta property="og:url" content="http://example.com/2023/05/26/SpringBoot-Lazy-Initialization-PartII/index.html">
 <meta property="og:site_name" content="DracoYu&#39;s MindCache">
-<meta property="og:description" content="在SpringBoot-Lazy-Initialization提到，懒加载可以延迟容器中单实例的创建时机，从容器启动时延迟到实例被使用时。 在实际设置懒加载时，遇到了一些问题，在此记录并分析。 静态方法访问如果试图调用一个类的静态方法，而此方法依赖的静态变量需要通过实例去进行设置，启用全局懒加载就会导致NPE（NullPointerException）报错。 常见的场景是，编写一个SpringCo">
+<meta property="og:description" content="在SpringBoot-Lazy-Initialization提到，懒加载可以延迟容器中单实例的创建时机，从容器启动时延迟到实例被使用时。 在实际设置懒加载时，遇到了一些问题，在此记录并分析。 静态方法访问 如果试图调用一个类的静态方法，而此方法依赖的静态变量需要通过实例去进行设置，启用全局懒加载就会导致NPE（NullPointerException）报错。 常见的场景是，编写一个Spr">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-05-26T03:20:27.000Z">
 <meta property="article:modified_time" content="2023-06-26T06:29:24.833Z">
@@ -71,7 +71,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.4","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"gtag":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml"};
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -115,7 +115,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/">
+              <a class="nav-link" href="/" target="_self">
                 <i class="iconfont icon-home-fill"></i>
                 <span>首页</span>
               </a>
@@ -127,7 +127,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/archives/">
+              <a class="nav-link" href="/archives/" target="_self">
                 <i class="iconfont icon-archive-fill"></i>
                 <span>归档</span>
               </a>
@@ -139,7 +139,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/categories/">
+              <a class="nav-link" href="/categories/" target="_self">
                 <i class="iconfont icon-category-fill"></i>
                 <span>分类</span>
               </a>
@@ -151,7 +151,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/tags/">
+              <a class="nav-link" href="/tags/" target="_self">
                 <i class="iconfont icon-tags-fill"></i>
                 <span>标签</span>
               </a>
@@ -163,7 +163,7 @@
           
           
             <li class="nav-item">
-              <a class="nav-link" href="/about/">
+              <a class="nav-link" href="/about/" target="_self">
                 <i class="iconfont icon-user-fill"></i>
                 <span>关于</span>
               </a>
@@ -222,7 +222,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.1k 字
+          887 字
         
       </span>
     
@@ -233,7 +233,7 @@
         
         
         
-          18 分钟
+          8 分钟
         
       </span>
     
@@ -270,37 +270,38 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <!-- SEO header -->
-            <h1 style="display: none">SpringBoot-Lazy-Initialization-PartII</h1>
+            <h1 id="seo-header">SpringBoot-Lazy-Initialization-PartII</h1>
             
             
               <div class="markdown-body">
                 
                 <p>在<a href="/2023/05/04/SpringBoot-Lazy-Initialization/" title="SpringBoot-Lazy-Initialization">SpringBoot-Lazy-Initialization</a>提到，懒加载可以延迟容器中单实例的创建时机，从容器启动时延迟到实例被使用时。</p>
 <p>在实际设置懒加载时，遇到了一些问题，在此记录并分析。</p>
-<h2 id="静态方法访问"><a href="#静态方法访问" class="headerlink" title="静态方法访问"></a>静态方法访问</h2><p>如果试图调用一个类的静态方法，而此方法依赖的静态变量需要通过实例去进行设置，启用全局懒加载就会导致<code>NPE（NullPointerException）</code>报错。</p>
+<h2 id="静态方法访问">静态方法访问</h2>
+<p>如果试图调用一个类的静态方法，而此方法依赖的静态变量需要通过实例去进行设置，启用全局懒加载就会导致<code>NPE（NullPointerException）</code>报错。</p>
 <p>常见的场景是，编写一个<code>SpringContextUtil</code>工具类，用于从容器中根据条件（名称、类型）获取<code>bean</code>。<code>SpringContextUtil</code>通过实现<code>ApplicationContextAware</code>接口，来设置静态成员变量，并通过公共静态方法来向外暴露。一个典型的<code>SpringContextUtil</code>代码如下。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Component</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">SpringContextUtil</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">ApplicationContextAware</span> &#123;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> ApplicationContext applicationContext;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setApplicationContext</span><span class="hljs-params">(ApplicationContext context)</span> <span class="hljs-keyword">throws</span> BeansException &#123;<br>        applicationContext = context;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Object <span class="hljs-title function_">getBean</span><span class="hljs-params">(String beanName)</span> &#123;<br>        <span class="hljs-keyword">return</span> applicationContext.getBean(beanName);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-
 <p>在<code>SpringContextUtil</code>实例化时，通过<code>ApplicationContextAwareProcessor</code>后置处理器调用<code>setApplicationContext</code>方法，完成属性注入。具体的注入时机引用源代码注释。</p>
 <blockquote>
-<p>Invoked after population of normal bean properties but before an init callback.</p>
+<p>Invoked after population of normal bean properties but before an init
+callback.</p>
 </blockquote>
 <p>问题在于，静态方法属于类，在懒加载的情况下，调用静态方法并不会引起类实例化，也因此不会对静态成员变量<code>applicationContext</code>进行设置，其值为引用类型的默认值<code>null</code>。此时调用静态方法<code>getBean</code>就会返回<code>NPE</code>。</p>
 <p>解决的办法也很简单，就是将<code>SpringContextUtil</code>单独设置为非懒加载。由于<code>SpringContextUtil</code>是通过<code>@Component</code>注解，被组件扫描载入容器中，一种方法便是在<code>@ComponentScan</code>中设置<code>excludeFilters</code>属性。另一种更为简单优雅的做法是直接在<code>SpringContextUtil</code>类定义上添加<code>@lazy(false)</code>的注解。根据就近原则，会覆盖掉全局设置。</p>
 <p>实际上<code>@lazy</code>有着很灵活的用法，可以添加在很多地方，在此不过多赘述。</p>
-<h2 id="Mybatis扫描懒加载"><a href="#Mybatis扫描懒加载" class="headerlink" title="Mybatis扫描懒加载"></a>Mybatis扫描懒加载</h2><p>开启懒加载的另一种方式是通过设置<code>@ComponentScan</code>的<code>lazyInit</code>属性，将通过组件扫描载入的<code>bean</code>设置为懒加载。这么做是合理的。对于大型项目来说，通过组件扫描载入的<code>bean</code>数量远大于其他方式，而且是些影响范围较小的<code>bean</code>(相对于框架层)。这么设置可以较大程度加快程序启动，又尽可能避免了bug延迟暴露的问题。</p>
+<h2 id="mybatis扫描懒加载">Mybatis扫描懒加载</h2>
+<p>开启懒加载的另一种方式是通过设置<code>@ComponentScan</code>的<code>lazyInit</code>属性，将通过组件扫描载入的<code>bean</code>设置为懒加载。这么做是合理的。对于大型项目来说，通过组件扫描载入的<code>bean</code>数量远大于其他方式，而且是些影响范围较小的<code>bean</code>(相对于框架层)。这么设置可以较大程度加快程序启动，又尽可能避免了bug延迟暴露的问题。</p>
 <p>但如此设置后，发现项目中的<code>Mybatis Mapper</code>并不会开启懒加载。研究后发现，<code>Mapper</code>扫描和组件扫描使用的并不是同一个扫描器。</p>
 <p>查询<code>Mybatis</code>懒加载相关资料后，发现存在歧义。在<code>MyBatis</code>中，懒加载表示按需进行关联查询，这显然与<code>SpringBoot</code>中懒加载的含义不同。因此无法通过在<code>Mybatis</code>配置文件中，开启我们需要的<code>bean</code>懒加载功能。</p>
 <figure class="highlight xml"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs xml"><span class="hljs-tag">&lt;<span class="hljs-name">setting</span> <span class="hljs-attr">name</span>=<span class="hljs-string">&quot;lazyLoadingEnabled&quot;</span> <span class="hljs-attr">value</span>=<span class="hljs-string">&quot;true&quot;</span>/&gt;</span><br></code></pre></td></tr></table></figure>
-
 <p>而<code>Mapper</code>扫描使用的是<code>ClassPathMapperScanner</code>。在<code>Mybatis</code>中，可以通过<code>@MapperScan</code>的<code>lazyInitialization</code>属性，设置<code>Mapper Bean</code>的懒加载。</p>
 <p>但公司框架中使用的是<code>通用mapper</code>，<code>maven</code>坐标如下：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs pom">&lt;dependency&gt;<br>    &lt;groupId&gt;tk.mybatis&lt;/groupId&gt;<br>    &lt;artifactId&gt;mapper&lt;/artifactId&gt;<br>&lt;/dependency&gt;<br></code></pre></td></tr></table></figure>
-
-<p>由于公司使用的<code>通用mapper</code>版本较早，仍未添加懒加载功能。新增懒加载的<a target="_blank" rel="noopener" href="https://github.com/abel533/Mapper/pull/874">PR</a>。</p>
+<p>由于公司使用的<code>通用mapper</code>版本较早，仍未添加懒加载功能。新增懒加载的<a
+target="_blank" rel="noopener" href="https://github.com/abel533/Mapper/pull/874">PR</a>。</p>
 <p>因此无法开启懒加载，只能使用全局懒加载。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>在实际开发过程中，总会遇到预料之外的情况。调试、分析、学习的过程中积累的经验，远重要于解决问题本身。经过这次问题解决，对<code>Spring</code>、<code>Mybatis</code>框架的理解又更深入了一步。</p>
+<h2 id="总结">总结</h2>
+<p>在实际开发过程中，总会遇到预料之外的情况。调试、分析、学习的过程中积累的经验，远重要于解决问题本身。经过这次问题解决，对<code>Spring</code>、<code>Mybatis</code>框架的理解又更深入了一步。</p>
 
                 
               </div>
@@ -334,11 +335,11 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/Java/">#Java</a>
+        <a href="/tags/Java/" class="print-no-link">#Java</a>
       
-        <a href="/tags/SpringBoot/">#SpringBoot</a>
+        <a href="/tags/SpringBoot/" class="print-no-link">#SpringBoot</a>
       
-        <a href="/tags/Lazy-Initialization/">#Lazy Initialization</a>
+        <a href="/tags/Lazy-Initialization/" class="print-no-link">#Lazy Initialization</a>
       
     </div>
   
@@ -374,7 +375,7 @@
             
               
               
-                <a target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
                   <span class="hint--top hint--rounded" aria-label="BY - 署名">
                     <i class="iconfont icon-by"></i>
                   </span>
@@ -463,6 +464,12 @@
 
 
   
+
+
+  
+  
+
+
 
 
 
@@ -656,6 +663,49 @@
 
 
   <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
 
   <script  src="/js/local-search.js" ></script>
 
