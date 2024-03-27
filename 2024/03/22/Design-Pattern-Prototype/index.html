@@ -1,0 +1,748 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/Memcached.svg">
+  <link rel="icon" href="/img/Memcached.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="DracoYu">
+  <meta name="keywords" content="学习笔记,Java,JavaScript,后端,前端">
+  
+    <meta name="description" content="原型模式(Prototype)是创建型模式中最简单、最不重要的一个设计模式。说不重要不是因为用不到，而是在实践过程中通常使用了其他更简便的方法进行了替代。前两篇设计模式在撰写时文本量超过了预期，本篇尽量言简意赅。 场景 假设现在有个对象，需要根据这个对象中的属性，去创建新的同类对象。这么做的目的可能是重新创建对象过程复杂，直接从已有对象中复制相当于节省了许多步骤，可以快速获取大量同类对象。也可">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Design-Pattern-Prototype">
+<meta property="og:url" content="http://example.com/2024/03/22/Design-Pattern-Prototype/index.html">
+<meta property="og:site_name" content="DracoYu&#39;s MindCache">
+<meta property="og:description" content="原型模式(Prototype)是创建型模式中最简单、最不重要的一个设计模式。说不重要不是因为用不到，而是在实践过程中通常使用了其他更简便的方法进行了替代。前两篇设计模式在撰写时文本量超过了预期，本篇尽量言简意赅。 场景 假设现在有个对象，需要根据这个对象中的属性，去创建新的同类对象。这么做的目的可能是重新创建对象过程复杂，直接从已有对象中复制相当于节省了许多步骤，可以快速获取大量同类对象。也可">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-03-22T01:15:19.000Z">
+<meta property="article:modified_time" content="2024-03-27T06:52:54.156Z">
+<meta property="article:author" content="DracoYu">
+<meta property="article:tag" content="DesignPattern">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Design-Pattern-Prototype - DracoYu&#39;s MindCache</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>DracoYu&#39;s MindCache</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Design-Pattern-Prototype"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-03-22 09:15" pubdate>
+          2024年3月22日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.4k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          20 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Design-Pattern-Prototype</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p><strong>原型模式<code>(Prototype)</code></strong>是创建型模式中最简单、最不重要的一个设计模式。说不重要不是因为用不到，而是在实践过程中通常使用了其他更简便的方法进行了替代。前两篇设计模式在撰写时文本量超过了预期，本篇尽量言简意赅。</p>
+<h2 id="场景">场景</h2>
+<p>假设现在有个对象，需要根据这个对象中的属性，去创建新的同类对象。这么做的目的可能是重新创建对象过程复杂，直接从已有对象中复制相当于节省了许多步骤，可以<strong>快速获取大量同类对象</strong>。也可能是需要<strong>保留一份对象当前的状态</strong>。这样的需求十分常见。</p>
+<p>在没有学过设计模式或一些现代开发技巧前，想当然的解决办法是，先通过<code>new</code>关键字新建一个对象，然后反复调用其<code>set</code>方法，设置值来自调用原型中的<code>get</code>方法。一些语言，例如C++，也可以通过拷贝构造函数，来完成对象的克隆。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">ClassA</span> <span class="hljs-variable">newObject</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ClassA</span>();<br>newObject.setA(oldObject.getA());<br>newObject.setB(oldObject.getB());<br>...<br></code></pre></td></tr></table></figure>
+<p>这样做有时行得通，但需要满足一些前提条件。例如这需要被克隆的类需要提供所有字段的<code>get</code>和<code>set</code>的公共方法。例如客户端需要明确被克隆类的具体类型，才能使用<code>new</code>关键字创建具体类对象。客户端也需要知道关于被克隆类的细节，有哪些字段，增加了代码的耦合度。</p>
+<p>原型模式提供了一个方案，<strong>基于一个已存在的对象克隆生成新的对象，而无需知道具体实现细节</strong>。</p>
+<h2 id="原型模式">原型模式</h2>
+<p>在不知道被克隆对象类型的情况下，需要根据运行时具体类型产生不同运行结果，通常会利用<strong>多态</strong>特性，并在具体类中定义克隆方法，在克隆方法中新建自身类的对象，并完成字段从原型到新对象的复制。由于方法定义在类中，因此也不涉及字段的访问权限问题，也做到了克隆过程和客户端分离的作用。</p>
+<p>在<code>Java</code>中，所有类都继承于<code>Object</code>类。在<code>Object</code>类中，声明了一个克隆方法，方法的签名如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">protected</span> <span class="hljs-keyword">native</span> Object <span class="hljs-title function_">clone</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> CloneNotSupportedException;<br></code></pre></td></tr></table></figure>
+<p><code>protected</code>意味着所有继承的子类均可调用这个方法，<code>native</code>关键字则声明方法是由本地语言实现的，而不是由
+<code>Java</code>
+语言实现的。这个方法在<code>JDK</code>中的注释如下：</p>
+<blockquote>
+<p>The method clone for class Object performs a specific cloning
+operation. First, if the class of this object does not implement the
+interface Cloneable, then a CloneNotSupportedException is thrown. Note
+that all arrays are considered to implement the interface Cloneable and
+that the return type of the clone method of an array type T[] is T[]
+where T is any reference or primitive type. Otherwise, this method
+creates a new instance of the class of this object and initializes all
+its fields with exactly the contents of the corresponding fields of this
+object, as if by assignment; the contents of the fields are not
+themselves cloned. Thus, this method performs a "shallow copy" of this
+object, not a "deep copy" operation. The class Object does not itself
+implement the interface Cloneable, so calling the clone method on an
+object whose class is Object will result in throwing an exception at run
+time.</p>
+</blockquote>
+<p>在每个对象上调用这个方法时，会先检查具体类是否实现了<code>Cloneable</code>接口，然后新建对象，并完成了所有字段的<strong>浅拷贝</strong>。这个<code>Object</code>类的<code>clone</code>方法，相当于帮我们完成了<code>new</code>对象和字段复制。</p>
+<p>如果想通过这种方式完成对象克隆，需要在具体类中实现<code>Cloneable</code>接口。并重写<code>clone</code>方法，将访问修饰符改为<code>public</code>。方法体内可以简单调用<code>super.clone()</code>，也就是<code>Object</code>类的<code>clone</code>方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ClassA</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Cloneable</span> &#123;<br>    <span class="hljs-meta">@override</span><br>    <span class="hljs-keyword">public</span> ClassA <span class="hljs-title function_">clone</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> CloneNotSupportedException &#123;<br>        <span class="hljs-keyword">return</span> (ClassA)<span class="hljs-built_in">super</span>.clone();<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">()</span>&#123;<br>    <span class="hljs-comment">// 调用原型对象的clone方法</span><br>	<span class="hljs-type">ClassA</span> <span class="hljs-variable">newObject</span> <span class="hljs-operator">=</span> oldObject.clone();<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>上例代码中，对返回对象做了<strong>类型转换</strong>。原方法返回<code>Object</code>类型，重写时可以返回其子类类型。这是因为在此具体类中，<code>clone</code>方法返回对象的类型是确定的，可以在此直接完成类型转换，而不是由客户端执行类型转换。</p>
+<p>在<code>java</code>之外的语言中，由于无法调用<code>Object</code>类的<code>clone</code>方法，也没有<code>Cloneable</code>接口，可以在方法体中通过调用空参或有参构造函数，再进行字段设置并返回来实现。以下是<code>C++</code>中的实现。</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs c++"><span class="hljs-built_in">ProductA</span>(<span class="hljs-type">const</span> ProductA&amp; other)&#123;<br>    <span class="hljs-comment">// 拷贝构造函数实现</span><br>    ...<br>&#125;<br><br><span class="hljs-function">ProductA* <span class="hljs-title">clone</span><span class="hljs-params">()</span> <span class="hljs-type">const</span> </span>&#123;<br>    <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-built_in">ProductA</span>(*<span class="hljs-keyword">this</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>总之，最简单的原型模式就是在类中定义一个拷贝方法，在拷贝方法中完成创建自身类对象，属性复制，并返回对象的操作。</p>
+<h2 id="抽象产品拓展">抽象产品拓展</h2>
+<p>在上一章中，只涉及了一种产品类的复制。产品类的拓展模式在前些篇中已出现多次，被细分为抽象产品和具体产品。如果在需要客户端中使用抽象产品作为变量类型，调用克隆方法，则这意味着克隆方法需要声明在接口中。在<code>java</code>中，可以通过继承<code>Cloneable</code>接口，并声明返回接口类型的克隆方法。并在子类中实现这个克隆方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 接口实现</span><br><span class="hljs-keyword">interface</span> <span class="hljs-title class_">InterfaceA</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Cloneable</span> &#123;<br>    InterfaceA <span class="hljs-title function_">clone</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> CloneNotSupportedException;<br>&#125;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">ProductA</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">InterfaceA</span> &#123;<br>    <span class="hljs-keyword">private</span> String field;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">ProductA</span><span class="hljs-params">(String field)</span> &#123;<br>        <span class="hljs-built_in">this</span>.field = field;<br>    &#125;<br>    <span class="hljs-comment">// 实现克隆方法</span><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> InterfaceA <span class="hljs-title function_">clone</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> CloneNotSupportedException &#123;<br>        <span class="hljs-keyword">return</span> (ProductA) <span class="hljs-built_in">super</span>.clone();<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-comment">// 创建接口类型对象，并调用clone方法</span><br>    <span class="hljs-type">InterfaceA</span> <span class="hljs-variable">objectA</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ProductA</span>(<span class="hljs-string">&quot;Draco&quot;</span>);<br>    <span class="hljs-type">InterfaceA</span> <span class="hljs-variable">objectB</span> <span class="hljs-operator">=</span> objectA.clone();<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>抽象产品也可以定义为抽象类。如果所有子类都是简单调用<code>Object</code>中的<code>clone</code>方法，则可以在抽象类中实现<code>Cloneable</code>接口，并提供方法默认实现。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 抽象类实现</span><br><span class="hljs-keyword">abstract</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AbstractProduct</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Cloneable</span> &#123;<br>    <span class="hljs-keyword">public</span> AbstractProduct <span class="hljs-title function_">clone</span><span class="hljs-params">()</span> <span class="hljs-keyword">throws</span> CloneNotSupportedException &#123;<br>        <span class="hljs-keyword">return</span> (AbstractProduct) <span class="hljs-built_in">super</span>.clone();<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">ProductA</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">AbstractProduct</span> &#123;<br>    <span class="hljs-keyword">private</span> String field;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">ProductA</span><span class="hljs-params">(String field)</span> &#123;<br>        <span class="hljs-built_in">this</span>.field = field;<br>    &#125;<br>    <span class="hljs-comment">// 无需实现克隆方法，使用抽象父类中的默认方法</span><br>&#125;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-comment">// 创建抽象类对象，并调用clone方法</span><br>    <span class="hljs-type">AbstractProduct</span> <span class="hljs-variable">objectA</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ProductA</span>(<span class="hljs-string">&quot;Draco&quot;</span>);<br>    <span class="hljs-type">AbstractProduct</span> <span class="hljs-variable">objectB</span> <span class="hljs-operator">=</span> objectA.clone();<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>如果语言未提供类似<code>java</code>的<code>Cloneable</code>接口，则可以自定义一个接口，在接口中声明一个克隆方法，在抽象产品接口类中继承此接口，并在子类中实现克隆方法的具体实现。</p>
+<h2 id="现代方法">现代方法</h2>
+<p>由于将属性从一个对象复制到另一个对象，这个功能是如此的使用频繁，以至于许多工具类都提供类似功能。因此上文提到的原型模式，在实际使用中通常都被工具类的使用给替代了，使用频率并不高。</p>
+<p>就<code>java</code>来说，最常用的就是<code>Apache BeanUtils</code>和<code>Spring BeanUtils</code>。通常认为后者在可用性和性能上更好，使用更多。这两者都是通过<strong>反射</strong>特性来完成对象间属性拷贝。<code>Spring BeanUtils</code>提供了静态方法，可以传入两个对象，即可把其中一个对象的属性复制到另一个当中。甚至传入的两个对象在类型上不需要有相同或继承的关系，只要有同名同类型的属性即可拷贝。<code>hutool BeanUtil</code>还提供了静态方法，可以传入返回对象的类型，直接获取拷贝后的对象。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">InterfaceA</span> <span class="hljs-variable">objectA</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ProductA</span>(<span class="hljs-string">&quot;Draco&quot;</span>);<br><span class="hljs-comment">// 新建一个空对象</span><br><span class="hljs-type">InterfaceA</span> <span class="hljs-variable">objectB</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ProductA</span>();<br><span class="hljs-comment">// Spring BeanUtils 完成属性复制</span><br>BeanUtils.copyProperties(objectA, objectB)<br>    <br><span class="hljs-comment">// hutool BeanUtil 完成对象创建和属性复制</span><br><span class="hljs-type">InterfaceA</span> <span class="hljs-variable">objectC</span> <span class="hljs-operator">=</span> BeanUtil.copyProperties(objectA, ProductA.class)<br></code></pre></td></tr></table></figure>
+<h2 id="浅拷贝和深拷贝">浅拷贝和深拷贝</h2>
+<p>在不同语言中，数据类型大致可以分为<strong>基础数据类型</strong>和<strong>引用数据类型</strong>。成员变量中，基础数据类型会将实际数值储存在对象中，而引用数据类型存储的是对象的地址，通过这个地址可以访问对象的属性和方法。</p>
+<p>在复制对象时，对于基础数据类型，是内存区域的复制，实际数值会在两个对象中各保存一份；而对于引用数据类型，如果只是引用的复制，复制完两个引用仍指向了同一个对象。这种对于复制模式，称为<strong>浅拷贝</strong>。与之对应的<strong>深拷贝</strong>，则是将每个引用数据类型的对象，在内存中新<code>new</code>了一份，并将返回的引用赋值给成员变量。</p>
+<p>浅拷贝可能存在的问题是，复制完后，对其中一个对象进行了改动，另一个对象的内容也会随之改动，<strong>引用数据类型的成员变量不满足拷贝后的对象与原对象相互独立的特性</strong>。但由于深拷贝需要创建新的对象，会更耗费内存和时间。实际情况下，如果对象在复制完后，不会对其中引用数据类型进行变动，使用浅拷贝提升性能是可取的。</p>
+<p>另外，对于一些不可变类型来说，由于每次变动都会新建一个对象，就算是引用数据类型，使用浅拷贝也是安全的。最典型的便是<code>String</code>、包装数据类型，如果对象中只包含基础数据类型、<code>String</code>和包装数据类型，那么使用浅拷贝也是安全的。</p>
+<h2 id="总结">总结</h2>
+<p>最简单的原型模式，就是在产品类中定义一个拷贝方法，在方法体中完成新建对象和属性的复制。</p>
+<p>如果产品类需要拓展，细分为抽象产品和具体产品，则需要在抽象产品中定义拷贝方法，返回类型设定为抽象产品类，并在具体产品类中实现拷贝方法。</p>
+<p>现代开发习惯中，通常使用工具类来完成对象的拷贝，实现原型模式。</p>
+<p>浅拷贝性能好，但可能存在拷贝后的对象与原型不独立的问题。需要根据实际情况来选择。如果成员变量都是不可变对象，则可以安全地使用浅拷贝。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/DesignPattern/" class="category-chain-item">DesignPattern</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/DesignPattern/" class="print-no-link">#DesignPattern</a>
+      
+        <a href="/tags/Java/" class="print-no-link">#Java</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Design-Pattern-Prototype</div>
+      <div>http://example.com/2024/03/22/Design-Pattern-Prototype/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>DracoYu</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年3月22日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/03/13/Design-Pattern-Builder/" title="Design-Pattern-Builder">
+                        <span class="hidden-mobile">Design-Pattern-Builder</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
