@@ -1,0 +1,783 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/Memcached.svg">
+  <link rel="icon" href="/img/Memcached.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="DracoYu">
+  <meta name="keywords" content="学习笔记,Java,JavaScript,后端,前端">
+  
+    <meta name="description" content="桥接模式(Bridge Pattern)是一种结构型模式。它的主要作用是将抽象部分与实现部分分离，使它们可以独立变化。 场景 有一个形状Shape类，从它扩展出两个子类：长方形Rectangle和 圆形Circle。假设需要在另一个维度颜色Color上，对Shape再进行扩展细分。如果只有红色Red和蓝色Blue两种颜色，那么一共需要四个类覆盖所有的组合。 12345">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Design-Pattern-Bridge">
+<meta property="og:url" content="http://example.com/2024/07/26/Design-Pattern-Bridge/index.html">
+<meta property="og:site_name" content="DracoYu&#39;s MindCache">
+<meta property="og:description" content="桥接模式(Bridge Pattern)是一种结构型模式。它的主要作用是将抽象部分与实现部分分离，使它们可以独立变化。 场景 有一个形状Shape类，从它扩展出两个子类：长方形Rectangle和 圆形Circle。假设需要在另一个维度颜色Color上，对Shape再进行扩展细分。如果只有红色Red和蓝色Blue两种颜色，那么一共需要四个类覆盖所有的组合。 12345">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-07-26T02:13:12.000Z">
+<meta property="article:modified_time" content="2024-08-05T08:48:44.469Z">
+<meta property="article:author" content="DracoYu">
+<meta property="article:tag" content="DesignPattern">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Design-Pattern-Bridge - DracoYu&#39;s MindCache</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>DracoYu&#39;s MindCache</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Design-Pattern-Bridge"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-07-26 10:13" pubdate>
+          2024年7月26日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          20 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Design-Pattern-Bridge</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p><strong>桥接模式</strong><code>(Bridge Pattern)</code>是一种<strong>结构型模式</strong>。它的主要作用是将<strong>抽象</strong>部分与<strong>实现</strong>部分分离，使它们可以独立变化。</p>
+<h2 id="场景">场景</h2>
+<p>有一个形状<code>Shape</code>类，从它扩展出两个子类：长方形<code>Rectangle</code>和
+圆形<code>Circle</code>。假设需要在另一个维度颜色<code>Color</code>上，对<code>Shape</code>再进行扩展细分。如果只有红色<code>Red</code>和蓝色<code>Blue</code>两种颜色，那么一共需要四个类覆盖所有的组合。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs text">                   ----Shape---<br>                  /            \<br>         Rectangle              Circle<br>        /         \            /      \<br>BlueRectangle  RedRectangle BlueCircle RedCircle<br></code></pre></td></tr></table></figure>
+<p>在形状和颜色种类不多时，上述的继承关系并没有太大问题。但如果有一百种形状，那么想新加一种颜色，就需要新增一百个新增颜色和已有形状组合的类。更不用说需要在更多维度进行扩展，例如材质<code>Material</code>、尺寸<code>Size</code>等等。具体来说，类需要在<span
+class="math inline">\(n\)</span>个维度拓展，第<span
+class="math inline">\(i\)</span>个维度的种类为<span
+class="math inline">\(m_i\)</span>，那么类的组合数量为<span
+class="math inline">\(\prod \limits_{i=1}^n
+m_i\)</span>。这种类的数量随着维度的扩展剧烈增长，造成系统复杂性过高、难以维护的情况，称为<strong>类爆炸</strong>。</p>
+<p><code>BlueRectangle</code>和<code>BlueCircle</code>关于颜色方面的代码中，是高度重复的。当需要对<code>Blue</code>的代码内容进行改动时，需要改动所有和<code>Blue</code>有关的类。从另一个角度说，形状和颜色是两种不相关的维度。如果把两个维度写在同一个类中，违反了<strong>单一职责原则</strong>。这可能导致改动颜色代码时，会破坏形状中的功能。</p>
+<h2 id="桥接模式">桥接模式</h2>
+<p>解决方法也很直观。对于重复出现的<code>Bule</code>和<code>Red</code>代码，抽取到单独的类中。并在形状中，组合对颜色的引用。当形状需要访问颜色相关的特性时，委派给具体颜色对象的方法。<strong>形状中对颜色的引用，像一座桥梁，将两者的功能组合到一起，因此称其为桥接模式</strong>。此时类关系降维成了下图。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">          ----Shape---                        Color<br>         /            \                       /   \<br>Rectangle(Color)   Circle(Color)           Blue   Red<br></code></pre></td></tr></table></figure>
+<p>重构完后，类的数量变成了<span class="math inline">\(\sum
+\limits_{i=1}^n
+m_i\)</span>，代码重复率下降，形状和颜色的代码也不再耦合。</p>
+<pre><code class=" mermaid">classDiagram
+    direction TB
+    class Client
+    
+    class Abstraction &#123;
+    	- Implementation i
+    	+featureA()
+    &#125;
+
+	Client --&gt; Abstraction
+	
+    class RefinedAbstraction &#123;
+    	+featureB()
+    &#125;
+    
+	RefinedAbstraction --|&gt; Abstraction
+	
+	class Implementation &#123;
+		&lt;&lt; interface &gt;&gt;
+		+method()
+	&#125;
+	
+	Abstraction --o Implementation
+	
+	class ConcreteImplementation &#123;
+		+method()
+	&#125;
+
+	ConcreteImplementation ..|&gt; Implementation
+</code></pre>
+<p>在类图中，上例<code>Shape</code>对应<strong>抽象</strong><code>Abstraction</code>，<code>Color</code>对应<strong>实现</strong><code>Implementation</code>，<code>Rectangle</code>和<code>Cirle</code>对应<strong>精确抽象</strong><code>RefinedAbstraction</code>，<code>Blue</code>和<code>Red</code>对应<strong>具体实现</strong><code>ConcreteImplementation</code>。核心结构是，<strong>抽象</strong>通过组合，持有了<strong>实现</strong>的对象。为了获得了<strong>实现</strong>相关的特性，当<strong>抽象</strong>中方法调用，需要委派给实际<strong>实现</strong>对象。客户端只与<strong>抽象</strong>交互。</p>
+<p>实际上，桥接模式在前文中已经出现过。<a href="/2023/06/27/Design-Pattern-Design-Principle/" title="Design-Pattern-Design-Principle">Design-Pattern-Design-Principle</a>中，在讨论<strong>组合优于继承</strong>的话题时，举例了<strong>抽象</strong>怪物类中，组合了<strong>实现</strong>飞行和攻击的能力。这里通过桥接模式，避免了“会攻击不会飞行的怪物类”、“不会攻击会飞行的怪物类”的产生。</p>
+<h2 id="抽象与实现">抽象与实现</h2>
+<p>在描述桥接模式时，使用了<code>GoF</code>书籍中定义的概念，<strong>抽象</strong>与<strong>实现</strong>。</p>
+<p>由于这两个概念，和面向对象中的<strong>抽象类</strong>和<strong>接口实现</strong>概念形式上相似，容易引起歧义。让人觉得<strong>抽象</strong>是接口定义，而<strong>实现</strong>是对接口的具体实现。然而两者没有必然联系，虽然语义上存在相似之处。</p>
+<p>具体来说，桥接模式中的<strong>抽象</strong>，不一定是<strong>抽象类</strong>，可以是<strong>具体类</strong>。<strong>实现</strong>也不一定<strong>接口实现类</strong>，一般是<strong>接口</strong>本身。<strong>抽象</strong>和<strong>实现</strong>也不是<a href="/2023/06/12/Design-Pattern-Relationships-Between-Objects/" title="Design-Pattern-Relationships-Between-Objects">Design-Pattern-Relationships-Between-Objects</a>中的继承或实现关系，而是组合关系。所以这里的抽象和实现，和编程语言中说的不是同一个事。</p>
+<p>桥接模式中的<strong>抽象</strong>，一般是高阶控制层，负责定义对象的行为和属性，使得客户端可以通过它与实现部分进行交互，而不必关心实现的细节；而<strong>实现</strong>定义了抽象部分所描述的操作的具体实现，关注的是如何执行操作。从这个角度看，宏观上<strong>抽象</strong>与<strong>实现</strong>之间的关系和编程语言中的<strong>接口</strong>和<strong>接口实现</strong>概念相近，都是一个负责定义行为，另一个负责具体实现，强调将接口与其实现分离，以提高灵活性和可扩展性。区别是<strong>接口</strong>与<strong>接口实现</strong>通常只涉及一个层次，而<strong>抽象</strong>与<strong>实现</strong>涉及多个层次。<strong>抽象</strong>与<strong>每个实现</strong>都对应着一组<strong>接口</strong>与<strong>接口实现</strong>。例如上例中，抽象对应着<code>Shape</code>抽象类和<code>Rectangle</code>和<code>Cirle</code>具体类，实现对应着<code>Color</code>接口和<code>Blue</code>和<code>Red</code>实现类。并且在<strong>抽象</strong>中，包含着对实现的引用，和核心业务逻辑和行为；而在<strong>接口</strong>中，无法定义成员变量，通常也不会包含实际业务代码（虽然<code>java8</code>接口也可以有默认方法）。</p>
+<p>桥接模式适用于类在多个维度上进行拓展的场景。在上例中，我们天然地认为了<strong>形状</strong>是<strong>抽象</strong>，<strong>颜色</strong>是<strong>实现</strong>，是<strong>形状</strong>持有了<strong>颜色</strong>的引用。<strong>抽象</strong>和<strong>实现</strong>无法相互替换，意味着多个维度并不是一视同仁，地位均等的。哪个为抽象，哪个为实现，主要是根据这些维度在系统中的角色，和它们对系统的设计影响来决定的。一个有颜色的形状，会比有形状的颜色要来的更符合客户端的需求。</p>
+<p>此外桥接模式中，通过抽象和实现进行分离，再通过组合，形成<span
+class="math inline">\(AB = A +
+B\)</span>的效果，需要两者功能相互独立。如果具体抽象会影响到具体实现的行为，则不适用于桥接模式。</p>
+<h2 id="与适配器模式的区别">与适配器模式的区别</h2>
+<p>桥接模式中，抽象组合了实现，通过成员变量持有被包装类的对象，也是一种<strong>包装</strong>。</p>
+<p>适配器模式与桥接模式的主要区别如下：</p>
+<ol type="1">
+<li>适配器模式中，被包装类的代码通常来自第三方库或陈年代码，没有改动权限；而在桥接模式中，实现（被包装的对象）的代码通常需要开发人员自己编写。</li>
+<li>从动机上来说，适配器模式则是将被适配接口，转换为了客户端需要的目标接口，扩展了代码的兼容性；桥接模式把相互独立的抽象和实现抽取到了两个类中，避免类爆炸。</li>
+<li>适配器模式的目标接口与被适配接口，通常是功能相近但不同的接口；桥接模式的抽象与实现中的接口，通常是两个不同维度，接口完全不同。</li>
+</ol>
+<h2 id="与策略模式的区别">与策略模式的区别</h2>
+<p>在行为型模式中有一种策略模式。策略模式中通常是一个<strong>上下文</strong>组合一个<strong>策略</strong>的引用，也是一种<strong>包装</strong>。<strong>策略</strong>通常是一个接口，在运行时能够更换其不同实现类。从这来看，策略模式的类结构图和桥接模式几乎相同。网上很多回答会强调，桥接模式是<strong>结构型模式</strong>，策略模式是<strong>行为型模式</strong>，所以他们俩不一样。这是在玩概念游戏，是在用定义去解释特征。对于我们区分两者也没有帮助。</p>
+<blockquote>
+<p>如果它看起来像鸭子、游泳像鸭子、叫声像鸭子，那么它可能就是只鸭子。</p>
+</blockquote>
+<p>我们应更多从本质上进行区分。实际上很多策略模式的例子，在桥接模式的概念中解释也没有太多违和感。<strong>上下文</strong>通常作为高阶控制层，在实际执行时委派给了具体<strong>策略</strong>实现。<strong>上下文</strong>通常独立于<strong>具体策略</strong>，因此可以相互独立地改动两部分代码。这些正是上文中对桥接模式的描述，在策略模式上同样成立。最显著的区别，是桥接模式中，<strong>抽象</strong>可以进行拓展，而策略模式中的<strong>上下文</strong>通常不拓展，除此外没有区别。因此笔者认为<strong>策略模式是桥接模式的一种特例</strong>。实际编写代码时，通常也不加区分，不会指定要使用其中一种。</p>
+<h2 id="总结">总结</h2>
+<p>如果一个类，需要在多个维度上进行拓展，可能会导致类爆炸问题，可以通过桥接模式进行解耦。</p>
+<p>选定其中相对用于控制的维度作为<strong>抽象</strong>，将其他维度抽取成<strong>实现</strong>。通过组合的形式在抽象中持有实现的引用。在客户端访问抽象时，把实际执行委派给<strong>实现</strong>对象。</p>
+<p>桥接模式与适配器模式、策略模式均为包装。结构相似，但又有所不同。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/DesignPattern/" class="category-chain-item">DesignPattern</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/DesignPattern/" class="print-no-link">#DesignPattern</a>
+      
+        <a href="/tags/Java/" class="print-no-link">#Java</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Design-Pattern-Bridge</div>
+      <div>http://example.com/2024/07/26/Design-Pattern-Bridge/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>DracoYu</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年7月26日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/07/03/Design-Pattern-Adapter/" title="Design-Pattern-Adapter">
+                        <span class="hidden-mobile">Design-Pattern-Adapter</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.utils.listenDOMLoaded(function() {
+      Fluid.events.registerRefreshCallback(function() {
+        if ('mermaid' in window) {
+          mermaid.init();
+        }
+      });
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
