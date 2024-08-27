@@ -1,0 +1,836 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/Memcached.svg">
+  <link rel="icon" href="/img/Memcached.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="DracoYu">
+  <meta name="keywords" content="学习笔记,Java,JavaScript,后端,前端">
+  
+    <meta name="description" content="最近读了Martin Fowler关于IoC和DI的文章，觉得之前SpringBoot-IoC-DI写的还是太过狭隘。因此本篇对这个话题进行补充。 IoC 和 DI 的关系 在上一篇文章中，首段的描述似乎把DI定义为与IoC同级的概念，这种暗示是错误的。  而Spring Core完成了两个关键概念：IoC（Inversion of Control，控制反转）和DI（Dependency">
+<meta property="og:type" content="article">
+<meta property="og:title" content="SpringBoot-IoC-DI-PartII">
+<meta property="og:url" content="http://example.com/2024/08/16/SpringBoot-IoC-DI-PartII/index.html">
+<meta property="og:site_name" content="DracoYu&#39;s MindCache">
+<meta property="og:description" content="最近读了Martin Fowler关于IoC和DI的文章，觉得之前SpringBoot-IoC-DI写的还是太过狭隘。因此本篇对这个话题进行补充。 IoC 和 DI 的关系 在上一篇文章中，首段的描述似乎把DI定义为与IoC同级的概念，这种暗示是错误的。  而Spring Core完成了两个关键概念：IoC（Inversion of Control，控制反转）和DI（Dependency">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-08-16T02:17:19.000Z">
+<meta property="article:modified_time" content="2024-08-27T11:44:04.309Z">
+<meta property="article:author" content="DracoYu">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="SpringBoot">
+<meta property="article:tag" content="IoC">
+<meta property="article:tag" content="DI">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>SpringBoot-IoC-DI-PartII - DracoYu&#39;s MindCache</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>DracoYu&#39;s MindCache</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="SpringBoot-IoC-DI-PartII"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-08-16 10:17" pubdate>
+          2024年8月16日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          31 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">SpringBoot-IoC-DI-PartII</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>最近读了<code>Martin Fowler</code>关于<code>IoC</code>和<code>DI</code>的<a
+target="_blank" rel="noopener" href="https://www.martinfowler.com/articles/injection.html">文章</a>，觉得之前<a href="/2023/04/13/SpringBoot-IoC-DI/" title="SpringBoot-IoC-DI">SpringBoot-IoC-DI</a>写的还是太过狭隘。因此本篇对这个话题进行补充。</p>
+<h2 id="ioc-和-di-的关系">IoC 和 DI 的关系</h2>
+<p>在上一篇文章中，首段的描述似乎把<code>DI</code>定义为与<code>IoC</code>同级的概念，这种暗示是错误的。</p>
+<blockquote>
+<p>而<code>Spring Core</code>完成了两个关键概念：<code>IoC</code>（Inversion
+of Control，控制反转）和<code>DI</code>（Dependency
+Injection，依赖注入）。</p>
+</blockquote>
+<p>实际上，<code>IoC</code>是一种设计原则或者说设计理念，而<code>DI</code>是实现这种设计原则的一种具体方式。除<code>DI</code>以外，还有其他实现<code>IoC</code>的方式。<code>IoC</code>在不同语境下，也存在着不同的解释。</p>
+<p>通俗地说，<code>DI</code>是<code>IoC</code>的一种特例，是<strong>在将不同组件/模块组合成一个大型程序的语境下，实现控制反转</strong>的一类方法。</p>
+<h2 id="ioc">IoC</h2>
+<p><code>IoC</code>（Inversion of
+Control，控制反转），在上篇中默认了<strong>将不同组件/模块组合成一个大型程序的语境</strong>，给出了狭隘的定义。</p>
+<blockquote>
+<p><code>IoC</code>是一种设计模式，它将对象的创建和管理的控制从应用程序代码转移到了容器中。</p>
+</blockquote>
+<p>广义的<code>IoC</code>不限于此。要搞清什么是控制反转，那么就得清楚，<strong>被控制的是什么，被反转的又是什么</strong>。</p>
+<p>程序员学习编程语言，通常会从命令行程序开始。在命令行中输出提示语句，等待用户输入。程序将用户输入保存在变量中，然后输出下一个提示语句并等待。在这个过程中，用户无法改变输入顺序。比如程序要求先输入姓名，然后输入性别，最后输入年龄，用户没法先输入年龄，后输入姓名。这是因为程序的运行顺序已经在编码时确定，编码（内部）顺序控制着程序的执行顺序。这也是面向过程编程的特点。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs Pseudocode">print &quot;enter your name&quot;<br>read name<br>print &quot;enter your age&quot;<br>read age<br>etc...<br>store in database<br></code></pre></td></tr></table></figure>
+<p>更进一步，一些命令行程序允许用户输入操作指令，来控制程序的执行顺序。例如输入<code>name</code>后，程序等待用户输入姓名，而输入<code>q</code>后程序则终止。这样用户可以按照任意顺序进行输入，甚至修改已输入的内容。此时，程序的执行顺序在编码时是不确定的，而是在运行时，根据用户（外部）行为随机应变的。从代码上看，录入姓名功能的代码，并不知道自己何时将被调用。外部可能包含一个循环和<code>if</code>语句，根据用户输入的<code>name</code>和<code>q</code>，来调用对应功能的代码。这实现了<strong>控制反转</strong>。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs Pseudocode">loop<br>    print &quot;enter your operator, &#x27;name&#x27; for set name, &#x27;q&#x27; for quit&quot;<br>    read operator<br>    if operator == name<br>        call setName<br>    else if operator == q<br>        call quit<br>    etc...<br>end loop<br><br>function setName:<br>    print &quot;enter your name&quot;<br>    read name<br></code></pre></td></tr></table></figure>
+<p>再进一步，不再是命令行，而是具有<code>GUI</code>的程序。用户通过选中文本框输入，在任意时刻点击提交或取消按钮，来控制程序的执行顺序。用户控制程序的执行顺序变得更加自由。这更加实现了<strong>控制反转</strong>。</p>
+<p><strong>总结上述例子，当程序功能的执行顺序/时机由外部控制，而不是内部定义，就实现了控制反转</strong>。这回答了本节开头的问题，<strong>被控制的是程序功能的执行顺序/时机，被反转的是控制方由内部转为外部</strong>。</p>
+<p>实现了控制反转时，体现在代码中的特点，通常是<strong>定义了回调函数(callback)</strong>。在上例中，设置名称和退出方法，都是回调函数。这两个方法的执行时机，在编译时无法知晓。条件满足时，会由外部控制器调用具体方法。在编写方法时，不用关心方法会何时被执行。这意味着<code>what to do</code>和<code>when to do</code>的代码是分开的。</p>
+<h2 id="spring中的ioc">Spring中的IoC</h2>
+<p>上一节提到控制反转，<code>IoC</code>是将程序功能的执行控制由内部转移到外部，实现<code>IoC</code>的特点是定义了回调函数。那么在提到<strong><code>Spring</code>实现了<code>IoC</code>时</strong>，内部和外部指什么，又是定义了哪个回调函数。</p>
+<p>在回答上面问题之前，先聊聊使用<code>Spring</code>的动机。</p>
+<p>程序员都是从某个单一功能的程序开始学习编程，后续也少有功能的扩展。而企业中运行的应用程序（通常称为<strong>系统</strong>）随着版本更迭，通常由多个不同的开发人员合作完成各个功能的扩展。为了避免多人开发时，开发人员相互影响，提出了<strong>模块化编程</strong>的思想。主旨就是将功能拆分成多个模块/文件，每个模块负责实现特定的功能或逻辑。模块化编程可以提高代码的可维护性、可读性、复用性。安排开发人员开发不同模块，也能减少相互影响的程度。企业应用常见的<code>MVC</code>(Model-View-Controller，模型-视图-控制器)模型也正是模块化编程的体现。</p>
+<p>模块化编程下，原本复杂的功能，被拆分成多个功能模块/组件。在实际使用应用程序时，就涉及<strong>将多个功能各异的模块，组装成一个应用程序</strong>。具体来说，模块之间存在着依赖（模块存在的意义就是被其他模块调用），例如<code>A</code>模块通过成员变量持有<code>B</code>模块的引用，并在A的方法定义中，调用了<code>B</code>模块中的方法。这就引起了一个问题，<strong>如何处理模块间的依赖关系，将各个模块链接在一起</strong>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">A</span> &#123;<br>    <span class="hljs-comment">// 对B模块的依赖</span><br>	<span class="hljs-keyword">private</span> B b;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>最直观简单的方式，就是<code>new</code>一个<code>B</code>对象。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">A</span> &#123;<br>    <span class="hljs-comment">// 对B模块的依赖</span><br>	<span class="hljs-keyword">private</span> <span class="hljs-type">B</span> <span class="hljs-variable">b</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">B</span>();<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>这样做的确能把<code>A</code>和<code>B</code>联系起来。但如果还有其他模块也需要依赖模块<code>B</code>，并且也是通过这种形式创建再链接，那么在内存空间会存在<code>B</code>的多个实例。每个模块中对<code>B</code>的依赖都是一个独立的实例。如果模块<code>B</code>包含一些状态，多个实例的状态不一致会引起问题。因此我们更希望多个模块依赖<code>B</code>，引用的是同一个<code>B</code>实例。</p>
+<p>此外，为了写出通用代码，我们会将<code>B</code>模块设置成一个接口，使得A模块的功能可以独立于<code>B</code>模块的具体实现。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">A</span> &#123;<br>    <span class="hljs-comment">// 对B模块的依赖</span><br>	<span class="hljs-keyword">private</span> <span class="hljs-type">BInterface</span> <span class="hljs-variable">b</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BImplement</span>();<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>语法上代码可以通过编译。但这种写法使得<code>A</code>模块不仅依赖了<code>B</code>接口，同时也通过<code>new</code>关键字依赖了<code>B</code>接口的具体实现。</p>
+<p><code>B</code>接口有多个实现，具体需要哪个实现，可能在运行时才能确定，例如根据配置文件或用户输入。直接在模块中创建任意一个<code>B</code>接口实例，会使得定义<code>B</code>接口变得没有意义，仍然不是一个通用的代码。</p>
+<p>所以对于<code>A</code>来说，要写出通用的代码，不应该依赖<code>B</code>接口具体实现。换句话说，在<code>A</code>的内部代码中，无法完成对成员变量<code>B</code>接口赋值。那么就需要一个额外的组装器类，专负责把<code>A</code>和<code>B</code>拼接在一起。</p>
+<pre><code class=" mermaid">classDiagram
+	direction TB
+	class A &#123;
+		- BInterface
+		+ Amethod()
+	&#125;
+	
+    class BInterface &#123;
+        &lt;&lt; interface &gt;&gt;
+        + Bmethod()
+	&#125;
+	
+	A --o BInterface
+	
+	class BImplementation &#123;
+		+ Bmethod()
+	&#125;
+	
+	BImplementation ..|&gt; BInterface
+	
+	class Assembler &#123;
+		+ assembleAAndB（）
+	&#125;
+	
+	Assembler ..&gt; A
+    Assembler ..&gt; BImplementation
+    Assembler ..&gt; BInterface
+
+</code></pre>
+<p>具体来说，组装类需要找到符合条件的对象，通过某种方式把对象赋值到需要的地方。<code>DI</code>就是其中一种方式，指模块通过定义注入方法，等待外部组装器调用，进行依赖链接。<strong>从描述来看，对模块间链接的过程，由模块内部，转移到了外部专门的组装器类，实现了<code>IoC</code>。定义的回调函数，通常是构造函数或setter函数，而外部的组装类，控制了回调函数的执行</strong>。</p>
+<p>对于多个模块来说，每个模块都需要一个组装类。但实际上不同模块的组装类在功能上是高度相似的。抽象地说，就是找到等待注入的回调函数，使用合适的参数调用这些注入方法。因此通常可以将多个模块的组装器类整合到一个通用的组装器类中，我们称之为<strong>容器</strong>。通常容器不仅完成了模块间的链接，还负责了每个模块的创建工作。</p>
+<h2 id="di">DI</h2>
+<p>依赖注入有多种形式，按照<code>Martin Fowler</code>的定义包括：构造器注入、setter注入、接口注入。实际上在现代<code>Spring</code>开发中，使用更多的是基于注解与反射的字段注入，因此对于上述三种注入形式，只是简单了解学习。</p>
+<p>构造器注入，<code>setter</code>注入是较为常见的注入方式。指在模块中，对其依赖的模块，提供对应的构造方法或<code>setter</code>方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">A</span> &#123;<br>    <span class="hljs-comment">// 对B模块的依赖</span><br>	<span class="hljs-keyword">private</span> BInterface b;<br>    <span class="hljs-comment">// 构造器注入</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">A</span><span class="hljs-params">(BInterface b)</span> &#123;<br>    	<span class="hljs-built_in">this</span>.b = b;<br>    &#125;<br>    <span class="hljs-comment">// setter注入</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setB</span><span class="hljs-params">(BInterface b)</span> &#123;<br>        <span class="hljs-built_in">this</span>.b = b;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>编写的注入方法无需考虑具体的调用时机，因此某种程度这些方法也属于回调函数。定义的方法会由容器进行调用。容器会判断，需要注入的类是否含有构造方法或<code>setter</code>方法，找到符合条件的对象，实际调用这些注入方法。</p>
+<p>接口注入是指，定义一个注入某个模块的接口，通常只声明一个注入指定模块方法。然后由依赖这个模块的类实现这个接口。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">InjectB</span> &#123;<br>	<span class="hljs-keyword">void</span> <span class="hljs-title function_">injectB</span><span class="hljs-params">(BInterface b)</span><br>&#125;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">A</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">InjectB</span> &#123;<br>	<span class="hljs-keyword">private</span> BInterface b;<br>    <br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">injectB</span><span class="hljs-params">(BInterface b)</span> &#123;<br>    	<span class="hljs-built_in">this</span>.b = b;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>这种方式和<code>setter</code>注入很像，都是定义了一个回调函数。区别是容器可以通过<code>instanceof</code>关键字判断某个类是否实现了注入接口，来确定是否存在需要注入的依赖。如果一个模块依赖着多个模块，会需要实现非常多的接口，显得繁琐，因此实际上接口注入使用不多。<code>Spring</code>中最常见的接口注入形式，是各种<code>xxxAware</code>，例如<code>ApplicationContextAwareProcessor</code>。在此不再赘述。</p>
+<p>上文仅描述了定义这些回调方法。我们仍需要某种方式告知容器，需要对哪些模块进行组装。可以通过多种形式，例如在代码中对需要组装的模块进行注册，或者在<code>XML</code>文件中对<code>bean</code>和其依赖进行描述性定义。容器创建对象和进行组装的时机，取决于具体容器实现。这部分不是本文重点，不再赘述。</p>
+<h2 id="service-locator">Service Locator</h2>
+<p>DI的主要动机是，移除了模块对某些接口具体实现的依赖。DI不是达成这个目的的唯一途径，服务定位（service
+locator）是另一种模式。</p>
+<p>在服务定位模式中，存在一个全局单例对象，掌握着所有接口对应的实现类对象。每个模块可以通过这个服务定位器对象，获取指定接口类型/名称的实例。</p>
+<pre><code class=" mermaid">classDiagram
+	direction TB
+	class A &#123;
+		- BInterface
+		+ Amethod()
+	&#125;
+	
+    class BInterface &#123;
+        &lt;&lt; interface &gt;&gt;
+        + Bmethod()
+	&#125;
+	
+	A --o BInterface
+	
+	class BImplementation &#123;
+		+ Bmethod()
+	&#125;
+	
+	BImplementation ..|&gt; BInterface
+	
+	class Assembler
+	
+    Assembler ..&gt; BImplementation
+    Assembler ..&gt; BInterface
+    
+    class ServiceLocator&#123;
+		+ getB()
+	&#125;
+    A ..&gt; ServiceLocator
+	Assembler ..&gt; ServiceLocator
+	ServiceLocator ..&gt; BInterface
+
+</code></pre>
+<p>在类图中，<code>Assembler</code>和<code>ServiceLocator</code>，通常前者完成对象的创建，后者完成将某个实例与某个接口/名称绑定。两者也可以合并成一个类。</p>
+<p>之后，只需要在需要依赖的模块中，例如构造函数、字段初始化或函数定义中，访问服务定位器的方法，就可完成依赖的链接。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ServiceLocator</span> &#123;<br>    <span class="hljs-comment">// 指定方法获取某个接口对象</span><br>	<span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> BInterface <span class="hljs-title function_">getB</span><span class="hljs-params">()</span> &#123;<br>    	...<br>    &#125;<br>    <span class="hljs-comment">// 通过接口类型获取对象</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> &lt;T&gt; T <span class="hljs-title function_">getBean</span><span class="hljs-params">(Class&lt;T&gt; requiredType)</span> &#123;<br>        ...<br>    &#125;<br>    <br>    <span class="hljs-comment">// 通过名称获取对象</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Object <span class="hljs-title function_">getBean</span><span class="hljs-params">(String name)</span> &#123;<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">A</span> &#123;<br>    <span class="hljs-comment">// 字段初始化时访问服务定位器</span><br>	<span class="hljs-keyword">private</span> <span class="hljs-type">BInterface</span> <span class="hljs-variable">b</span> <span class="hljs-operator">=</span> ServiceLocator.getB();<br>    <span class="hljs-comment">// 默认构造函数中访问服务定位器</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">A</span><span class="hljs-params">()</span> &#123;<br>    	<span class="hljs-built_in">this</span>.b = ServiceLocator.getBean(BInterface.class);<br>    &#125;<br>    <span class="hljs-comment">// 函数中访问服务定位器</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">Amethod</span><span class="hljs-params">()</span> &#123;<br>    	<span class="hljs-built_in">this</span>.b = (BInterface)ServiceLocator.getBean(<span class="hljs-string">&quot;OneOfBImplementation&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>从这里看，服务定位也消除了模块<code>A</code>对<code>B</code>接口具体实现的依赖。模块<code>A</code>对于依赖链接的时机是了解的，是在模块<code>A</code>内部显示定义的。模块<code>A</code>也没有提供相应的回调函数，等待被外部调用。但对于<code>B</code>接口具体实现的实例化过程，是不了解的。因此笔者认为服务定位模式不完全实现了<code>IoC</code>。</p>
+<p>对比<code>DI</code>和服务定位，在<code>DI</code>中，模块对于外部的认知是最少的，甚至不知道容器的存在；而在服务定位中，所有模块都需要依赖服务定位器。服务定位器是一个全局单例，有着全局变量的缺点，例如可能会掩盖模块间的依赖关系。</p>
+<p>在<code>Spring</code>中，<code>BeanFactory</code>容器，同时完成了<code>DI</code>和服务定位两种功能。服务定位对应的就是<code>BeanFactory</code>中的<code>getBean</code>方法。<strong>在源码的注释中，更推荐使用<code>DI</code>来完成依赖链接的功能。</strong></p>
+<blockquote>
+<p>Note that it is generally better to rely on Dependency Injection
+("push" configuration) to configure application objects through setters
+or constructors, rather than use any form of "pull" configuration like a
+BeanFactory lookup. Spring's Dependency Injection functionality is
+implemented using this BeanFactory interface and its subinterfaces.</p>
+</blockquote>
+<h2 id="总结">总结</h2>
+<p>广义的<code>IoC</code>，是指某段程序的执行由外部行为控制，而不是内部定义，则称实现了<code>IoC</code>。</p>
+<p>实现<code>IoC</code>体现在代码中的特征通常是定义了回调函数，将<code>what to do</code>和<code>when to do</code>的代码分开。</p>
+<p>现代大型企业应用程序为了代码可维护性、可读性、复用性，采取了模块化编程的形式。</p>
+<p>在模块化编程中，模块之间存在着依赖，具体体现在一个模块通过成员变量持有另一个模块的引用。因此需要将多个模块组装成应用的过程。</p>
+<p>在将不同组件/模块组合成一个大型程序的语境下，<code>DI</code>实现<code>IoC</code>的一种方式，通常用容器完成这个过程。</p>
+<p><code>DI</code>通常包括构造器注入，<code>setter</code>注入，接口注入。现代更常用的是通过注解和反射的字段注入的方式。</p>
+<p>服务定位也可以消除模块对接口实现类的依赖。通过访问一个全局单例的服务定位器，来获取需要的依赖。</p>
+<p>服务定位没有完全实现<code>IoC</code>。</p>
+<p><code>Spring</code>同时实现了<code>DI</code>和服务定位，但更推荐使用<code>DI</code>。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Java/" class="category-chain-item">Java</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Java/" class="print-no-link">#Java</a>
+      
+        <a href="/tags/SpringBoot/" class="print-no-link">#SpringBoot</a>
+      
+        <a href="/tags/IoC/" class="print-no-link">#IoC</a>
+      
+        <a href="/tags/DI/" class="print-no-link">#DI</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>SpringBoot-IoC-DI-PartII</div>
+      <div>http://example.com/2024/08/16/SpringBoot-IoC-DI-PartII/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>DracoYu</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年8月16日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/07/26/Design-Pattern-Bridge/" title="Design-Pattern-Bridge">
+                        <span class="hidden-mobile">Design-Pattern-Bridge</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
