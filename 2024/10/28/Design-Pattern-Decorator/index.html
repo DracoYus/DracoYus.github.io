@@ -1,0 +1,784 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/Memcached.svg">
+  <link rel="icon" href="/img/Memcached.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="DracoYu">
+  <meta name="keywords" content="学习笔记,Java,JavaScript,后端,前端">
+  
+    <meta name="description" content="装饰模式（Decorator Pattern）是一种结构型设计模式，允许在不修改现有对象结构的前提下向对象添加新的功能。 场景 假设我们正在开发一款爬虫软件，并准备将爬取到的数据写入csv文件中。按照模块化编程的思想，会把csv相关的代码保存到一个独立的类CsvWriter中。而后可能又需要把同样的数据写入txt、json、数据库中，也会诞生相应的TxtWriter、JsonWriter、S">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Design-Pattern-Decorator">
+<meta property="og:url" content="http://example.com/2024/10/28/Design-Pattern-Decorator/index.html">
+<meta property="og:site_name" content="DracoYu&#39;s MindCache">
+<meta property="og:description" content="装饰模式（Decorator Pattern）是一种结构型设计模式，允许在不修改现有对象结构的前提下向对象添加新的功能。 场景 假设我们正在开发一款爬虫软件，并准备将爬取到的数据写入csv文件中。按照模块化编程的思想，会把csv相关的代码保存到一个独立的类CsvWriter中。而后可能又需要把同样的数据写入txt、json、数据库中，也会诞生相应的TxtWriter、JsonWriter、S">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2024-10-28T08:44:25.000Z">
+<meta property="article:modified_time" content="2024-11-08T11:04:59.137Z">
+<meta property="article:author" content="DracoYu">
+<meta property="article:tag" content="DesignPattern">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Design-Pattern-Decorator - DracoYu&#39;s MindCache</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>DracoYu&#39;s MindCache</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Design-Pattern-Decorator"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-10-28 16:44" pubdate>
+          2024年10月28日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          24 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Design-Pattern-Decorator</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p><strong>装饰模式（Decorator
+Pattern）</strong>是一种结构型设计模式，允许在不修改现有对象结构的前提下向对象添加新的功能。</p>
+<h2 id="场景">场景</h2>
+<p>假设我们正在开发一款爬虫软件，并准备将爬取到的数据写入<code>csv</code>文件中。按照模块化编程的思想，会把<code>csv</code>相关的代码保存到一个独立的类<code>CsvWriter</code>中。而后可能又需要把同样的数据写入<code>txt</code>、<code>json</code>、数据库中，也会诞生相应的<code>TxtWriter</code>、<code>JsonWriter</code>、<code>SqlWriter</code>。基于每个<code>XxWriter</code>做的事情相似，可以把通用行为抽取成接口<code>DataWriter</code>中的方法。例如文件初始化，或者接收数据并写入文件的方法。客户端通过接口与不同实现类交互。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">DataWriter</span> &#123;<br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">initialization</span><span class="hljs-params">()</span>;<br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">write</span><span class="hljs-params">(List&lt;Data&gt; dataList)</span>;<br>&#125;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">CsvWriter</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">DataWriter</span> &#123;...&#125;<br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TxtWriter</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">DataWriter</span> &#123;...&#125;<br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">JsonWriter</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">DataWriter</span> &#123;...&#125;<br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">SqlWriter</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">DataWriter</span> &#123;...&#125;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Crawler</span> &#123;<br>    <span class="hljs-keyword">private</span> DataWriter dataWriter;<br>    ...<br>	<span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">run</span><span class="hljs-params">()</span> &#123;<br>        dataWriter.initialization();<br>        ...<br>        dataWriter.write(dataList);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>但我们并不会局限于某一特定格式，而是根据场景组合多个格式，例如把数据同时写入<code>csv</code>和<code>txt</code>中。如果不改变客户端代码，那么需要提供一个可以同时写入两种格式的<code>CsvTxtWriter</code>。而这个类的实现代码，与<code>CsvWriter</code>和<code>TxtWriter</code>的代码高度重合，通常是依次调用<code>CsvWriter</code>和<code>TxtWriter</code>中的代码。因此相对于重写一个<code>CsvTxtWriter</code>，更多会选择扩展已有代码。</p>
+<p>扩展已有代码有两种方式，继承或组合。由于<code>java</code>不支持多继承，只能选择继承其中一个类，然后把另一各类的代码重新写一遍。这怎么看都不优雅。使用组合则是在类中引入两个类的成员变量，在实现接口的方法时，把方法调用委派给对两个成员变量的调用。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">CsvTxtWriter</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">CsvWriter</span> &#123;<br>    <span class="hljs-comment">// 继承的方式扩展CsvWriter</span><br>	<span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">initialization</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-built_in">super</span>.initialization();<br>        ...<br>    &#125;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">write</span><span class="hljs-params">(List&lt;Data&gt; dataList)</span> &#123;<br>    	<span class="hljs-built_in">super</span>.write(dataList);<br>        ...<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">CsvTxtWriter</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">DataWriter</span> &#123;<br>    <span class="hljs-comment">// 组合的方式扩展CsvWriter、TxtWriter</span><br>	<span class="hljs-keyword">private</span> <span class="hljs-type">CsvWriter</span> <span class="hljs-variable">csvWriter</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">CsvWriter</span>();<br>	<span class="hljs-keyword">private</span> <span class="hljs-type">TxtWriter</span> <span class="hljs-variable">txtWriter</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">TxtWriter</span>();<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">initialization</span><span class="hljs-params">()</span> &#123;<br>        csvWriter.initialization();<br>        txtWriter.initialization();<br>    &#125;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">write</span><span class="hljs-params">(List&lt;Data&gt; dataList)</span> &#123;<br>		csvWriter.write(dataList);<br>		txtWriter.write(dataList);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>但这样做的问题也很明显，如果有 <span class="math inline">\(n\)</span>
+个独立的<code>XxWriter</code>，一共会有 <span class="math inline">\(2^n
+- 1\)</span>
+种可能的组合。也就是需要定义的类数量很快会发生指数爆炸。所有组合中，只有
+<span class="math inline">\(n\)</span>
+个基础的<code>XxWriter</code>执行了实际代码，其他类只是委派调用这些基础类的方法。</p>
+<p>从需求出发，我们希望编程语言提供这样的机制，能在运行时根据场景（例如通过读取配置文件，或者解析命令行参数），组合不同功能，动态生成所需的多功能类。这样就可以避免定义所有的可能组合，只需定义最基础的
+<span class="math inline">\(n\)</span>
+个类即可。这就是装饰模式将完成的功能。</p>
+<h2 id="装饰模式">装饰模式</h2>
+<p>在上文中，通过组合的方式扩展<code>CsvWriter</code>、<code>TxtWriter</code>，在<code>CsvTxtWriter</code>定义了两个被封装的具体类成员变量，<strong>封装/包装/组合/装饰（本文不加区分使用这些相似概念）的对象和被封装的对象是一对多的关系</strong>。装饰模式也是通过组合定义装饰类，但区别是只定义了<strong>一个</strong>抽象接口的成员变量。由于装饰类本身也实现了接口，因此实例可以再次作为其他装饰类的被封装对象，<strong>封装的对象和被封装的对象是一对一的关系</strong>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">CsvDecorator</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">DataWriter</span> &#123;<br>	<span class="hljs-keyword">private</span> DataWriter wrappee;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">CsvDecorator</span><span class="hljs-params">(DataWriter wrappee)</span> &#123;<br>        <span class="hljs-built_in">this</span>.wrappee = wrappee;<br>    &#125;<br>     <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">initialization</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-comment">// 调用被装饰类</span><br>    	wrappee.initialization();<br>        <span class="hljs-comment">// 装饰类额外新增的功能，如写入csv格式文件</span><br>        ...<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>整体上，<strong>装饰模式的多个装饰类封装后像是一个链表或者一叉树</strong>。调用装饰后对象的方法，则是通过持有链，进行先序遍历或后续遍历。换句话说就是先调用自身方法逻辑，还是先委派调用被装饰类的方法。</p>
+<p>对于上例，基于装饰模式，则可以将 <span
+class="math inline">\(n\)</span> 个基础类，重构成 <span
+class="math inline">\(n\)</span> 个装饰类。这 <span
+class="math inline">\(n\)</span>
+个装饰类，代码仍有重复的部分，可以将这部分重复代码再进行一次抽象。将持有的被装饰类成员变量，以及委派调用被装饰对象方法的代码，都封装到抽取抽象基类中。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">BaseDataWriterDecorator</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">DataWriter</span> &#123;<br>	<span class="hljs-keyword">private</span> DataWriter wrappee;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">BaseDataWriterDecorator</span><span class="hljs-params">(DataWriter wrappee)</span>&#123;<br>        <span class="hljs-built_in">this</span>.wrappee = wrappee;<br>    &#125;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">initialization</span><span class="hljs-params">()</span> &#123;<br>    	wrappee.initialization();<br>    &#125;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">write</span><span class="hljs-params">(List&lt;Data&gt; dataList)</span> &#123;<br>    	wrappee.write(dataList);<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">CsvDecorator</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">BaseDataWriterDecorator</span> &#123;<br>	<span class="hljs-keyword">public</span> <span class="hljs-title function_">CsvDecorator</span><span class="hljs-params">(DataWriter wrappee)</span>&#123;<br>        <span class="hljs-built_in">super</span>(wrappee);<br>    &#125;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">initialization</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-comment">// 装饰类额外新增的功能，如写入csv格式文件，根据需求也可以在被包装类方法执行前执行</span><br>        ...<br>    	<span class="hljs-built_in">super</span>.initialization();<br>    &#125;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">write</span><span class="hljs-params">(List&lt;Data&gt; dataList)</span> &#123;<br>    	<span class="hljs-built_in">super</span>.write(dataList);<br>        <span class="hljs-comment">// 也可以在被包装类方法执行后执行</span><br>        ...<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>对于每个装饰类来说，都需要在构造函数中传入一个被装饰类的对象。如果没有传入，则会导致在调用被装饰类的方法时，抛出<code>NPE</code>。这不是我们想要的。所以额外需要一种不持有被封装对象，不会进行委派调用，同样实现了接口的类。这个类可以被视作用来表示装饰链的终止，树的叶子节点。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">BaseDataWriter</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">DataWriter</span> &#123;<br>    <span class="hljs-comment">// 简单定义两个空方法</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">initialization</span><span class="hljs-params">()</span> &#123;&#125;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">write</span><span class="hljs-params">(List&lt;String&gt; dataList)</span> &#123;&#125;<br>&#125;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">client</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">()</span>&#123;<br>        <span class="hljs-type">DataWriter</span> <span class="hljs-variable">dataWriter</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BaseDataWriter</span>();<br>        <span class="hljs-comment">// 动态向对象添加新的功能</span><br>        <span class="hljs-keyword">if</span> (config.isWriteCsv) dataWriter = <span class="hljs-keyword">new</span> <span class="hljs-title class_">CsvDecorator</span>(dataWriter);<br>        <span class="hljs-keyword">if</span> (config.isWriteTxt) dataWriter = <span class="hljs-keyword">new</span> <span class="hljs-title class_">TxtDecorator</span>(dataWriter);<br>        ...<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>至此，已经把装饰模式所有结构都提及了。如果使用<code>GoF</code>书中的命名：</p>
+<ul>
+<li><p>接口<code>DataWriter</code>被称为<strong>部件</strong>（Component），用以声明装饰器和被装饰对象的公用接口。</p></li>
+<li><p>不封装其他接口对象，在装饰链处于末端的，部件实现类<code>BaseDataWriter</code>称为<strong>具体部件</strong>（Concrete
+Component），定义了基础行为， 但装饰类可以改变这些行为。</p></li>
+<li><p>抽象的装饰器基类<code>BaseDataWriterDecorator</code>称为<strong>基础装饰</strong>（Base
+Decorator），拥有一个被封装对象的成员变量。
+该成员变量的类型应当被声明为通用部件接口，
+这样它就可以引用具体的部件和装饰。
+装饰基类会将所有操作委派给被封装的对象。</p></li>
+<li><p>具体的装饰器类<code>CsvDecorator</code>称为<strong>具体装饰类</strong>（Concrete
+Decorators），定义了可动态添加到部件的额外行为。
+具体装饰类会重写装饰基类的方法，
+并在调用父类方法之前或之后进行额外的行为。</p></li>
+</ul>
+<pre><code class=" mermaid">classDiagram
+    direction TB
+    class Client
+    
+    class Component &#123;
+        &lt;&lt; interface &gt;&gt;
+    	+methodA() ResultA
+    &#125;
+	Client --&gt; Component
+	
+	class ConcreteComponent &#123;
+		+methodA() ResultA
+	&#125;
+    ConcreteComponent ..|&gt; Component
+	
+	class BaseDecorator &#123;
+		- Component component
+		+BaseDecorator(Component)
+		+methodA() ResultA
+	&#125;
+	BaseDecorator ..|&gt; Component
+
+	class ConcreteDecorator &#123;
+		+methodA() ResultA
+	&#125;
+	ConcreteDecorator --|&gt; BaseDecorator
+    
+</code></pre>
+<p>由于装饰类都实现了部件接口，对于客户端来说，仍是通过部件接口与装饰后的对象交互，无需在意其是否是被装饰。</p>
+<h2 id="具体部件与具体装饰类">具体部件与具体装饰类</h2>
+<p>上例中，<code>BaseDataWriter</code>只是为了作为装饰链的终点，定义了两个空方法。而各种实际功能都定义在了<code>XxDecorator</code>中。这容易引起疑惑，<strong>具体部件和具体装饰类有什么区别，某个功能应该写成具体部件还是具体装饰类</strong>。</p>
+<p>会发生这个问题，其实是因为最开头的例子并不合适。这都是笔者为了引出这个话题的良苦用心。</p>
+<p>从结构分析，具体部件没有持有部件的成员变量，<strong>因此它一定是装饰链的末端</strong>。而且具体部件在创建对象时，不需要传入其他部件对象，而具体装饰类均需要一个已经存在的部件对象，<strong>因此具体部件通常先于具体装饰类实例化</strong>。基于这两个特征，可以认为对于特定装饰链，<strong>具体部件对象有且只有一个，而具体装饰对象可以有零个或多个，且创建具体装饰对象前需要先创建具体部件对象，具体装饰对象的存在依赖于具体部件对象</strong>。这意味着地位上，具体部件和具体装饰类不是等价的，具体部件相对更重要。</p>
+<p>而上例中，各种<code>XxWriter</code>之间都是相互独立，地位均等的。没有说某个<code>XxWriter</code>一定依赖于另一个<code>XxWriter</code>。换句话说，无法找出一个必须存在的具体部件。因此定义了一个没有意义的空实现具体部件。</p>
+<p>当所有功能相互独立，且可以单独存在的情况下，解决类组合爆炸的另一种优雅的解决方案是客户端引用的不是单个<code>DataWriter</code>，而是<code>List&lt;DataWirter&gt;</code>。对于所有<code>DataWriter</code>的方法调用，不是通过装饰链，而是遍历列表依次调用，调用顺序由加入<code>List</code>的顺序决定。</p>
+<p>为了使例子更适合装饰模式，需要某个具体部件必须存在的场景。因此将例子调整为，需要将数据写入<code>txt</code>，并需要根据配置，选择是否进行加密或压缩。在这个场景中，写入负责<code>txt</code>的<code>txtWriter</code>必须存在，是具体部件；而加密或压缩，需要依赖于具体部件，根据运行时动态装饰对象添加功能，是具体装饰器。</p>
+<h2 id="装饰模式与其他模式的异同">装饰模式与其他模式的异同</h2>
+<p>结构上，装饰模式也是包装/封装（<code>Wrapper</code>）。这与前篇介绍的多种设计模式是相同的。</p>
+<p>适配器模式会改变被封装对象的接口，而装饰模式不会改变封装前后对象的接口。此外，装饰模式可以递归封装，而适配器模式通常只会封装一次。</p>
+<p>组合模式也可以递归封装，且不会改变接口，和装饰模式相似。区别是组合模式中，每个容器可以拥有多个子节点，而每个装饰类只能拥有一个被装饰对象。这个结构也导致递归调用，组合模式强调每个容器对子节点进行汇总，而装饰模式强调添加额外功能。</p>
+<p>实际在上例中，要将数据写入多种格式，可以使用组合模式。通过在容器中持有多个接口对象，然后把容器传递给客户端，也可以避免客户端调整代码，不必修改为<code>List&lt;DataWirter&gt;</code>。</p>
+<h2 id="总结">总结</h2>
+<p>装饰模式允许在不修改现有对象结构的前提下向对象添加新的功能。</p>
+<p>装饰模式通常用于解决多个功能根据场景开启，需要定义所有可能的组合引起的类爆炸问题。</p>
+<p>装饰模式由部件、具体部件、基础装饰和具体装饰类组成。</p>
+<p>具体部件、基础装饰、具体装饰都需要实现部件接口，因此这些类的实例对象可以被装饰类再次封装，形成装饰链。</p>
+<p>调用装饰类对象的方法， 会根据装饰链依次进行委派调用。</p>
+<p>运行时，具体部件类通常是必须实例化的，具体装饰器可以不实例化。</p>
+<p>组合模式和前篇提到的适配器模式、组合模式相似，均属于包装。但在结构、功能和动机上略有区别。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/DesignPattern/" class="category-chain-item">DesignPattern</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/DesignPattern/" class="print-no-link">#DesignPattern</a>
+      
+        <a href="/tags/Java/" class="print-no-link">#Java</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Design-Pattern-Decorator</div>
+      <div>http://example.com/2024/10/28/Design-Pattern-Decorator/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>DracoYu</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年10月28日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/09/29/Design-Pattern-Composite/" title="Design-Pattern-Composite">
+                        <span class="hidden-mobile">Design-Pattern-Composite</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
