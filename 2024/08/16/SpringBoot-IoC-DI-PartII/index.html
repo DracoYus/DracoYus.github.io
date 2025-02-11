@@ -19,7 +19,7 @@
     <meta name="description" content="最近读了Martin Fowler关于IoC和DI的文章，觉得之前SpringBoot-IoC-DI写的还是太过狭隘。因此本篇对这个话题进行补充。 IoC 和 DI 的关系 在上一篇文章中，首段的描述似乎把DI定义为与IoC同级的概念，这种暗示是错误的。  而Spring Core完成了两个关键概念：IoC（Inversion of Control，控制反转）和DI（Dependency">
 <meta property="og:type" content="article">
 <meta property="og:title" content="SpringBoot-IoC-DI-PartII">
-<meta property="og:url" content="http://example.com/2024/08/16/SpringBoot-IoC-DI-PartII/index.html">
+<meta property="og:url" content="http://dracoyus.github.io/2024/08/16/SpringBoot-IoC-DI-PartII/index.html">
 <meta property="og:site_name" content="DracoYu&#39;s MindCache">
 <meta property="og:description" content="最近读了Martin Fowler关于IoC和DI的文章，觉得之前SpringBoot-IoC-DI写的还是太过狭隘。因此本篇对这个话题进行补充。 IoC 和 DI 的关系 在上一篇文章中，首段的描述似乎把DI定义为与IoC同级的概念，这种暗示是错误的。  而Spring Core完成了两个关键概念：IoC（Inversion of Control，控制反转）和DI（Dependency">
 <meta property="og:locale" content="zh_CN">
@@ -72,7 +72,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
+    var CONFIG = {"hostname":"dracoyus.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -467,7 +467,7 @@ implemented using this BeanFactory interface and its subinterfaces.</p>
   <div class="license-box my-3">
     <div class="license-title">
       <div>SpringBoot-IoC-DI-PartII</div>
-      <div>http://example.com/2024/08/16/SpringBoot-IoC-DI-PartII/</div>
+      <div>http://dracoyus.github.io/2024/08/16/SpringBoot-IoC-DI-PartII/</div>
     </div>
     <div class="license-meta">
       

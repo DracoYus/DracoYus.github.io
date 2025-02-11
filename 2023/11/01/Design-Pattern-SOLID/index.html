@@ -19,15 +19,15 @@
     <meta name="description" content="距离上一次写博客已经过去了三个多月，一直忙于工作。 上次说到，设计原则是使得代码拥有更好复用性和拓展性的指南针，是一种基于优秀代码的经验总结。既然是经验总结，不同学者必然存在着不同归纳角度。上次提到的封装变化、面向接口而不是面向实现、组合优于继承原则是一种归纳，这次要讲的SOLID原则也是一种归纳。这些原则本是并列关系，但实际又会觉得互相关联、交融。因为本身可能都是对同一件事情，不同角度的描述。">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Design-Pattern-SOLID">
-<meta property="og:url" content="http://example.com/2023/11/01/Design-Pattern-SOLID/index.html">
+<meta property="og:url" content="http://dracoyus.github.io/2023/11/01/Design-Pattern-SOLID/index.html">
 <meta property="og:site_name" content="DracoYu&#39;s MindCache">
 <meta property="og:description" content="距离上一次写博客已经过去了三个多月，一直忙于工作。 上次说到，设计原则是使得代码拥有更好复用性和拓展性的指南针，是一种基于优秀代码的经验总结。既然是经验总结，不同学者必然存在着不同归纳角度。上次提到的封装变化、面向接口而不是面向实现、组合优于继承原则是一种归纳，这次要讲的SOLID原则也是一种归纳。这些原则本是并列关系，但实际又会觉得互相关联、交融。因为本身可能都是对同一件事情，不同角度的描述。">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-11-01T02:20:18.000Z">
 <meta property="article:modified_time" content="2023-11-02T07:27:38.912Z">
 <meta property="article:author" content="DracoYu">
-<meta property="article:tag" content="DesignPattern">
 <meta property="article:tag" content="Java">
+<meta property="article:tag" content="DesignPattern">
 <meta name="twitter:card" content="summary_large_image">
   
   
@@ -70,7 +70,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
+    var CONFIG = {"hostname":"dracoyus.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -367,9 +367,9 @@ Inversion Principle 依赖倒置原则</h2>
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/DesignPattern/" class="print-no-link">#DesignPattern</a>
-      
         <a href="/tags/Java/" class="print-no-link">#Java</a>
+      
+        <a href="/tags/DesignPattern/" class="print-no-link">#DesignPattern</a>
       
     </div>
   
@@ -382,7 +382,7 @@ Inversion Principle 依赖倒置原则</h2>
   <div class="license-box my-3">
     <div class="license-title">
       <div>Design-Pattern-SOLID</div>
-      <div>http://example.com/2023/11/01/Design-Pattern-SOLID/</div>
+      <div>http://dracoyus.github.io/2023/11/01/Design-Pattern-SOLID/</div>
     </div>
     <div class="license-meta">
       

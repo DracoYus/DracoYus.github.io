@@ -19,15 +19,15 @@
     <meta name="description" content="创建型模式已经全部介绍完，接下来是结构型模式。 在以往的文中提过，结构型模式和行为型模式边界比较模糊。根据定义，结构型模式侧重于类和对象的组合以构建灵活且高效的结构，而行为型模式侧重于类和对象之间的通信和职责分配。但结构和行为本身就会相互影响，因此会存在模棱两可的分类。例如代理语义上是个行为，但是代理模式是结构模式；中介者组织了组件间的结构关系，但是中介者模式是行为模式。 结构模式和行为模式都">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Design-Pattern-Adapter">
-<meta property="og:url" content="http://example.com/2024/07/03/Design-Pattern-Adapter/index.html">
+<meta property="og:url" content="http://dracoyus.github.io/2024/07/03/Design-Pattern-Adapter/index.html">
 <meta property="og:site_name" content="DracoYu&#39;s MindCache">
 <meta property="og:description" content="创建型模式已经全部介绍完，接下来是结构型模式。 在以往的文中提过，结构型模式和行为型模式边界比较模糊。根据定义，结构型模式侧重于类和对象的组合以构建灵活且高效的结构，而行为型模式侧重于类和对象之间的通信和职责分配。但结构和行为本身就会相互影响，因此会存在模棱两可的分类。例如代理语义上是个行为，但是代理模式是结构模式；中介者组织了组件间的结构关系，但是中介者模式是行为模式。 结构模式和行为模式都">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-07-03T07:37:32.000Z">
 <meta property="article:modified_time" content="2024-08-01T08:14:27.177Z">
 <meta property="article:author" content="DracoYu">
-<meta property="article:tag" content="DesignPattern">
 <meta property="article:tag" content="Java">
+<meta property="article:tag" content="DesignPattern">
 <meta name="twitter:card" content="summary_large_image">
   
   
@@ -70,7 +70,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
+    var CONFIG = {"hostname":"dracoyus.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -375,9 +375,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/DesignPattern/" class="print-no-link">#DesignPattern</a>
-      
         <a href="/tags/Java/" class="print-no-link">#Java</a>
+      
+        <a href="/tags/DesignPattern/" class="print-no-link">#DesignPattern</a>
       
     </div>
   
@@ -390,7 +390,7 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>Design-Pattern-Adapter</div>
-      <div>http://example.com/2024/07/03/Design-Pattern-Adapter/</div>
+      <div>http://dracoyus.github.io/2024/07/03/Design-Pattern-Adapter/</div>
     </div>
     <div class="license-meta">
       

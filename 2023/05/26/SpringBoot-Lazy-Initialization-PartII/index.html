@@ -19,7 +19,7 @@
     <meta name="description" content="在SpringBoot-Lazy-Initialization提到，懒加载可以延迟容器中单实例的创建时机，从容器启动时延迟到实例被使用时。 在实际设置懒加载时，遇到了一些问题，在此记录并分析。 静态方法访问 如果试图调用一个类的静态方法，而此方法依赖的静态变量需要通过实例去进行设置，启用全局懒加载就会导致NPE（NullPointerException）报错。 常见的场景是，编写一个Spr">
 <meta property="og:type" content="article">
 <meta property="og:title" content="SpringBoot-Lazy-Initialization-PartII">
-<meta property="og:url" content="http://example.com/2023/05/26/SpringBoot-Lazy-Initialization-PartII/index.html">
+<meta property="og:url" content="http://dracoyus.github.io/2023/05/26/SpringBoot-Lazy-Initialization-PartII/index.html">
 <meta property="og:site_name" content="DracoYu&#39;s MindCache">
 <meta property="og:description" content="在SpringBoot-Lazy-Initialization提到，懒加载可以延迟容器中单实例的创建时机，从容器启动时延迟到实例被使用时。 在实际设置懒加载时，遇到了一些问题，在此记录并分析。 静态方法访问 如果试图调用一个类的静态方法，而此方法依赖的静态变量需要通过实例去进行设置，启用全局懒加载就会导致NPE（NullPointerException）报错。 常见的场景是，编写一个Spr">
 <meta property="og:locale" content="zh_CN">
@@ -71,7 +71,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
+    var CONFIG = {"hostname":"dracoyus.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -352,7 +352,7 @@ target="_blank" rel="noopener" href="https://github.com/abel533/Mapper/pull/874"
   <div class="license-box my-3">
     <div class="license-title">
       <div>SpringBoot-Lazy-Initialization-PartII</div>
-      <div>http://example.com/2023/05/26/SpringBoot-Lazy-Initialization-PartII/</div>
+      <div>http://dracoyus.github.io/2023/05/26/SpringBoot-Lazy-Initialization-PartII/</div>
     </div>
     <div class="license-meta">
       

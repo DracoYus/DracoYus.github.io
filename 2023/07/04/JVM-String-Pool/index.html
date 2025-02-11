@@ -19,7 +19,7 @@
     <meta name="description" content="最近在学习JVM的过程中，遇到了一个十分容易混淆的概念，字符串池。 有关字符串池的代码，运行结果始终没有和预期对应上。查询了大量资料无果后，在stackoverflow上发布了提问，提问链接。提问后的半天内（在此感叹下国际友人的钻研精神），有两位大佬和我就此问题进行了探讨。在交流中对这个概念的理解逐渐清晰。通过将这个事情记录下来，来理清自己的思路，并分享给更多人。 由于具体情况可能在不同JVM">
 <meta property="og:type" content="article">
 <meta property="og:title" content="JVM-String-Pool">
-<meta property="og:url" content="http://example.com/2023/07/04/JVM-String-Pool/index.html">
+<meta property="og:url" content="http://dracoyus.github.io/2023/07/04/JVM-String-Pool/index.html">
 <meta property="og:site_name" content="DracoYu&#39;s MindCache">
 <meta property="og:description" content="最近在学习JVM的过程中，遇到了一个十分容易混淆的概念，字符串池。 有关字符串池的代码，运行结果始终没有和预期对应上。查询了大量资料无果后，在stackoverflow上发布了提问，提问链接。提问后的半天内（在此感叹下国际友人的钻研精神），有两位大佬和我就此问题进行了探讨。在交流中对这个概念的理解逐渐清晰。通过将这个事情记录下来，来理清自己的思路，并分享给更多人。 由于具体情况可能在不同JVM">
 <meta property="og:locale" content="zh_CN">
@@ -71,7 +71,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
+    var CONFIG = {"hostname":"dracoyus.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -414,7 +414,7 @@ target="_blank" rel="noopener" href="https://docs.oracle.com/javase/specs/jvms/s
   <div class="license-box my-3">
     <div class="license-title">
       <div>JVM-String-Pool</div>
-      <div>http://example.com/2023/07/04/JVM-String-Pool/</div>
+      <div>http://dracoyus.github.io/2023/07/04/JVM-String-Pool/</div>
     </div>
     <div class="license-meta">
       

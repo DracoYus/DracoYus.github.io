@@ -19,15 +19,15 @@
     <meta name="description" content="外观&#x2F;门面模式(Facade)是一种结构型设计模式，能为程序库、框架或其他复杂类提供一个简单的接口。 场景 为了通用性，第三方库&#x2F;子系统会把功能设计得完备，但客户端通常只使用其中非常少的功能。客户端直接使用第三方库类，会引入过多不必要的功能与方法细节，也会导致客户端会与第三方类的实现细节紧密耦合。当想尝试替换其他功能相似的第三方库时，客户端需要调整所有调用第三方库方法的位置。如果客户端需要同时">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Design-Pattern-Facade">
-<meta property="og:url" content="http://example.com/2025/01/15/Design-Pattern-Facade/index.html">
+<meta property="og:url" content="http://dracoyus.github.io/2025/01/15/Design-Pattern-Facade/index.html">
 <meta property="og:site_name" content="DracoYu&#39;s MindCache">
 <meta property="og:description" content="外观&#x2F;门面模式(Facade)是一种结构型设计模式，能为程序库、框架或其他复杂类提供一个简单的接口。 场景 为了通用性，第三方库&#x2F;子系统会把功能设计得完备，但客户端通常只使用其中非常少的功能。客户端直接使用第三方库类，会引入过多不必要的功能与方法细节，也会导致客户端会与第三方类的实现细节紧密耦合。当想尝试替换其他功能相似的第三方库时，客户端需要调整所有调用第三方库方法的位置。如果客户端需要同时">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-01-15T02:53:51.000Z">
 <meta property="article:modified_time" content="2025-02-11T03:06:03.686Z">
 <meta property="article:author" content="DracoYu">
-<meta property="article:tag" content="DesignPattern">
 <meta property="article:tag" content="Java">
+<meta property="article:tag" content="DesignPattern">
 <meta name="twitter:card" content="summary_large_image">
   
   
@@ -70,7 +70,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
+    var CONFIG = {"hostname":"dracoyus.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -325,9 +325,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/DesignPattern/" class="print-no-link">#DesignPattern</a>
-      
         <a href="/tags/Java/" class="print-no-link">#Java</a>
+      
+        <a href="/tags/DesignPattern/" class="print-no-link">#DesignPattern</a>
       
     </div>
   
@@ -340,7 +340,7 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>Design-Pattern-Facade</div>
-      <div>http://example.com/2025/01/15/Design-Pattern-Facade/</div>
+      <div>http://dracoyus.github.io/2025/01/15/Design-Pattern-Facade/</div>
     </div>
     <div class="license-meta">
       

@@ -19,15 +19,15 @@
     <meta name="description" content="装饰模式（Decorator Pattern）是一种结构型设计模式，允许在不修改现有对象结构的前提下向对象添加新的功能。 场景 假设我们正在开发一款爬虫软件，并准备将爬取到的数据写入csv文件中。按照模块化编程的思想，会把csv相关的代码保存到一个独立的类CsvWriter中。而后可能又需要把同样的数据写入txt、json、数据库中，也会诞生相应的TxtWriter、JsonWriter、S">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Design-Pattern-Decorator">
-<meta property="og:url" content="http://example.com/2024/10/28/Design-Pattern-Decorator/index.html">
+<meta property="og:url" content="http://dracoyus.github.io/2024/10/28/Design-Pattern-Decorator/index.html">
 <meta property="og:site_name" content="DracoYu&#39;s MindCache">
 <meta property="og:description" content="装饰模式（Decorator Pattern）是一种结构型设计模式，允许在不修改现有对象结构的前提下向对象添加新的功能。 场景 假设我们正在开发一款爬虫软件，并准备将爬取到的数据写入csv文件中。按照模块化编程的思想，会把csv相关的代码保存到一个独立的类CsvWriter中。而后可能又需要把同样的数据写入txt、json、数据库中，也会诞生相应的TxtWriter、JsonWriter、S">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-10-28T08:44:25.000Z">
 <meta property="article:modified_time" content="2024-11-08T11:04:59.137Z">
 <meta property="article:author" content="DracoYu">
-<meta property="article:tag" content="DesignPattern">
 <meta property="article:tag" content="Java">
+<meta property="article:tag" content="DesignPattern">
 <meta name="twitter:card" content="summary_large_image">
   
   
@@ -70,7 +70,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
+    var CONFIG = {"hostname":"dracoyus.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -400,9 +400,9 @@ Decorators），定义了可动态添加到部件的额外行为。
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/DesignPattern/" class="print-no-link">#DesignPattern</a>
-      
         <a href="/tags/Java/" class="print-no-link">#Java</a>
+      
+        <a href="/tags/DesignPattern/" class="print-no-link">#DesignPattern</a>
       
     </div>
   
@@ -415,7 +415,7 @@ Decorators），定义了可动态添加到部件的额外行为。
   <div class="license-box my-3">
     <div class="license-title">
       <div>Design-Pattern-Decorator</div>
-      <div>http://example.com/2024/10/28/Design-Pattern-Decorator/</div>
+      <div>http://dracoyus.github.io/2024/10/28/Design-Pattern-Decorator/</div>
     </div>
     <div class="license-meta">
       
