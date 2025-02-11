@@ -16,15 +16,15 @@
   <meta name="author" content="DracoYu">
   <meta name="keywords" content="学习笔记,Java,JavaScript,后端,前端">
   
-    <meta name="description" content="组合模式(composite)是一种结构型设计模式，可以使用它将对象组合成树状结构， 并且能像使用独立对象一样使用它们。 场景 在开发中会遇到需要处理&#x2F;统计的对象们，属于层级或者包含关系。学过数据结构的同学肯定知道，通常用树来组织这些对象。 树由节点和边构成。其中节点用于存储数据，而边构建了节点之间的关系。一个节点通过持有另一些节点的引用，来构建边。一段典型树结构代码如下所示。 1234">
+    <meta name="description" content="外观&#x2F;门面模式(Facade)是一种结构型设计模式，能为程序库、框架或其他复杂类提供一个简单的接口。 场景 为了通用性，第三方库&#x2F;子系统会把功能设计得完备，但客户端通常只使用其中非常少的功能。客户端直接使用第三方库类，会引入过多不必要的功能与方法细节，也会导致客户端会与第三方类的实现细节紧密耦合。当想尝试替换其他功能相似的第三方库时，客户端需要调整所有调用第三方库方法的位置。如果客户端需要同时">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Design-Pattern-Composite">
-<meta property="og:url" content="http://example.com/2024/09/29/Design-Pattern-Composite/index.html">
+<meta property="og:title" content="Design-Pattern-Facade">
+<meta property="og:url" content="http://example.com/2025/01/15/Design-Pattern-Facade/index.html">
 <meta property="og:site_name" content="DracoYu&#39;s MindCache">
-<meta property="og:description" content="组合模式(composite)是一种结构型设计模式，可以使用它将对象组合成树状结构， 并且能像使用独立对象一样使用它们。 场景 在开发中会遇到需要处理&#x2F;统计的对象们，属于层级或者包含关系。学过数据结构的同学肯定知道，通常用树来组织这些对象。 树由节点和边构成。其中节点用于存储数据，而边构建了节点之间的关系。一个节点通过持有另一些节点的引用，来构建边。一段典型树结构代码如下所示。 1234">
+<meta property="og:description" content="外观&#x2F;门面模式(Facade)是一种结构型设计模式，能为程序库、框架或其他复杂类提供一个简单的接口。 场景 为了通用性，第三方库&#x2F;子系统会把功能设计得完备，但客户端通常只使用其中非常少的功能。客户端直接使用第三方库类，会引入过多不必要的功能与方法细节，也会导致客户端会与第三方类的实现细节紧密耦合。当想尝试替换其他功能相似的第三方库时，客户端需要调整所有调用第三方库方法的位置。如果客户端需要同时">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-09-29T01:43:39.000Z">
-<meta property="article:modified_time" content="2024-10-12T12:08:01.862Z">
+<meta property="article:published_time" content="2025-01-15T02:53:51.000Z">
+<meta property="article:modified_time" content="2025-02-11T03:06:03.686Z">
 <meta property="article:author" content="DracoYu">
 <meta property="article:tag" content="DesignPattern">
 <meta property="article:tag" content="Java">
@@ -32,7 +32,7 @@
   
   
   
-  <title>Design-Pattern-Composite - DracoYu&#39;s MindCache</title>
+  <title>Design-Pattern-Facade - DracoYu&#39;s MindCache</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -198,7 +198,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Design-Pattern-Composite"></span>
+            <span id="subtitle" data-typed-text="Design-Pattern-Facade"></span>
           
         </div>
 
@@ -209,8 +209,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-09-29 09:43" pubdate>
-          2024年9月29日 上午
+        <time datetime="2025-01-15 10:53" pubdate>
+          2025年1月15日 上午
         </time>
       </span>
     
@@ -221,7 +221,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.6k 字
+          1.1k 字
         
       </span>
     
@@ -232,7 +232,7 @@
         
         
         
-          13 分钟
+          10 分钟
         
       </span>
     
@@ -269,64 +269,29 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Design-Pattern-Composite</h1>
+            <h1 id="seo-header">Design-Pattern-Facade</h1>
             
             
               <div class="markdown-body">
                 
-                <p><strong>组合模式(composite)</strong>是一种结构型设计模式，可以使用它将对象组合成树状结构，
-并且能像使用独立对象一样使用它们。</p>
+                <p><strong>外观/门面模式(Facade)</strong>是一种结构型设计模式，能为程序库、框架或其他复杂类提供一个简单的接口。</p>
 <h2 id="场景">场景</h2>
-<p>在开发中会遇到需要处理/统计的对象们，属于层级或者包含关系。学过数据结构的同学肯定知道，通常用<strong>树</strong>来组织这些对象。</p>
-<p>树由节点和边构成。其中节点用于存储数据，而边构建了节点之间的关系。一个节点通过持有另一些节点的引用，来构建边。一段典型树结构代码如下所示。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 定义树的节点类</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">TreeNode</span> &#123;<br>    <span class="hljs-type">int</span> value;<br>    List&lt;TreeNode&gt; children;<br><br>    <span class="hljs-comment">// 构造函数，初始化节点</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">TreeNode</span><span class="hljs-params">(<span class="hljs-type">int</span> value)</span> &#123;<br>        <span class="hljs-built_in">this</span>.value = value;<br>        <span class="hljs-built_in">this</span>.children = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br>    &#125;<br><br>    <span class="hljs-comment">// 添加子节点</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">addChild</span><span class="hljs-params">(TreeNode child)</span> &#123;<br>        <span class="hljs-built_in">this</span>.children.add(child);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-<p>在此基础上进行一些拓展。上例中，<strong>所有节点都属于同一类<code>TreeNode</code></strong>。而在实际建模时，不同维度节点需要储存和表示的信息不同，<strong>通常会使用不同类</strong>。例如想统计国内经济指标，节点可以是省、市、区、县类。当节点属于不同类时，我们没法在所有节点类中都使用<code>List&lt;TreeNode&gt; children</code>去定义所有可能的子节点。一种朴素的解决方法是，每种类仅持有其子类的节点。例如可以在定义<code>省</code>时，持有<code>市</code>的节点，<code>市</code>中再持有<code>区</code>的节点。但也存在例外，例如直辖市不属于任一省，某些市没有设置区。为了兼容这些特殊情况，需要定义多种类型子节点变量，如下所示。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Country</span> &#123;<br>    <span class="hljs-keyword">private</span> String name;<br>    <span class="hljs-comment">// 国家特有的属性</span><br>    <span class="hljs-keyword">private</span> String president;<br>    <span class="hljs-comment">// 省子节点</span><br>    <span class="hljs-keyword">private</span> List&lt;Province&gt; childrenProvinces;<br>    <span class="hljs-comment">// 直辖市子节点</span><br>    <span class="hljs-keyword">private</span> List&lt;City&gt; childrenCities;<br>&#125;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Province</span> &#123;<br>    ...<br>&#125;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">City</span> &#123;<br>    ...<br>&#125;<br></code></pre></td></tr></table></figure>
-<p>而在客户端代码中，当需要统计某个省或者某个市的经济时，可能会定义如下方法。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> Bigdecimal <span class="hljs-title function_">calculateGdpProvince</span><span class="hljs-params">(Province province)</span>;<br><span class="hljs-keyword">public</span> Bigdecimal <span class="hljs-title function_">calculateGdpCity</span><span class="hljs-params">(City city)</span>;<br></code></pre></td></tr></table></figure>
-<p><strong>可以发现节点种类越多，定义节点的代码和客户端引用节点的代码就会越复杂。</strong></p>
-<p>此外也会设计容器节点。<strong>容器节点指只提供结构和组织，而不直接存储数据的节点。</strong>例如上例中，想要统计一个省加一个市加一个区的数据，可以在容器节点中持有这三个不同类节点的引用。客户端只与容器节点交互，而不关心容器内具体包含什么。所以容器节点类需要依赖其他所有节点类。容器节点类内通常也会定义递归遍历其子节点的方法，<strong>当子节点种类越多时，容器节点类的代码也会越复杂。</strong></p>
-<p>参考数据结构中经典的树结构，我们期望对所有节点类型一视同仁。如此节点内定义子节点和客户端引用的代码会更简洁。又期望保持每种节点类的特色。这显然要利用到<code>java</code>多态的特性。</p>
-<h2 id="组合模式">组合模式</h2>
-<p>组合模式中，所有节点类型都实现一个<code>Component</code>接口，用来表示是树结构中的一个节点。客户端通过接口与不同的节点类交互，并不关心其具体类型，移除了对具体节点类的依赖。<code>Component</code>接口中定义节点类需要向外暴露的共同特性，例如上例中统计GDP指标的方法。对于非叶子节点类，这些方法实现通常为调用其子节点的同方法，并汇总返回；而在叶子节点中，实际进行属性查询并计算。这种调用方式也被称为树的递归。</p>
-<p>根据组合模式，我们可以重构上例中的代码。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">interface</span> <span class="hljs-title class_">Component</span> &#123;<br>	BigDecimal <span class="hljs-title function_">calculateGdp</span><span class="hljs-params">()</span>;<br>&#125;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Country</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Component</span> &#123;<br>    <span class="hljs-keyword">private</span> String name;<br>    <span class="hljs-comment">// 国家特有的属性</span><br>    <span class="hljs-keyword">private</span> String president;<br>    <span class="hljs-comment">// 任意类型子节点</span><br>    <span class="hljs-keyword">private</span> List&lt;Component&gt; children;<br>    <br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> BigDecimal <span class="hljs-title function_">calculateGdp</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">return</span> children.parallelStream()<br>                .map(Component::calculateGdp)<br>                .reduce(BigDecimal.ZERO, BigDecimal::add);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-<p>组合模式的类图相对比较简单，核心便是代表节点的接口<code>Component</code>。对于节点类，通常还会分为叶子节点<code>Leaf</code>和非叶子节点（也称组合或容器）<code>Composite</code>。叶子节点由于不包含子节点，因此无需定义子节点的成员变量，也不需要提供添加/删除子节点的方法。</p>
-<pre><code class=" mermaid">classDiagram
-    direction TB
-    class Client
-    
-    class Component &#123;
-        &lt;&lt; interface &gt;&gt;
-    	+methodA() ResultA
-    &#125;
-
-	Client --&gt; Component
-	
-	class Leaf &#123;
-		+methodA() ResultA
-	&#125;
-	
-	class Composite &#123;
-		-List~Composite~ children
-		+methodA() ResultA
-		+addChild(Component) void
-		+removeChild(Component) Component
-	&#125;
-
-	
-    Leaf ..|&gt; Component
-    Composite ..|&gt; Component
-</code></pre>
-<h2 id="添加和删除子节点的方法">添加和删除子节点的方法</h2>
-<p>由于客户端与接口进行交互，而上例中接口中并不包含添加或删除子节点的方法。因此当客户端需要进行这类操作时，不可避免会依赖具体容器节点类。如果想移除这种依赖，可以将这些方法同样定义在接口中。但注意，这违反了单一职责原则，因为对于叶子节点来说，添加和删除子节点的方法是无意义，且不该被支持的。</p>
-<p>不论是否在接口中声明这类方法，都是合理的选择。通常根据客户端使用这类方法的频率，来决定是否在接口中添加。这是对耦合性和接口隔离性的权衡与取舍。</p>
+<p>为了通用性，第三方库/子系统会把功能设计得完备，但客户端通常只使用其中非常少的功能。客户端直接使用第三方库类，会引入过多不必要的功能与方法细节，也会导致客户端会与第三方类的实现细节紧密耦合。当想尝试替换其他功能相似的第三方库时，客户端需要调整所有调用第三方库方法的位置。如果客户端需要同时与多个第三方库交互，类的创建，库之间的依赖，交互流程的顺序，对于客户端来说都是过于复杂的。</p>
+<h2 id="门面模式">门面模式</h2>
+<p><strong>简单来说，门面模式就是为了让客户端更方便地使用子系统。</strong></p>
+<p>门面模式为子系统中的一组接口提供一个统一的高层接口。它就像是一个门面，将子系统的复杂性封装起来，让外部调用者只需要与这个门面进行交互，而不需要了解子系统内部的具体实现细节。就像通过电话给商店下达订单时，接线员就是该商店的所有服务和部门的门面。接线员为你提供了一个同购物系统、支付网关和各种送货服务进行互动的简单语音接口。</p>
+<p><strong>门面模式的结构比较简单，包含两个角色，门面和子系统</strong>。其中子系统通常是第三方库，而门面则负责封装所需功能并隐藏其他代码，从而无需使全部代码直接与数十个第三方类进行交互。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Facade</span> &#123;<br>    +<br>    <span class="hljs-keyword">private</span> Subsystem1 subsystem1;<br>    <span class="hljs-keyword">private</span> Subsystem2 subsystem2;<br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">Facade</span><span class="hljs-params">()</span> &#123;<br>    	<span class="hljs-comment">// 通常负责子系统对象的创建与初始化</span><br>        subsystem1 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Subsystem1</span>();<br>        subsystem2 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Subsystem2</span>();<br>        ....<br>    &#125;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">function1</span><span class="hljs-params">()</span> &#123;<br>    	<span class="hljs-comment">// 客户端直接需要的功能，通常包含对子系统的一系列调用</span><br>        subsystem1.function();<br>        subsystem2.function();<br>    &#125;<br>        <br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="门面模式变体">门面模式变体</h2>
+<p>上例中，将门面设计成了类。如果要替换第三方库实现时，则需要修改门面类，一定程度上不符合开闭原则。</p>
+<p>如果对门面再抽象一层，可以将门面设计成接口。在门面接口中定义客户端需要的方法，客户端也只与门面交互。如此一来，替换第三方库实现，可以通过新增门面接口的实现类来完成。</p>
+<p>大名鼎鼎的<code>SLF4J（Simple Logging Facade forJava）</code>就是门面模式的典型实现，其中的<code>F</code>指的就是<code>Facade</code>门面。<code>java</code>中，可以完成日志功能的第三方库有许多，例如<code>log4j</code>、<code>logback</code>、<code>java.util.logging</code>，不同的日志实现提供的接口也不同。当需要将项目中的日志实现从一个替换成另一个，或者日志实现发生了代码变动，所有引用的地方都需要进行改动。而<code>SLF4J</code>则为这些不同的日志实现，统一规定了交互接口。客户端仅通过<code>SLF4J</code>的接口，与各种不同的日志实现交互。当需要替换日志实现时，只需要替换<code>SLF4J</code>门面的具体实现，这通常也被包含在第三方库中，因此客户端代码无需进行任何调整。</p>
+<p>此外，如果门面接口包含的功能太多，不符合单一职责原则，可以通过将接口拆分成多个接口，并通过继承来组织接口之间的关系。</p>
 <h2 id="总结">总结</h2>
-<p>组合模式通常使用于，需要处理统计的对象属于层级关系或包含关系。</p>
-<p>组合模式通过定义一个<code>Component</code>接口来表示树上的一个节点，以此对所有具体节点类一视同仁，移除了对具体节点类的依赖，简化了具体节点类和客户端的代码。</p>
-<p><code>Component</code>接口内需要声明对所有节点类都有意义的方法。</p>
-<p>实现接口声明的方法时，容器应该将大部分工作交给其子元素来完成，也就是递归。</p>
-<p>也可以在接口中定义添加或删除子节点的方法。这样允许客户端通过接口对容器元素进行操作，但也会违反单一职责原则。</p>
+<p>门面模式的动机就是让客户端更简单地使用第三方库。类似把课本中关注的重点抄到笔记本上，后续不翻书本，只翻笔记了。</p>
+<p>门面模式可以降低客户端与第三方库之间的耦合。使得替换第三方库时，可以最小程度改动客户端代码。</p>
+<p>简单的门面可以设计成类，并在其中实现对子系统的创建与交互。复杂的门面可以设计成接口，并通过不同实现类，完成对不同子系统的交互，以符合开闭原则。<code>SLF4J</code>就是典型例子。</p>
+<p>门面被设计成接口时，可以通过接口拆分和继承，来组织接口的关系。</p>
 
                 
               </div>
@@ -374,8 +339,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Design-Pattern-Composite</div>
-      <div>http://example.com/2024/09/29/Design-Pattern-Composite/</div>
+      <div>Design-Pattern-Facade</div>
+      <div>http://example.com/2025/01/15/Design-Pattern-Facade/</div>
     </div>
     <div class="license-meta">
       
@@ -387,7 +352,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年9月29日</div>
+          <div>2025年1月15日</div>
         </div>
       
       
@@ -419,18 +384,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/10/28/Design-Pattern-Decorator/" title="Design-Pattern-Decorator">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Design-Pattern-Decorator</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/08/16/SpringBoot-IoC-DI-PartII/" title="SpringBoot-IoC-DI-PartII">
-                        <span class="hidden-mobile">SpringBoot-IoC-DI-PartII</span>
+                      <a href="/2024/11/11/Architecture-Microservices/" title="Architecture-Microservices">
+                        <span class="hidden-mobile">Architecture-Microservices</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -494,21 +453,6 @@
 
 
 
-
-
-  <script>
-  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
-    mermaid.initialize({"theme":"default"});
-
-    Fluid.utils.listenDOMLoaded(function() {
-      Fluid.events.registerRefreshCallback(function() {
-        if ('mermaid' in window) {
-          mermaid.init();
-        }
-      });
-    });
-  });
-</script>
 
 
 
