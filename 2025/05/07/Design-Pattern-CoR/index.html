@@ -1,0 +1,758 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/Memcached.svg">
+  <link rel="icon" href="/img/Memcached.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="DracoYu">
+  <meta name="keywords" content="学习笔记,Java,JavaScript,后端,前端">
+  
+    <meta name="description" content="总算到了行为模式。回顾前文，在创建型模式中，关注如何创建某类实例，在结构型模式中，关注将不同类和对象组装到一起，以扩展或适配功能。而在行为模式中，关注对象间的交互和职责划分。 首先介绍责任链模式（Chain of Responsibility, CoR）。责任链模式允许将请求沿着处理链传递，直到有一个处理器能够处理它。每个处理器决定是否处理请求或将其传递给链中的下一个处理器。 场景 在业务代">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Design-Pattern-CoR">
+<meta property="og:url" content="http://dracoyus.github.io/2025/05/07/Design-Pattern-CoR/index.html">
+<meta property="og:site_name" content="DracoYu&#39;s MindCache">
+<meta property="og:description" content="总算到了行为模式。回顾前文，在创建型模式中，关注如何创建某类实例，在结构型模式中，关注将不同类和对象组装到一起，以扩展或适配功能。而在行为模式中，关注对象间的交互和职责划分。 首先介绍责任链模式（Chain of Responsibility, CoR）。责任链模式允许将请求沿着处理链传递，直到有一个处理器能够处理它。每个处理器决定是否处理请求或将其传递给链中的下一个处理器。 场景 在业务代">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-05-07T08:20:16.000Z">
+<meta property="article:modified_time" content="2025-05-23T08:09:56.369Z">
+<meta property="article:author" content="DracoYu">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="DesignPattern">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Design-Pattern-CoR - DracoYu&#39;s MindCache</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"dracoyus.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>DracoYu&#39;s MindCache</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Design-Pattern-CoR"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-05-07 16:20" pubdate>
+          2025年5月7日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.1k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          26 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Design-Pattern-CoR</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>总算到了<strong>行为模式</strong>。回顾前文，在<strong>创建型模式</strong>中，关注如何创建某类实例，在<strong>结构型模式</strong>中，关注将不同类和对象组装到一起，以扩展或适配功能。而在<strong>行为模式</strong>中，关注对象间的交互和职责划分。</p>
+<p>首先介绍<strong>责任链模式（<code>Chain of Responsibility, CoR</code>）</strong>。<strong>责任链模式允许将请求沿着处理链传递，直到有一个处理器能够处理它。每个处理器决定是否处理请求或将其传递给链中的下一个处理器。</strong></p>
+<h2 id="场景">场景</h2>
+<p>在业务代码执行前，通常会进行多种校验，例如权限校验、参数校验、状态校验、缓存校验等。这些校验可能在不同业务中以不同组合，不同顺序的形式存在。如果在每个业务类中都复制粘贴这些校验并调整顺序，会导致代码重复率大。相对简洁一点的做法是把这些校验抽取成方法，这样在每个业务中只是调用这些校验方法。校验方法通常有个特点，前面的校验不通过，后面的校验则没必要继续了。随着业务复杂，校验方法越来越多。方法之间互相耦合，修改某个部分可能会影响到其他部分。</p>
+<h2 id="责任链模式">责任链模式</h2>
+<p>如果把校验过程进行抽象，可以提取出<strong>处理器(<code>handler</code>)</strong>。处理器的功能是对请求进行操作，并根据操作结果决定是由下一个处理器继续处理，还是直接终止后续的所有处理。处理器通过成员变量持有下一个处理器的引用，多个处理器通过链表的形式组合在一起。链表上的顺序决定了处理器执行校验的顺序。</p>
+<p>如此一来，每个校验都可以重构成一个处理器。而要使得处理器能通过链表一样串起来，这需要所有处理器是同一个类型，例如实现了同一个接口，或继承自同一个基类。这样的结构在装饰模式中也已经见过了。在<code>java</code>中，优先会使用接口来表示多个类的共同行为，因此定义处理器接口<code>handler</code>。而多个处理器实现类中，有很多共有部分，例如都需要持有下一个处理器的成员变量，成员变量的设置方法，以及链式调用通用逻辑。因此会使用一个抽象基类实现处理器接口，把这些共同的部分定义在基类中，这个抽象基类称为<strong>基础处理器(<code>base handler</code>)</strong>。而<strong>具体处理器(<code>Concrete Handlers</code>)</strong>，通过继承基础处理器，实现抽象方法，来添加特有的具体处理逻辑。</p>
+<p>基于上述设计思路，可以给出如下代码：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 处理器接口</span><br><span class="hljs-keyword">interface</span> <span class="hljs-title class_">Handler</span> &#123;<br>	<span class="hljs-keyword">void</span> <span class="hljs-title function_">handle</span><span class="hljs-params">(Request request)</span>;<br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">setNext</span><span class="hljs-params">(Handler handler)</span>;<br>&#125;<br><br><span class="hljs-comment">// 基础处理器</span><br><span class="hljs-keyword">abstract</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">BaseHandler</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Handler</span> &#123;<br>    <span class="hljs-keyword">protected</span> Handler nextHandler;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setNext</span><span class="hljs-params">(Handler nextHandler)</span> &#123;<br>        <span class="hljs-built_in">this</span>.nextHandler = nextHandler;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">handle</span><span class="hljs-params">(Request request)</span>;<br>&#125;<br><br><span class="hljs-comment">// 具体处理器A</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">ConcreteHandlerA</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">BaseHandler</span> &#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">handle</span><span class="hljs-params">(Request request)</span> &#123;<br>        <span class="hljs-keyword">if</span> (request.getType().equals(<span class="hljs-string">&quot;TypeA&quot;</span>)) &#123;<br>            System.out.println(<span class="hljs-string">&quot;ConcreteHandlerA 处理请求: &quot;</span> + request.getContent());<br>        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (nextHandler != <span class="hljs-literal">null</span>) &#123;<br>            nextHandler.handle(request); <span class="hljs-comment">// 传递给下一个处理器</span><br>        &#125;<br>    &#125;<br>&#125;<br><br><span class="hljs-comment">// 具体处理器B</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">ConcreteHandlerB</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">BaseHandler</span> &#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">handle</span><span class="hljs-params">(Request request)</span> &#123;<br>        <span class="hljs-keyword">if</span> (request.getType().equals(<span class="hljs-string">&quot;TypeB&quot;</span>)) &#123;<br>            System.out.println(<span class="hljs-string">&quot;ConcreteHandlerB 处理请求: &quot;</span> + request.getContent());<br>        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (nextHandler != <span class="hljs-literal">null</span>) &#123;<br>            nextHandler.handle(request);<br>        &#125;<br>    &#125;<br>&#125;<br><br><span class="hljs-comment">// 请求类</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Request</span> &#123;<br>    <span class="hljs-keyword">private</span> String type;<br>    <span class="hljs-keyword">private</span> String content;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">Request</span><span class="hljs-params">(String type, String content)</span> &#123;<br>        <span class="hljs-built_in">this</span>.type = type;<br>        <span class="hljs-built_in">this</span>.content = content;<br>    &#125;<br><br>    <span class="hljs-comment">// Getter方法...</span><br>&#125;<br><br><span class="hljs-comment">// 客户端</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Client</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        <span class="hljs-type">Handler</span> <span class="hljs-variable">handlerA</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ConcreteHandlerA</span>();<br>        <span class="hljs-type">Handler</span> <span class="hljs-variable">handlerB</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ConcreteHandlerB</span>();<br>        handlerA.setNext(handlerB); <span class="hljs-comment">// 构建责任链</span><br><br>        <span class="hljs-comment">// 发送请求</span><br>        handlerA.handle(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Request</span>(<span class="hljs-string">&quot;TypeB&quot;</span>, <span class="hljs-string">&quot;请求内容&quot;</span>));<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<pre><code class=" mermaid">classDiagram
+    direction RL
+    class Client
+    
+    class Handler &#123;
+        &lt;&lt; interface &gt;&gt;
+    	+ Handler()
+    	+ setNext()
+    &#125;
+	Client --&gt; Handler
+	
+	class ConcreteHandler &#123;
+		+Handler()
+	&#125;
+    ConcreteHandler ..|&gt; Handler
+	
+	class BaseHandler &#123;
+		&lt;&lt;abstract&gt;&gt;
+		- Handler handler
+    	+ Handler()*
+    	+ setNext()
+	&#125;
+	BaseHandler ..|&gt; Handler
+	BaseHandler ..o Handler
+
+	ConcreteHandler --|&gt; BaseHandler
+    
+</code></pre>
+<h2 id="责任链变体">责任链变体</h2>
+<p>谈到责任链的结构，总感觉和实际使用情况不符。对比上述关于校验流程的例子和示例代码，会发现也是匹配不上的。这是因为责任链模式存在很多变体，实际使用的是各种变体。在此简单介绍最常见的变体。</p>
+<ul>
+<li><strong>中断式责任链</strong>：拿校验的例子来说，校验过程通常是一个接着一个执行，若任意一个校验不通过，则立即终止后续的校验。上述示例代码显然不满足这个要求。因为需要根据校验结果判断是否继续校验，那么校验方法需要提供能表示是否校验通过的标识，例如返回一个<code>boolean</code>类型，<code>true</code>表示通过校验。如此可以对<code>handle</code>方法改造。示例代码如下，调整了基础处理器<code>handle</code>的方法，并定义了实际执行校验逻辑的<code>validate</code>抽象方法。任意一个处理器校验失败，就会直接<code>return</code>，结束链式调用。</li>
+</ul>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 短路型责任链</span><br><span class="hljs-keyword">abstract</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">BaseHandler</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Handler</span> &#123;<br>    <span class="hljs-keyword">protected</span> Handler nextHandler;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setNext</span><span class="hljs-params">(Handler nextHandler)</span> &#123;<br>        <span class="hljs-built_in">this</span>.nextHandler = nextHandler;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">handle</span><span class="hljs-params">(Request request)</span> &#123;<br>    	<span class="hljs-keyword">if</span> (!validate(request)) <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>        <span class="hljs-keyword">return</span> nextHandler == <span class="hljs-literal">null</span> || nextHandler.handle(request);<br>    &#125;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">validate</span><span class="hljs-params">(Request request)</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<ul>
+<li><strong>全传播责任链</strong>：与中断式责任链相反，全传播责任链会将请求一直传递，必须遍历所有处理器。请求可能被多个处理器处理，也可能没有处理器处理。</li>
+<li><strong>纯责任链</strong>：请求必须被某个处理器处理，且每个处理器只能选择处理或传递给下一节点（不可既处理又传递）。</li>
+<li><strong>不纯责任链</strong>：允许处理器部分处理请求后继续传递（如拦截器模式），或所有处理器均尝试处理（如中间件管道）。</li>
+<li><strong>动态责任链</strong>：链的节点可在运行时动态增删或重新排序。</li>
+</ul>
+<p>这些变体不全是互斥的，例如<code>spring mcv</code>的拦截器，在上述变体中属于不纯的、可中断、动态责任链。</p>
+<h2 id="与装饰模式的区别">与装饰模式的区别</h2>
+<p>对比装饰模式与责任链模式的结构，会发现两者一模一样，概念也几乎一一对应，并且两者都依赖递归组合将需要执行的操作传递给一系列对象。</p>
+<p>有些文章提到装饰模式无法中断请求传递。但这不是明显差别，因为全传播责任链会要求请求遍历所有处理器，不会在调用链中间中断。也有文章提到从语义上说，装饰模式强调给对象动态添加功能，责任链强调众多处理器之一对对象进行处理。但不纯责任链允许多个处理器处理请求。我们也可以将这多个处理器，理解为是对功能的动态添加。例如<code>spring mvc</code>中每添加一个拦截器，都是对拦截器整体功能的扩展。客户端使用的处理器，其实是所有处理器功能的结合。<strong>使用装饰模式的语义看待责任链一点也不违和</strong>。另外处理器判断某个请求是否是其职责，是否该处理，这判断本身也是一种处理。也就是说在这种理解下，就算处理器把处理委派给了下一个处理器，其本身也完成了一部分处理，不能很严谨地说只进行传递。装饰模式也能符合责任链的语义，例如数据加密的装饰器，可以判断数据是否已经加密，如果已经加密则不处理，并委派给下一个装饰器。在这种场景下，也并不是所有的装饰器都会对请求进行处理，装饰器也可以选择处理或传递中的一个。</p>
+<p><strong>有些文章认为责任链是装饰器的一种特殊形式，笔者赞同这个观点</strong>。如果硬是要比较两者的差别，笔者认为<strong>主要区别在于责任链模式的每个处理器，是相对独立的，彼此间互相不知道。而装饰模式中的装饰器之间，耦合程度会更高</strong>。例如装饰器之间可能存在依赖，必须按照特定顺序添加装饰器。
+并且装饰模式中会有一个专门位于链尾部的具体部件，而在责任链模式中，每个处理器并不知道自己是否位于尾部。</p>
+<h2 id="一些想法">一些想法</h2>
+<p>回到实际，我们似乎很少在代码中通过责任链去执行校验，上文把校验过程改造为责任链的例子并不好。这是因为不同的校验所需要的入参/上下文不同。例如校验方法的入参可能是日期，可能是金额，亦或各种字段可能的组合。这意味着不同的校验方法，应对的不是同一个请求，也就无法抽取出公共的处理抽象方法。这当然也有解决方法，例如新建一个自定义类，各种校验需要的入参都被包含在其中，类名就叫<code>ValidationContext</code>。但这也加重了客户端的负担，需要收集各个字段，负责这个实例的创建和初始化，这可能得不偿失。</p>
+<p>因此，<strong>实际适合责任链模式的场景，都需要多个处理器处理的是同一个请求</strong>。常被拿来举例子的权限审批，不同职级是对同一个请求表单进行审查。<code>spring mcv</code>中，不同拦截器是对同一个HTTP请求和响应进行处理和拦截。所以在考虑把一连串相似的处理重构成责任链时，还需要考虑这些处理应对的是否为同一个请求，或者需要衡量改造成同一个请求的成本。</p>
+<p>此外，多个处理器是否有必要通过链表串在一起，也是个值得思考的问题。备选方案是可以建一个<code>List</code>包含所有处理器，客户端通过<code>for</code>循环，按顺序依次调用所有处理器。在<code>for</code>循环中也可以通过<code>if</code>和<code>break</code>关键字来跳出循环，模拟责任链中任意处理器中断请求传递的过程。对于客户端来说，只知道请求由一个处理器集合负责处理，不必关心其中的顺序，具体由谁来执行。<code>List</code>也支持动态添加、删除元素的操作。整体看使用<code>List</code>和责任链的行为和特征是一致的。</p>
+<p>当处理器的功能不复杂，这么做确实可行。但当处理器需要在所有剩下处理器处理完后再执行某些操作，简单的<code>List</code>循环就不再能满足需求。责任链的递归调用模式可以产生栈的效果，每个处理器可以在入栈和出栈时执行操作，也就是预处理和后处理。此外，在一些场景中，处理器天然地会以树的形式组织在一起。常被拿来举例的是<code>UI</code>亦或是<code>DOM</code>。我们点击了其中某个元素，产生的点击事件会沿着元素一直追溯到树的根，沿途的节点所代表的处理器都可能会处理这个事件，也可能传递给下一个节点。在这种场景下，责任链的结构天然地比<code>List</code>更合适。</p>
+<h2 id="总结">总结</h2>
+<p>责任链模式以链表结构串起一系列类似的处理器。请求会沿着链表传递，每个处理器都可以决定自己是否处理，是否交由下一个处理器处理，是否中断处理传递。</p>
+<p>责任链模式的角色包括处理器接口、基础处理器、具体处理器。</p>
+<p>责任链模式存在不同变体，主要的大类包括中断/全传播责任链，纯/不纯责任链，动态责任链等。</p>
+<p>责任链模式和装饰模式几乎一模一样。笔者认为责任链模式是装饰模式的一种特例。</p>
+<p>责任链模式适合的场景需要多个处理器处理的是同一个请求。</p>
+<p>处理器以树结构组织时天然地适合责任链模式。有时也可以考虑使用<code>List</code>储存处理器和循环调用作为责任链模式的替代方案。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/DesignPattern/" class="category-chain-item">DesignPattern</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Java/" class="print-no-link">#Java</a>
+      
+        <a href="/tags/DesignPattern/" class="print-no-link">#DesignPattern</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Design-Pattern-CoR</div>
+      <div>http://dracoyus.github.io/2025/05/07/Design-Pattern-CoR/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>DracoYu</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年5月7日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/02/27/Design-Pattern-Proxy/" title="Design-Pattern-Proxy">
+                        <span class="hidden-mobile">Design-Pattern-Proxy</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
