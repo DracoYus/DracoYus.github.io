@@ -1,0 +1,778 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/Memcached.svg">
+  <link rel="icon" href="/img/Memcached.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="DracoYu">
+  <meta name="keywords" content="学习笔记,Java,JavaScript,后端,前端">
+  
+    <meta name="description" content="命令模式是一种行为设计模式，它可以将请求转换为一个包含与请求相关的所有信息的独立对象。该转换让你能根据不同的请求将方法参数化、延迟请求执行或将其放入队列中，且能实现可撤销操作。 场景 假设正在开发一款软件的GUI，界面上有许多功能不同的按钮。这些按钮有很多相似的地方，直觉上会把这些共性提取到一个按钮基类中。而每个具体按钮不同的实际功能，则需要在继承的子类中实现区分。 123456789101">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Design-Pattern-Command">
+<meta property="og:url" content="http://dracoyus.github.io/2025/06/10/Design-Pattern-Command/index.html">
+<meta property="og:site_name" content="DracoYu&#39;s MindCache">
+<meta property="og:description" content="命令模式是一种行为设计模式，它可以将请求转换为一个包含与请求相关的所有信息的独立对象。该转换让你能根据不同的请求将方法参数化、延迟请求执行或将其放入队列中，且能实现可撤销操作。 场景 假设正在开发一款软件的GUI，界面上有许多功能不同的按钮。这些按钮有很多相似的地方，直觉上会把这些共性提取到一个按钮基类中。而每个具体按钮不同的实际功能，则需要在继承的子类中实现区分。 123456789101">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-06-10T08:49:29.000Z">
+<meta property="article:modified_time" content="2025-06-24T07:50:16.897Z">
+<meta property="article:author" content="DracoYu">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="DesignPattern">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Design-Pattern-Command - DracoYu&#39;s MindCache</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"dracoyus.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>DracoYu&#39;s MindCache</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Design-Pattern-Command"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-06-10 16:49" pubdate>
+          2025年6月10日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.9k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          25 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Design-Pattern-Command</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p><strong>命令模式</strong>是一种行为设计模式，它可以将请求转换为一个包含与请求相关的所有信息的独立对象。该转换让你能根据不同的请求将方法参数化、延迟请求执行或将其放入队列中，且能实现可撤销操作。</p>
+<h2 id="场景">场景</h2>
+<p>假设正在开发一款软件的<code>GUI</code>，界面上有许多功能不同的按钮。这些按钮有很多相似的地方，直觉上会把这些共性提取到一个按钮基类中。而每个具体按钮不同的实际功能，则需要在继承的子类中实现区分。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Button</span> &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-type">int</span> positionX;<br>    <span class="hljs-keyword">private</span> <span class="hljs-type">int</span> positionY;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">click</span><span class="hljs-params">()</span>;<br>&#125;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">SaveButton</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Button</span> &#123;<br>    <span class="hljs-keyword">private</span> FileService fileService;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">click</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">savePath</span> <span class="hljs-operator">=</span> getSavePath();<br>        fileService.save(savePath);<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">DeleteButton</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Button</span> &#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">click</span><span class="hljs-params">()</span> &#123;<br>        ...<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>但这会产生问题。随着功能增多，按钮的子类也变得越来越多。每新增一种功能就需要新增一个具体按钮子类。并且继承这种关系本身就是强耦合的，子类依赖着基类。如果基类<code>Button</code>发生了改动，所有的子类可能需要修改，导致不容易维护。例如上例中基类的<code>click</code>方法，如果不是定义为抽象方法，而是添加了部分逻辑，那么基类的<code>click</code>方法的改动会影响所有的子类。子类重写了父类的行为也可能破坏里氏替换原则。<strong>因此对于容易发生变动的基类来说，通过继承来扩展功能并不是个好选择。</strong></p>
+<p>此外，在上例中，<code>SaveButton</code>中调用了业务方法，使得<strong><code>GUI</code>层</strong>直接依赖了<strong>业务逻辑层</strong>。根据分层开发的思想，<code>GUI</code>层应只关注用户交互，业务逻辑应封装为独立的模块。而<code>GUI</code>对于业务逻辑层的直接依赖，使其需要了解业务逻辑细节，如<code>save</code>方法及其参数。业务逻辑的频繁变化，也会导致<code>GUI</code>需要协同调整。</p>
+<p>保存功能也可能会被其他地方使用。例如通过菜单，或者通过快捷键来触发。按照上例的做法，<code>SaveMenu</code>和<code>SaveShortcut</code>中，会有重复的代码，这显然不是个良好的设计。</p>
+<h2 id="命令模式">命令模式</h2>
+<p>对于带来问题的继承，在<a href="/2023/06/27/Design-Pattern-Design-Principle/" title="Design-Pattern-Design-Principle">Design-Pattern-Design-Principle</a>中也讨论过，<strong>组合优于继承</strong>，可以使用组合代替。通过继承扩展的每个具体按钮的功能，可以改为把功能作为变量，由外部传入。这样保存按钮不再是按钮的子类，而是带着保存功能的按钮类。这种形式实际上在桥接模式<a href="/2024/07/26/Design-Pattern-Bridge/" title="Design-Pattern-Bridge">Design-Pattern-Bridge</a>中也见到过。在桥接模式中，抽象和实现互相独立。通过抽象组合实现，来避免类的组合爆炸。在本例中，如果将按钮、快捷键、菜单视为抽象，将具体触发的功能视为实现，某种程度也符合桥接模式中的语义
+-- 抽象部分与实现部分分离，可以独立变化，对抽象的调用会委派给实现。</p>
+<p>但这还没解决<code>GUI</code>层直接依赖业务逻辑层的问题。不过没有什么不可以通过加一层来解决。引入中间层<strong>命令</strong>，<code>GUI</code>中只需负责调用命令的执行方法，而无需关心是哪个具体命令和执行逻辑。使得<code>GUI</code>和业务逻辑间的依赖关系发生了转变。</p>
+<figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs TEXT">[GUI] ----依赖----&gt; [业务逻辑]<br>[GUI] ----依赖----&gt; [命令] ----依赖----&gt; [业务逻辑]<br></code></pre></td></tr></table></figure>
+<p>这种间接依赖使得业务逻辑层的变动仅影响了命令层，只需要调整命令层的代码，而无需对<code>GUI</code>层进行改动。降低了耦合，也便于两个层独立地进行单元测试。</p>
+<p>至此可以正式给出命令模式的定义。在命令模式中，上例中的按钮类称为发送者<code>Sender</code>或触发者<code>Invoker</code>，执行功能的接口称为命令<code>Command</code>，其实现类称为具体命令<code>Concrete Command</code>，实际执行的业务逻辑类称为接收者<code>Receiver</code>，用于将命令和发送者绑定的类称为客户端<code>Client</code>。</p>
+<pre><code class=" mermaid">classDiagram
+    direction RL
+    class Client
+    
+    class Invoker &#123;
+        - Command command
+        + setCommand()
+        + executeCommand()
+    &#125;
+    
+    class Command &#123;
+        &lt;&lt; interface &gt;&gt;
+        + execute()
+    &#125;
+    Invoker --&gt; Command
+    
+    class ConcreteCommand &#123;
+        - Receiver receiver
+        + execute()
+    &#125;
+    ConcreteCommand ..|&gt; Command
+    
+    class Receiver &#123;
+        + operation(a, b, c)
+    &#125;
+    ConcreteCommand --&gt; Receiver
+
+    class Client
+    Client --&gt; Invoker
+    Client --&gt; ConcreteCommand
+    
+</code></pre>
+<h2 id="接口与参数">接口与参数</h2>
+<p>命令是对操作的抽象，是对各种业务逻辑方法调用的抽象。由于不同业务逻辑方法的方法签名不同，所以如何统一接口的方法参数、返回等是个问题。</p>
+<p>引入命令模式的一部分动机是减少不同层之间的耦合，消除<code>GUI</code>层对于业务逻辑层的依赖。最简单粗暴的方法便是将命令接口的执行方法定义为无参无返回的方法。把所有命令都统一后的好处是，可以十分方便地切换命令，而无需对触发者做任何代码改动。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">Command</span> &#123;<br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">execute</span><span class="hljs-params">()</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>但命令层实际调用业务逻辑层时，又需要这些参数。这些参数从哪里来？通常来说，需要客户端在创建具体命令时，把相关的上下文信息传入具体命令中。例如一个命令是另存为，客户端可以把整个<code>GUI</code>或者部分文本框对象传入另存为命令中（通过构造函数或者<code>set</code>方法），使得命令中可以获取到这些对象的属性值，作为参数传递给业务逻辑方法。所以调用业务逻辑的过程仍然存在，只是职责上由<code>GUI</code>层，转移到了命令层。</p>
+<p>而对于方法的返回值，某些场景中，触发者需要根据命令的执行结果来决定是否弹出警告。那也可以将执行方法的返回改成<code>boolean</code>，或者一个自定义的<code>CommonResponse</code>类，在其中包含执行结果和错误信息等。由于这部分信息对触发者来说是通用的，不会增加代码耦合度。不过这也会使得那些不关心命令执行情况的触发者强行关注。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">Command</span> &#123;<br>    CommonResponse <span class="hljs-title function_">execute</span><span class="hljs-params">()</span>;<br>&#125;<br><br><span class="hljs-meta">@Getter</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">CommonResponse</span> &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-type">boolean</span> success;<br>    <span class="hljs-keyword">private</span> String errorMessage;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="命令模式的额外功能">命令模式的额外功能</h2>
+<p>上文一直在强调命令模式的解耦作用。但当将操作功能封装为对象时，<strong>操作本身便可以进行存储、组合、排序</strong>。这些特性常用于实现撤销操作。例如可以用一个栈保存触发过的操作。当需要撤销最近的操作时，则从栈顶弹出命令，并根据具体命令执行撤销。由于撤销和具体命令直接相关，通常也定义在具体命令中。撤销的实现方式有多种，例如<strong>状态快照</strong>在执行命令前，保存当前状态，在执行撤销时恢复成命令执行前保存的状态即可。也可以在撤销中编写<strong>逆向操作</strong>，例如命令的功能是打开某个功能，则撤销的逻辑就是关闭这个功能。<code>git</code>中每次<code>commit</code>，记录了增量信息，撤销时就可以反向应用这些变化量，推断出<code>commit</code>前的状态，通过逆向操作来撤销。逆向操作方案并不是总是可行，这需要根据当前状态，和最近一次执行的命令，可以推断出命令执行前的状态。当某个命令是把字体颜色改为红色，由于无法推断改之前是什么颜色，所以无法使用这种方式。因此逆向操作通用性不如状态快照，但相较于每次执行保存状态会更节省空间。<strong>实际也可以根据命令的复杂程度，组合使用不同的撤销实现方式</strong>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">Command</span> &#123;<br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">execute</span><span class="hljs-params">()</span>;<br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">undo</span><span class="hljs-params">()</span>;<br>&#125;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">UpgradeCommand</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Command</span> &#123;<br>    <span class="hljs-keyword">private</span> States backupStates;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">execute</span><span class="hljs-params">()</span> &#123;<br>        backupStates = getStates();<br>        upgrade();<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">undo</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-comment">// 通过状态快照实现撤销</span><br>        restoreState(backupStates)<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">SaveCommand</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Command</span> &#123;<br>    <span class="hljs-keyword">private</span> FileService fileService;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">execute</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">savePath</span> <span class="hljs-operator">=</span> getSavePath();<br>        fileService.save(savePath);<br>    &#125;<br><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">undo</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-comment">// 通过逆向操作实现撤销</span><br>        <span class="hljs-type">String</span> <span class="hljs-variable">savePath</span> <span class="hljs-operator">=</span> getSavePath();<br>        fileService.delete(savePath)<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>利用命令可以储存和排序特性，还可以支持类似<code>MQ</code>的功能。例如将命令对象放入一个优先级队列（<code>PriorityQueue</code>）中，根据任务的优先级决定执行的顺序。再结合线程池或任务调度框架，消费命令队列中的任务。</p>
+<p>至此可以回顾最开头的定义。</p>
+<blockquote>
+<p><strong>命令模式</strong>是一种行为设计模式，它可将请求转换为一个包含与请求相关的所有信息的独立对象。该转换让你能根据不同的请求将方法参数化、延迟请求执行或将其放入队列中，且能实现可撤销操作。</p>
+</blockquote>
+<p>笔者最初读了很多遍也没搞懂在说什么。要理解这段定义，最重要的是弄清楚其中的核心概念<strong>“请求”</strong>。这里的请求，实际就是前文多次提到的<strong>操作</strong>，在代码中体现为对某个业务逻辑类方法的调用、参数以及相关上下文信息。而<strong>转化</strong>的过程，就是把对业务逻辑的方法调用，封装成了一个命令，也是定义中的<strong>包含与请求相关的所有信息的独立对象</strong>。基于这些核心概念的解释，后续也就容易理解了。</p>
+<h2 id="左右脑互搏">左右脑互搏</h2>
+<p>在笔者实际开发中，几乎没有遇到过命令模式的场景。大部分的代码逻辑都是接受到某个请求，直接调用对应的业务逻辑类。好像没有考虑过中间加一层，或者把请求封装为对象。</p>
+<p>上文提到了在没有应用命令模式前，代码会直接依赖业务逻辑层，导致<strong>“高耦合”</strong>。而实际开发中，业务逻辑进行了抽象。调用方依赖的是相对稳定的接口，不关心其具体实现。并且也不需要经常切换接口实现类。这种高耦合似乎也没那么耦合，没有到必须加一层，牺牲便利性来降低耦合的程度。因此在降低耦合这件事情上，命令模式不存在明显优势。</p>
+<p>那么使用命令模式，更多是想借助其额外功能，也就是可以对操作进行记录、存储、排序的特性。当需要支持命令撤销、组合以及队列的功能，并且命令具有多个不同的实现类，才会考虑使用命令模式。而实际上，这些功能也有很多的替代方案，例如<code>Spring</code>的<code>@Transactional</code>，以及<code>MQ</code>。</p>
+<p>在日常开发中，更多依赖框架提供的抽象。只有在少数特定场景下，才会考虑使用命令模式。纵观网上众多教程，使用的案例不是编辑器（撤销），就是<code>GUI</code>（解耦），遥控器（命令组合），几乎没有更现代的案例。这也从侧面说明了命令模式使用范围的局限。</p>
+<h2 id="总结">总结</h2>
+<p>命令模式中的主要角色包括：发送者、接收者、命令接口和实现、客户端。</p>
+<p>命令模式通过新增了命令层，将对业务逻辑方法的调用封装成了命令对象，解耦了发送者与接收者。</p>
+<p>命令接口的执行方法通常是个无参无返回的方法，也可以使用通用的入参和返回。</p>
+<p>命令模式天然地支持命令的记录、组合、排序，最常见用来实现操作撤销。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/DesignPattern/" class="category-chain-item">DesignPattern</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Java/" class="print-no-link">#Java</a>
+      
+        <a href="/tags/DesignPattern/" class="print-no-link">#DesignPattern</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Design-Pattern-Command</div>
+      <div>http://dracoyus.github.io/2025/06/10/Design-Pattern-Command/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>DracoYu</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年6月10日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/05/07/Design-Pattern-CoR/" title="Design-Pattern-CoR">
+                        <span class="hidden-mobile">Design-Pattern-CoR</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.utils.listenDOMLoaded(function() {
+      Fluid.events.registerRefreshCallback(function() {
+        if ('mermaid' in window) {
+          mermaid.init();
+        }
+      });
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
