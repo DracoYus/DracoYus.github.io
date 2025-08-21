@@ -24,10 +24,10 @@
 <meta property="og:description" content="享元模式（Flyweight）是一种结构型设计模式，它摒弃了在每个对象中保存所有数据的方式，旨在通过共享对象来减少内存使用和提高性能。 场景 在一些2D平面游戏中，玩家可以控制一个角色，在地图中移动，和不同单位交互。对于这类游戏，内存中存在一个数组，表示游戏的地图数据，包含例如某个地格的地形、位置、障碍物、是否有道具&#x2F;角色可交互对象等数据。游戏的图像引擎，通过遍历每个地格的数据，渲染成游戏界面">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-02-20T08:34:27.000Z">
-<meta property="article:modified_time" content="2025-02-26T02:38:36.446Z">
+<meta property="article:modified_time" content="2025-08-07T02:16:26.303Z">
 <meta property="article:author" content="DracoYu">
-<meta property="article:tag" content="Java">
 <meta property="article:tag" content="DesignPattern">
+<meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary_large_image">
   
   
@@ -287,23 +287,23 @@
 <pre><code class=" mermaid">classDiagram
     direction LR
     class Client &#123;
-    	- List~Context~
+        - List~Context~
     &#125;
     
     class Context &#123;
         - UniqueState
-    	- Flyweight
+        - Flyweight
     &#125;
-	Client *-- Context
-	
-	class Flyweight &#123;
-		- RepeatingState
-	&#125;
+    Client *-- Context
+    
+    class Flyweight &#123;
+        - RepeatingState
+    &#125;
     Context --&gt; Flyweight
     
     class FlyweightFactory &#123;
-    	- Map~Flyweight~ cache
-    	+ getFlyweight(RepeatingState) Flyweight
+        - Map~Flyweight~ cache
+        + getFlyweight(RepeatingState) Flyweight
     &#125;
     
     Context --&gt; FlyweightFactory
@@ -312,7 +312,7 @@
 <h2 id="享元工厂">享元工厂</h2>
 <p>在上图中，额外新增了一个角色<strong>享元工厂<code>FlyweightFactory</code></strong>。前文提到，享元是被共享的对象，但还没有说清楚，这个对象由谁创建，以及如何保证不同<code>Context</code>可以共享同一个享元对象。</p>
 <p>那就需要一个方法，可以通过内部状态获取到对应的享元对象。这个方法可以定义在享元类中，但更多是定义在专门的享元工厂中。新建一个工厂类，专门负责所有享元对象的创建和管理的想法是自然的。如果对应的享元对象之前已经创建过，那么工厂方法应该返回之前已有的对象，而不是新建一个。这也被称为缓存机制。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">FlyweightFactory</span> &#123;<br>    <span class="hljs-keyword">private</span> Map&lt;RepeatingState, Flyweight&gt; cache = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>();<br>	<span class="hljs-keyword">public</span> Flyweight <span class="hljs-title function_">getFlyweright</span><span class="hljs-params">(RepeatingState repeatingState)</span>  &#123;<br>        <span class="hljs-keyword">if</span> (!flyweights.containsKey(repeatingState)) &#123;<br>            flyweights.put(repeatingState, <span class="hljs-keyword">new</span> <span class="hljs-title class_">Flyweight</span>(repeatingState));<br>        &#125;<br>        <span class="hljs-keyword">return</span> flyweights.get(repeatingState);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">FlyweightFactory</span> &#123;<br>    <span class="hljs-keyword">private</span> Map&lt;RepeatingState, Flyweight&gt; cache = <span class="hljs-keyword">new</span> <span class="hljs-title class_">HashMap</span>();<br>    <span class="hljs-keyword">public</span> Flyweight <span class="hljs-title function_">getFlyweright</span><span class="hljs-params">(RepeatingState repeatingState)</span>  &#123;<br>        <span class="hljs-keyword">if</span> (!flyweights.containsKey(repeatingState)) &#123;<br>            flyweights.put(repeatingState, <span class="hljs-keyword">new</span> <span class="hljs-title class_">Flyweight</span>(repeatingState));<br>        &#125;<br>        <span class="hljs-keyword">return</span> flyweights.get(repeatingState);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>一个享元对象会被多个<code>Context</code>同时引用，可能会引发线程不安全。因此通常将享元类设计为不可变类，具体的采取措施是将所有字段设置为<code>private final</code>，不提供<code>setter</code>方法，并且要求在构造函数能够初始化所有字段。</p>
 <h2 id="内部状态和外部状态">内部状态和外部状态</h2>
 <p>关于内部状态和外部状态的定义，笔者是十分疑惑的。这里说的内部和外部，是相对什么的内外？一种解释是，内指对象本身，而外指对象所处的环境。具体来说，<strong>内</strong>指的是<strong>对象本身固有的属性</strong>，即对象内部存储的、不依赖于外部环境的状态。<strong>外</strong>指的是<strong>对象所处的环境或上下文</strong>，即依赖于外部环境的状态。这些状态不是对象本身的一部分，而是由对象的使用者（客户端）维护，并在需要时传递给对象。</p>
@@ -356,9 +356,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/Java/" class="print-no-link">#Java</a>
-      
         <a href="/tags/DesignPattern/" class="print-no-link">#DesignPattern</a>
+      
+        <a href="/tags/Java/" class="print-no-link">#Java</a>
       
     </div>
   

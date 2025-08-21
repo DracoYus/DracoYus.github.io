@@ -24,10 +24,10 @@
 <meta property="og:description" content="外观&#x2F;门面模式(Facade)是一种结构型设计模式，能为程序库、框架或其他复杂类提供一个简单的接口。 场景 为了通用性，第三方库&#x2F;子系统会把功能设计得完备，但客户端通常只使用其中非常少的功能。客户端直接使用第三方库类，会引入过多不必要的功能与方法细节，也会导致客户端会与第三方类的实现细节紧密耦合。当想尝试替换其他功能相似的第三方库时，客户端需要调整所有调用第三方库方法的位置。如果客户端需要同时">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-01-15T02:53:51.000Z">
-<meta property="article:modified_time" content="2025-02-11T03:06:03.686Z">
+<meta property="article:modified_time" content="2025-08-07T02:16:24.315Z">
 <meta property="article:author" content="DracoYu">
-<meta property="article:tag" content="Java">
 <meta property="article:tag" content="DesignPattern">
+<meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary_large_image">
   
   
@@ -281,7 +281,7 @@
 <p><strong>简单来说，门面模式就是为了让客户端更方便地使用子系统。</strong></p>
 <p>门面模式为子系统中的一组接口提供一个统一的高层接口。它就像是一个门面，将子系统的复杂性封装起来，让外部调用者只需要与这个门面进行交互，而不需要了解子系统内部的具体实现细节。就像通过电话给商店下达订单时，接线员就是该商店的所有服务和部门的门面。接线员为你提供了一个同购物系统、支付网关和各种送货服务进行互动的简单语音接口。</p>
 <p><strong>门面模式的结构比较简单，包含两个角色，门面和子系统</strong>。其中子系统通常是第三方库，而门面则负责封装所需功能并隐藏其他代码，从而无需使全部代码直接与数十个第三方类进行交互。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Facade</span> &#123;<br>    +<br>    <span class="hljs-keyword">private</span> Subsystem1 subsystem1;<br>    <span class="hljs-keyword">private</span> Subsystem2 subsystem2;<br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">Facade</span><span class="hljs-params">()</span> &#123;<br>    	<span class="hljs-comment">// 通常负责子系统对象的创建与初始化</span><br>        subsystem1 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Subsystem1</span>();<br>        subsystem2 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Subsystem2</span>();<br>        ....<br>    &#125;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">function1</span><span class="hljs-params">()</span> &#123;<br>    	<span class="hljs-comment">// 客户端直接需要的功能，通常包含对子系统的一系列调用</span><br>        subsystem1.function();<br>        subsystem2.function();<br>    &#125;<br>        <br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Facade</span> &#123;<br>    +<br>    <span class="hljs-keyword">private</span> Subsystem1 subsystem1;<br>    <span class="hljs-keyword">private</span> Subsystem2 subsystem2;<br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">Facade</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-comment">// 通常负责子系统对象的创建与初始化</span><br>        subsystem1 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Subsystem1</span>();<br>        subsystem2 = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Subsystem2</span>();<br>        ....<br>    &#125;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">function1</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-comment">// 客户端直接需要的功能，通常包含对子系统的一系列调用</span><br>        subsystem1.function();<br>        subsystem2.function();<br>    &#125;<br>        <br>&#125;<br></code></pre></td></tr></table></figure>
 <h2 id="门面模式变体">门面模式变体</h2>
 <p>上例中，将门面设计成了类。如果要替换第三方库实现时，则需要修改门面类，一定程度上不符合开闭原则。</p>
 <p>如果对门面再抽象一层，可以将门面设计成接口。在门面接口中定义客户端需要的方法，客户端也只与门面交互。如此一来，替换第三方库实现，可以通过新增门面接口的实现类来完成。</p>
@@ -325,9 +325,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/Java/" class="print-no-link">#Java</a>
-      
         <a href="/tags/DesignPattern/" class="print-no-link">#DesignPattern</a>
+      
+        <a href="/tags/Java/" class="print-no-link">#Java</a>
       
     </div>
   

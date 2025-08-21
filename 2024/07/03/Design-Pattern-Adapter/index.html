@@ -24,10 +24,10 @@
 <meta property="og:description" content="创建型模式已经全部介绍完，接下来是结构型模式。 在以往的文中提过，结构型模式和行为型模式边界比较模糊。根据定义，结构型模式侧重于类和对象的组合以构建灵活且高效的结构，而行为型模式侧重于类和对象之间的通信和职责分配。但结构和行为本身就会相互影响，因此会存在模棱两可的分类。例如代理语义上是个行为，但是代理模式是结构模式；中介者组织了组件间的结构关系，但是中介者模式是行为模式。 结构模式和行为模式都">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-07-03T07:37:32.000Z">
-<meta property="article:modified_time" content="2024-08-01T08:14:27.177Z">
+<meta property="article:modified_time" content="2025-08-07T02:06:03.655Z">
 <meta property="article:author" content="DracoYu">
-<meta property="article:tag" content="Java">
 <meta property="article:tag" content="DesignPattern">
+<meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary_large_image">
   
   
@@ -296,27 +296,27 @@
     
     class InterfaceA &#123;
         &lt;&lt; interface &gt;&gt;
-    	+methodA() ResultA
+        +methodA() ResultA
     &#125;
 
     
     
-	Client --&gt; InterfaceA
-	
-	class BAdapter &#123;
-		-B b
-		+methodA() ResultA
-	&#125;
-	
-	class B &#123;
-		+methodB() ResultB
-	&#125;
+    Client --&gt; InterfaceA
+    
+    class BAdapter &#123;
+        -B b
+        +methodA() ResultA
+    &#125;
+    
+    class B &#123;
+        +methodB() ResultB
+    &#125;
 
-	
+    
     BAdapter ..|&gt; InterfaceA
     BAdapter --&gt; B
 </code></pre>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// Client 和 InterfaceA的定义同上</span><br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">BAdapter</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">InterfaceA</span> &#123;<br>    <span class="hljs-comment">// 通过成员变量持有一个B类对象</span><br>    <span class="hljs-keyword">private</span> B b;<br>    <br>    <span class="hljs-comment">// 构造函数中传入一个B类对象</span><br>    BAdapter(B b) &#123;<br>    	<span class="hljs-built_in">this</span>.b = b;<br>    &#125;<br>    <br>    <span class="hljs-meta">@Override</span><br>    ResultA <span class="hljs-title function_">methodA</span><span class="hljs-params">()</span>&#123;<br>        ...<br>        <span class="hljs-comment">// 在调用B的方法前，进行一些类型转换等适配</span><br>        <span class="hljs-comment">// 并将实际调用委派给被适配类</span><br>        <span class="hljs-type">ResultB</span> <span class="hljs-variable">resultB</span> <span class="hljs-operator">=</span> b.methodB();<br>        <span class="hljs-comment">// 根据B的方法返回值，将结果转换成接口需要的类型</span><br>        ...<br>    &#125;;<br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// Client 和 InterfaceA的定义同上</span><br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">BAdapter</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">InterfaceA</span> &#123;<br>    <span class="hljs-comment">// 通过成员变量持有一个B类对象</span><br>    <span class="hljs-keyword">private</span> B b;<br>    <br>    <span class="hljs-comment">// 构造函数中传入一个B类对象</span><br>    BAdapter(B b) &#123;<br>        <span class="hljs-built_in">this</span>.b = b;<br>    &#125;<br>    <br>    <span class="hljs-meta">@Override</span><br>    ResultA <span class="hljs-title function_">methodA</span><span class="hljs-params">()</span>&#123;<br>        ...<br>        <span class="hljs-comment">// 在调用B的方法前，进行一些类型转换等适配</span><br>        <span class="hljs-comment">// 并将实际调用委派给被适配类</span><br>        <span class="hljs-type">ResultB</span> <span class="hljs-variable">resultB</span> <span class="hljs-operator">=</span> b.methodB();<br>        <span class="hljs-comment">// 根据B的方法返回值，将结果转换成接口需要的类型</span><br>        ...<br>    &#125;;<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>此时，<code>Client</code>中需要<code>InterfaceA</code>接口的实现类，而我们希望支持<code>B</code>类对象时，可以在传入前创建一个从<code>B</code>类对象到<code>InterfaceA</code>的适配器。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">()</span> &#123;<br>    <span class="hljs-type">B</span> <span class="hljs-variable">b</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">B</span>();<br>    <span class="hljs-type">InterfaceA</span> <span class="hljs-variable">bAdapter</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BAdapter</span>(b); <span class="hljs-comment">// BAdapter 实现了 InterfaceA，编译通过</span><br>    <span class="hljs-type">Result</span> <span class="hljs-variable">resultB</span> <span class="hljs-operator">=</span> client(bAdapter); <br>&#125;<br></code></pre></td></tr></table></figure>
 <p>从代码形式看，使用适配器的方式，和上文中的调用前先转换的方式<code>convertBToA</code>很像。区别是<code>convertBToA</code>中返回的是具体的<code>A</code>类对象，而客户端需要的也是<code>A</code>类。但当客户端接受的是某个接口类型<code>InterfaceA</code>，此时再把所有对象转换成<code>A</code>类（实现了<code>InterfaceA</code>），虽然也能满足功能，但总觉得像饶了原路，不符合面向接口编程的思想。</p>
@@ -375,9 +375,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/Java/" class="print-no-link">#Java</a>
-      
         <a href="/tags/DesignPattern/" class="print-no-link">#DesignPattern</a>
+      
+        <a href="/tags/Java/" class="print-no-link">#Java</a>
       
     </div>
   

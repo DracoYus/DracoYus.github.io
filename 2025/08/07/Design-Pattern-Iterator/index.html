@@ -1,0 +1,800 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/Memcached.svg">
+  <link rel="icon" href="/img/Memcached.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="DracoYu">
+  <meta name="keywords" content="学习笔记,Java,JavaScript,后端,前端">
+  
+    <meta name="description" content="迭代器模式是一种行为设计模式，让你能在不暴露集合底层表现形式 （列表、 栈和树等） 的情况下遍历集合中所有的元素。 场景 迭代器实在是太常见了，已经成为了很多现代编程语言本身的一部分。 在日常开发过程中，处理同类型的多个数据对象的场景太常见了。我们通常会用集合表示这些同类型的一组对象。为了了解集合构成，需要不重复地访问元素，这个过程称为遍历。 学过算法和数据结构，或者刷过leetcode">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Design-Pattern-Iterator">
+<meta property="og:url" content="http://dracoyus.github.io/2025/08/07/Design-Pattern-Iterator/index.html">
+<meta property="og:site_name" content="DracoYu&#39;s MindCache">
+<meta property="og:description" content="迭代器模式是一种行为设计模式，让你能在不暴露集合底层表现形式 （列表、 栈和树等） 的情况下遍历集合中所有的元素。 场景 迭代器实在是太常见了，已经成为了很多现代编程语言本身的一部分。 在日常开发过程中，处理同类型的多个数据对象的场景太常见了。我们通常会用集合表示这些同类型的一组对象。为了了解集合构成，需要不重复地访问元素，这个过程称为遍历。 学过算法和数据结构，或者刷过leetcode">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-08-07T01:33:22.000Z">
+<meta property="article:modified_time" content="2025-08-21T10:08:10.533Z">
+<meta property="article:author" content="DracoYu">
+<meta property="article:tag" content="DesignPattern">
+<meta property="article:tag" content="Java">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Design-Pattern-Iterator - DracoYu&#39;s MindCache</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"dracoyus.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>DracoYu&#39;s MindCache</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Design-Pattern-Iterator"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-08-07 09:33" pubdate>
+          2025年8月7日 上午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          19 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Design-Pattern-Iterator</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p><strong>迭代器模式</strong>是一种行为设计模式，让你能在不暴露集合底层表现形式
+（列表、 栈和树等） 的情况下遍历集合中所有的元素。</p>
+<h2 id="场景">场景</h2>
+<p>迭代器实在是太常见了，已经成为了很多现代编程语言本身的一部分。</p>
+<p>在日常开发过程中，处理同类型的多个数据对象的场景太常见了。我们通常会用<strong>集合</strong>表示这些同类型的一组对象。为了了解集合构成，需要不重复地访问元素，这个过程称为<strong>遍历</strong>。</p>
+<p>学过算法和数据结构，或者刷过<code>leetcode</code>的朋友，应该也写过某些集合的遍历算法。比如数组、链表、树的遍历。遍历也有不同的算法，对数组可以顺序，逆序遍历；对于树可以广度优先，深度优先遍历。不同的遍历算法决定哪些元素会被访问，访问顺序。</p>
+<p>如果使用<code>C</code>语言作为刷题语言，由于<code>C</code>语言本身没有内置容器，每道题都需要自己实现遍历算法。实现的次数多了就会觉得繁琐，同样的遍历算法会被反复实现。从可复用性角度来讲，反复使用的集合数据结构，和其遍历算法应该在某个类中实现，以便后续直接使用。</p>
+<p><strong>值得思考的是遍历算法应该在哪里实现</strong>。</p>
+<p><strong>可以在客户端中实现</strong>，例如客户端获取数组的长度，再使用一个递增的索引逐个获取元素。这样写的好处是<strong>灵活性高</strong>，客户端可以按照需求自定义遍历的方式。但也会导致<strong>代码重复</strong>，<strong>封装性差</strong>等问题。客户端需要了解集合的详细结构，导致代码更加耦合。上例中提到的使用<code>C</code>语言刷题，反复编写遍历算法，就是在客户端实现遍历算法的例子。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; list.size(); i++) &#123;<br>    <span class="hljs-comment">// 通过 数组[i] 访问当前元素</span><br>&#125;<br></code></pre></td></tr></table></figure>
+<p>又或者是<strong>实现在数据结构的类中</strong>。在同一个类中实现的优点是，封装性好，使用简单，遍历的代码会更加简洁。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 实现在数据结构类中，更简洁</span><br>collection.forEach(...)<br><br><span class="hljs-comment">// 实现在数据结构类外</span><br>for_each(collection.begin(), collection.end(), ...)<br></code></pre></td></tr></table></figure>
+<p>但这某种程度也<strong>违反了单一职责原则</strong>：集合类既负责存储数据，又负责遍历逻辑，承担了多个职责。当遍历方式需要扩展或变化时（例如支持多种遍历方式：正向、反向、过滤等），集合类可能会变得臃肿，难以维护。</p>
+<h2 id="迭代器模式">迭代器模式</h2>
+<p>迭代器模式，则是将集合对象的遍历行为抽象出来，封装成独立的迭代器对象，从而使得遍历逻辑与集合本身解耦，提供统一、灵活、可扩展的访问方式，同时隐藏集合的内部结构。</p>
+<p>不同的迭代器对象，都包含一个获取元素的方法用于遍历，通常还有一个用于表示是否遍历结束的方法，这些共性的方法会被声明在<strong>迭代器接口</strong>中。客户端通过迭代器接口与不同的具体迭代器交互，而不需要直接依赖具体的集合类，降低了代码对集合类的耦合。</p>
+<p>迭代器对象不仅包含了遍历算法，也<strong>包含了遍历过程中的状态</strong>。例如遍历了多少元素，一共有多少元素，剩余多少元素等。因此在不修改集合元素的情况下，不同的迭代器对象可以互相独立地遍历同一个集合。</p>
+<p>至此可以给出迭代器的大致设计。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 迭代器接口</span><br><span class="hljs-keyword">interface</span> <span class="hljs-title class_">Iterator</span> &#123;<br>    <span class="hljs-type">boolean</span> <span class="hljs-title function_">hasNext</span><span class="hljs-params">()</span>;<br>    Object <span class="hljs-title function_">next</span><span class="hljs-params">()</span>;<br>&#125;<br><br><span class="hljs-comment">// 具体迭代器</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">ConcreteIterator</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Iterator</span> &#123;<br>    <span class="hljs-comment">// 遍历集合的状态</span><br>    <span class="hljs-type">int</span> cursor;<br>    <span class="hljs-comment">// 待遍历的集合</span><br>    Collection concreteCollection;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">ConcreteIterator</span><span class="hljs-params">(Collection collection)</span> &#123;<br>        <span class="hljs-built_in">this</span>.concreteCollection = collection;<br>        <span class="hljs-built_in">this</span>.cursor = <span class="hljs-number">0</span>;<br>    &#125;<br>    <br>    <span class="hljs-comment">// 实现迭代方法</span><br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">hasNext</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">return</span> cursor &lt; concreteCollection.size();<br>    &#125;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> Object <span class="hljs-title function_">next</span><span class="hljs-params">()</span> &#123;<br>        ...<br>    &#125;<br>&#125;<br><br><span class="hljs-comment">// 其他算法的具体迭代器实现</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">DeepFirstIterator</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Iterator</span><br></code></pre></td></tr></table></figure>
+<p>由于集合中存放的元素不确定是哪种具体类型，因此在迭代器接口中的<code>next</code>方法中，使用了<code>Object</code>作为了方法的返回值。实际在<code>Java</code>中，可以使用泛型，在编译期提供类型检查，这样就不需要在客户端中重复执行类型转换的操作。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 使用泛型的迭代器接口</span><br><span class="hljs-keyword">interface</span> <span class="hljs-title class_">Iterator</span>&lt;E&gt; &#123;<br>    <span class="hljs-type">boolean</span> <span class="hljs-title function_">hasNext</span><span class="hljs-params">()</span>;<br>    E <span class="hljs-title function_">next</span><span class="hljs-params">()</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>客户端如何获取迭代器，最简单的方式是客户端直接<code>new</code>一个具体迭代器的实例，但这样会导致客户端和具体迭代器耦合。</p>
+<p>另一个简单的做法是直接在集合类中直接提供迭代器的获取方法。由于迭代是集合最基础的功能，因此可以把这个方法定义在集合接口中。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// 集合接口</span><br><span class="hljs-keyword">interface</span> <span class="hljs-title class_">IterableCollection</span>&lt;E&gt; &#123;<br>    Iterator&lt;E&gt; <span class="hljs-title function_">createIterator</span><span class="hljs-params">()</span>;<br>&#125;<br><br><span class="hljs-comment">// 具体集合</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">ConcreteCollection</span>&lt;E&gt; <span class="hljs-keyword">implements</span> <span class="hljs-title class_">IterableCollection</span>&lt;E&gt; &#123;<br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> Iterator&lt;E&gt; <span class="hljs-title function_">createIterator</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ConcreteIterator</span>&lt;&gt;(<span class="hljs-built_in">this</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>但这样的问题是只能创建一种具体迭代器，当某个集合需要支持多种算法的迭代器就不行了。一种方案是<strong>声明多种迭代器创建方法</strong>，不同的算法通过不同的方法名区分，例如<code>createDeepFirstIterator</code>和<code>createBreadthFristIterator</code>。显然这些方法不该声明在集合接口中，因为不是所有的集合都支持深度和广度优先的遍历。定义在集合接口会导致其他具体集合被迫实现不需要的方法，这违背了接口隔离原则。因此只能定义在具体集合中。对这些方法的调用需要客户端依赖具体集合类。</p>
+<p>另一种方案是<strong>创建迭代器的方法增加一个入参</strong>，可以是字符串或者枚举类。并在实现代码中根据入参，通过<code>if</code>或<code>switch</code>语句返回对应的具体迭代器。</p>
+<p>再复杂点可以将创建迭代器的代码封装到一个工厂类中。并采用
+<strong>枚举</strong> 来表示不同的迭代算法类型，同时将
+<strong>集合类作为参数传入</strong>，由工厂根据不同的枚举值，返回对应算法的迭代器实现。</p>
+<p>至此可以给出迭代器模式的全貌。</p>
+<pre><code class=" mermaid">classDiagram
+    direction LR
+    class Iterator &#123;
+        &lt;&lt; interface &gt;&gt;
+        +hasNext(): boolean
+        +next(): E
+    &#125;
+
+    class IterableCollection &#123;
+        &lt;&lt; interface &gt;&gt;
+        +createIterator(): Iterator
+    &#125;
+
+    class ConcreteCollection &#123;
+        -items: E[]
+        -size: int
+        +createIterator(): Iterator
+        +get(index: int): E
+        +size(): int
+    &#125;
+
+    class ConcreteIterator &#123;
+        -collection: ConcreteCollection
+        -cursor: int
+        +hasNext(): boolean
+        +next(): E
+    &#125;
+    
+    class client
+    
+    IterableCollection &lt;|-- ConcreteCollection
+    Iterator &lt;|-- ConcreteIterator
+    ConcreteCollection --&gt; ConcreteIterator
+    client --&gt; Iterator
+    client --&gt; IterableCollection
+</code></pre>
+<h2 id="java中的迭代器模式">Java中的迭代器模式</h2>
+<p>在实际开发中，好像没有专门编码过迭代器模式。但其实大部分<code>Java</code>开发程序员已经在无形中频繁使用迭代器模式了，例如我们在<code>Java</code>中使用增强<code>for</code>循环。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java">List&lt;String&gt; list = Arrays.asList(<span class="hljs-string">&quot;A&quot;</span>, <span class="hljs-string">&quot;B&quot;</span>, <span class="hljs-string">&quot;C&quot;</span>);<br><br><span class="hljs-comment">// 增强 for 循环（for-each）</span><br><span class="hljs-keyword">for</span> (String item : list) &#123;<br>    System.out.println(item);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p><strong>但这种写法实际是编译器提供的一种语法糖，底层会被转换为使用
+<code>Iterator</code>的普通<code>for</code>循环</strong>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java">List&lt;String&gt; list = Arrays.asList(<span class="hljs-string">&quot;A&quot;</span>, <span class="hljs-string">&quot;B&quot;</span>, <span class="hljs-string">&quot;C&quot;</span>);<br>Iterator&lt;String&gt; iterator = list.iterator(); <span class="hljs-comment">// 获取迭代器</span><br><span class="hljs-keyword">while</span> (iterator.hasNext()) &#123;<br>    <span class="hljs-type">String</span> <span class="hljs-variable">item</span> <span class="hljs-operator">=</span> iterator.next(); <span class="hljs-comment">// 取出元素</span><br>    System.out.println(item);<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>集合允许被增强<code>for</code>循环遍历，需要集合实现<code>Java.lang.Iterable</code>。这个<code>Iterable</code>接口，对应的是上文提到的集合接口<code>IterableCollection</code>。在<code>Java</code>中更常见的是<code>Java.util.Collection</code>接口，而<code>Collection</code>接口扩展了<code>Iterable</code>接口。</p>
+<p>至此可以给出上文提到的迭代器模式概念和<code>Java</code>中的迭代器模式的关系。</p>
+<table>
+<thead>
+<tr class="header">
+<th>迭代器模式概念</th>
+<th>Java中的迭代器模式</th>
+</tr>
+</thead>
+<tbody>
+<tr class="odd">
+<td>迭代器接口</td>
+<td><code>Java.util.Iterator</code></td>
+</tr>
+<tr class="even">
+<td>具体迭代器</td>
+<td><code>Java.util.ArrayList.Itr</code>等</td>
+</tr>
+<tr class="odd">
+<td>集合接口</td>
+<td><code>Java.lang.Iterable</code>、<code>Java.util.Collection</code></td>
+</tr>
+<tr class="even">
+<td>具体集合</td>
+<td><code>Java.util.ArrayList</code>等</td>
+</tr>
+</tbody>
+</table>
+<p>由于<strong><code>Java</code>标准库已经为几乎所有集合实现了迭代器模式</strong>，集合框架功能非常完善，覆盖了大部分遍历需求。因此作为<code>Java</code>开发者，很少需要自己手动实现迭代器模式。</p>
+<p>此外，一些看似实现在集合类中的遍历算法，例如<code>forEach</code>方法，可能最终也会调用迭代器的遍历算法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// java.lang.Iterable</span><br><span class="hljs-keyword">default</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">forEach</span><span class="hljs-params">(Consumer&lt;? <span class="hljs-built_in">super</span> T&gt; action)</span> &#123;<br>    Objects.requireNonNull(action);<br>    <span class="hljs-keyword">for</span> (T t : <span class="hljs-built_in">this</span>) &#123;<br>        action.accept(t);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="总结">总结</h2>
+<ol type="1">
+<li>迭代器模式可以用一种统一且简单的方式遍历集合，而不用关心集合具体是怎么存储的。</li>
+<li>迭代器接口通常包含<code>next</code>和<code>hasNext</code>方法。</li>
+<li>获取迭代器的方法通常由集合类提供。</li>
+</ol>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/DesignPattern/" class="category-chain-item">DesignPattern</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/DesignPattern/" class="print-no-link">#DesignPattern</a>
+      
+        <a href="/tags/Java/" class="print-no-link">#Java</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Design-Pattern-Iterator</div>
+      <div>http://dracoyus.github.io/2025/08/07/Design-Pattern-Iterator/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>DracoYu</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年8月7日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/06/10/Design-Pattern-Command/" title="Design-Pattern-Command">
+                        <span class="hidden-mobile">Design-Pattern-Command</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

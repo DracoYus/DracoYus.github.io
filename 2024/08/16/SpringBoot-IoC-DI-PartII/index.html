@@ -24,7 +24,7 @@
 <meta property="og:description" content="最近读了Martin Fowler关于IoC和DI的文章，觉得之前SpringBoot-IoC-DI写的还是太过狭隘。因此本篇对这个话题进行补充。 IoC 和 DI 的关系 在上一篇文章中，首段的描述似乎把DI定义为与IoC同级的概念，这种暗示是错误的。  而Spring Core完成了两个关键概念：IoC（Inversion of Control，控制反转）和DI（Dependency">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-08-16T02:17:19.000Z">
-<meta property="article:modified_time" content="2024-09-06T06:52:46.469Z">
+<meta property="article:modified_time" content="2025-08-07T02:18:16.801Z">
 <meta property="article:author" content="DracoYu">
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="SpringBoot">
@@ -306,40 +306,40 @@ Control，控制反转），在上篇中默认了<strong>将不同组件/模块�
 <p>在回答上面问题之前，先聊聊使用<code>Spring</code>的动机。</p>
 <p>程序员都是从某个单一功能的程序开始学习编程，后续也少有功能的扩展。而企业中运行的应用程序（通常称为<strong>系统</strong>）随着版本更迭，通常由多个不同的开发人员合作完成各个功能的扩展。为了避免多人开发时，开发人员相互影响，提出了<strong>模块化编程</strong>的思想。主旨就是将功能拆分成多个模块/文件，每个模块负责实现特定的功能或逻辑。模块化编程可以提高代码的可维护性、可读性、复用性。安排开发人员开发不同模块，也能减少相互影响的程度。企业应用常见的<code>MVC</code>(Model-View-Controller，模型-视图-控制器)模型也正是模块化编程的体现。</p>
 <p>模块化编程下，原本复杂的功能，被拆分成多个功能模块/组件。在实际使用应用程序时，就涉及<strong>将多个功能各异的模块，组装成一个应用程序</strong>。具体来说，模块之间存在着依赖（模块存在的意义就是被其他模块调用），例如<code>A</code>模块通过成员变量持有<code>B</code>模块的引用，并在A的方法定义中，调用了<code>B</code>模块中的方法。这就引起了一个问题，<strong>如何处理模块间的依赖关系，将各个模块链接在一起</strong>。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">A</span> &#123;<br>    <span class="hljs-comment">// 对B模块的依赖</span><br>	<span class="hljs-keyword">private</span> B b;<br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">A</span> &#123;<br>    <span class="hljs-comment">// 对B模块的依赖</span><br>    <span class="hljs-keyword">private</span> B b;<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>最直观简单的方式，就是<code>new</code>一个<code>B</code>对象。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">A</span> &#123;<br>    <span class="hljs-comment">// 对B模块的依赖</span><br>	<span class="hljs-keyword">private</span> <span class="hljs-type">B</span> <span class="hljs-variable">b</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">B</span>();<br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">A</span> &#123;<br>    <span class="hljs-comment">// 对B模块的依赖</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-type">B</span> <span class="hljs-variable">b</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">B</span>();<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>这样做的确能把<code>A</code>和<code>B</code>联系起来。但如果还有其他模块也需要依赖模块<code>B</code>，并且也是通过这种形式创建再链接，那么在内存空间会存在<code>B</code>的多个实例。每个模块中对<code>B</code>的依赖都是一个独立的实例。如果模块<code>B</code>包含一些状态，多个实例的状态不一致会引起问题。因此我们更希望多个模块依赖<code>B</code>，引用的是同一个<code>B</code>实例。</p>
 <p>此外，为了写出通用代码，我们会将<code>B</code>模块设置成一个接口，使得A模块的功能可以独立于<code>B</code>模块的具体实现。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">A</span> &#123;<br>    <span class="hljs-comment">// 对B模块的依赖</span><br>	<span class="hljs-keyword">private</span> <span class="hljs-type">BInterface</span> <span class="hljs-variable">b</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BImplement</span>();<br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">A</span> &#123;<br>    <span class="hljs-comment">// 对B模块的依赖</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-type">BInterface</span> <span class="hljs-variable">b</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">BImplement</span>();<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>语法上代码可以通过编译。但这种写法使得<code>A</code>模块不仅依赖了<code>B</code>接口，同时也通过<code>new</code>关键字依赖了<code>B</code>接口的具体实现。</p>
 <p><code>B</code>接口有多个实现，具体需要哪个实现，可能在运行时才能确定，例如根据配置文件或用户输入。直接在模块中创建任意一个<code>B</code>接口实例，会使得定义<code>B</code>接口变得没有意义，仍然不是一个通用的代码。</p>
 <p>所以对于<code>A</code>来说，要写出通用的代码，不应该依赖<code>B</code>接口具体实现。换句话说，在<code>A</code>的内部代码中，无法完成对成员变量<code>B</code>接口赋值。那么就需要一个额外的组装器类，专负责把<code>A</code>和<code>B</code>拼接在一起。</p>
 <pre><code class=" mermaid">classDiagram
-	direction TB
-	class A &#123;
-		- BInterface
-		+ Amethod()
-	&#125;
-	
+    direction TB
+    class A &#123;
+        - BInterface
+        + Amethod()
+    &#125;
+    
     class BInterface &#123;
         &lt;&lt; interface &gt;&gt;
         + Bmethod()
-	&#125;
-	
-	A --o BInterface
-	
-	class BImplementation &#123;
-		+ Bmethod()
-	&#125;
-	
-	BImplementation ..|&gt; BInterface
-	
-	class Assembler &#123;
-		+ assembleAAndB（）
-	&#125;
-	
-	Assembler ..&gt; A
+    &#125;
+    
+    A --o BInterface
+    
+    class BImplementation &#123;
+        + Bmethod()
+    &#125;
+    
+    BImplementation ..|&gt; BInterface
+    
+    class Assembler &#123;
+        + assembleAAndB（）
+    &#125;
+    
+    Assembler ..&gt; A
     Assembler ..&gt; BImplementation
     Assembler ..&gt; BInterface
 
@@ -349,10 +349,10 @@ Control，控制反转），在上篇中默认了<strong>将不同组件/模块�
 <h2 id="di">DI</h2>
 <p>依赖注入有多种形式，按照<code>Martin Fowler</code>的定义包括：构造器注入、setter注入、接口注入。实际上在现代<code>Spring</code>开发中，使用更多的是基于注解与反射的字段注入，因此对于上述三种注入形式，只是简单了解学习。</p>
 <p>构造器注入，<code>setter</code>注入是较为常见的注入方式。指在模块中，对其依赖的模块，提供对应的构造方法或<code>setter</code>方法。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">A</span> &#123;<br>    <span class="hljs-comment">// 对B模块的依赖</span><br>	<span class="hljs-keyword">private</span> BInterface b;<br>    <span class="hljs-comment">// 构造器注入</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">A</span><span class="hljs-params">(BInterface b)</span> &#123;<br>    	<span class="hljs-built_in">this</span>.b = b;<br>    &#125;<br>    <span class="hljs-comment">// setter注入</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setB</span><span class="hljs-params">(BInterface b)</span> &#123;<br>        <span class="hljs-built_in">this</span>.b = b;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">A</span> &#123;<br>    <span class="hljs-comment">// 对B模块的依赖</span><br>    <span class="hljs-keyword">private</span> BInterface b;<br>    <span class="hljs-comment">// 构造器注入</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">A</span><span class="hljs-params">(BInterface b)</span> &#123;<br>        <span class="hljs-built_in">this</span>.b = b;<br>    &#125;<br>    <span class="hljs-comment">// setter注入</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">setB</span><span class="hljs-params">(BInterface b)</span> &#123;<br>        <span class="hljs-built_in">this</span>.b = b;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>编写的注入方法无需考虑具体的调用时机，因此某种程度这些方法也属于回调函数。定义的方法会由容器进行调用。容器会判断，需要注入的类是否含有构造方法或<code>setter</code>方法，找到符合条件的对象，实际调用这些注入方法。</p>
 <p>接口注入是指，定义一个注入某个模块的接口，通常只声明一个注入指定模块方法。然后由依赖这个模块的类实现这个接口。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">InjectB</span> &#123;<br>	<span class="hljs-keyword">void</span> <span class="hljs-title function_">injectB</span><span class="hljs-params">(BInterface b)</span><br>&#125;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">A</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">InjectB</span> &#123;<br>	<span class="hljs-keyword">private</span> BInterface b;<br>    <br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">injectB</span><span class="hljs-params">(BInterface b)</span> &#123;<br>    	<span class="hljs-built_in">this</span>.b = b;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">InjectB</span> &#123;<br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">injectB</span><span class="hljs-params">(BInterface b)</span><br>&#125;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">A</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">InjectB</span> &#123;<br>    <span class="hljs-keyword">private</span> BInterface b;<br>    <br>    <span class="hljs-meta">@Override</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">injectB</span><span class="hljs-params">(BInterface b)</span> &#123;<br>        <span class="hljs-built_in">this</span>.b = b;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>这种方式和<code>setter</code>注入很像，都是定义了一个回调函数。区别是容器可以通过<code>instanceof</code>关键字判断某个类是否实现了注入接口，来确定是否存在需要注入的依赖。如果一个模块依赖着多个模块，会需要实现非常多的接口，显得繁琐，因此实际上接口注入使用不多。<code>Spring</code>中最常见的接口注入形式，是各种<code>xxxAware</code>，例如<code>ApplicationContextAwareProcessor</code>。在此不再赘述。</p>
 <p>上文仅描述了定义这些回调方法。我们仍需要某种方式告知容器，需要对哪些模块进行组装。可以通过多种形式，例如在代码中对需要组装的模块进行注册，或者在<code>XML</code>文件中对<code>bean</code>和其依赖进行描述性定义。容器创建对象和进行组装的时机，取决于具体容器实现。这部分不是本文重点，不再赘述。</p>
 <h2 id="service-locator">Service Locator</h2>
@@ -360,41 +360,41 @@ Control，控制反转），在上篇中默认了<strong>将不同组件/模块�
 locator）是另一种模式。</p>
 <p>在服务定位模式中，存在一个全局单例对象，掌握着所有接口对应的实现类对象。每个模块可以通过这个服务定位器对象，获取指定接口类型/名称的实例。</p>
 <pre><code class=" mermaid">classDiagram
-	direction TB
-	class A &#123;
-		- BInterface
-		+ Amethod()
-	&#125;
-	
+    direction TB
+    class A &#123;
+        - BInterface
+        + Amethod()
+    &#125;
+    
     class BInterface &#123;
         &lt;&lt; interface &gt;&gt;
         + Bmethod()
-	&#125;
-	
-	A --o BInterface
-	
-	class BImplementation &#123;
-		+ Bmethod()
-	&#125;
-	
-	BImplementation ..|&gt; BInterface
-	
-	class Assembler
-	
+    &#125;
+    
+    A --o BInterface
+    
+    class BImplementation &#123;
+        + Bmethod()
+    &#125;
+    
+    BImplementation ..|&gt; BInterface
+    
+    class Assembler
+    
     Assembler ..&gt; BImplementation
     Assembler ..&gt; BInterface
     
     class ServiceLocator&#123;
-		+ getB()
-	&#125;
+        + getB()
+    &#125;
     A ..&gt; ServiceLocator
-	Assembler ..&gt; ServiceLocator
-	ServiceLocator ..&gt; BInterface
+    Assembler ..&gt; ServiceLocator
+    ServiceLocator ..&gt; BInterface
 
 </code></pre>
 <p>在类图中，<code>Assembler</code>和<code>ServiceLocator</code>，通常前者完成对象的创建，后者完成将某个实例与某个接口/名称绑定。两者也可以合并成一个类。</p>
 <p>之后，只需要在需要依赖的模块中，例如构造函数、字段初始化或函数定义中，访问服务定位器的方法，就可完成依赖的链接。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ServiceLocator</span> &#123;<br>    <span class="hljs-comment">// 指定方法获取某个接口对象</span><br>	<span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> BInterface <span class="hljs-title function_">getB</span><span class="hljs-params">()</span> &#123;<br>    	...<br>    &#125;<br>    <span class="hljs-comment">// 通过接口类型获取对象</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> &lt;T&gt; T <span class="hljs-title function_">getBean</span><span class="hljs-params">(Class&lt;T&gt; requiredType)</span> &#123;<br>        ...<br>    &#125;<br>    <br>    <span class="hljs-comment">// 通过名称获取对象</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Object <span class="hljs-title function_">getBean</span><span class="hljs-params">(String name)</span> &#123;<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">A</span> &#123;<br>    <span class="hljs-comment">// 字段初始化时访问服务定位器</span><br>	<span class="hljs-keyword">private</span> <span class="hljs-type">BInterface</span> <span class="hljs-variable">b</span> <span class="hljs-operator">=</span> ServiceLocator.getB();<br>    <span class="hljs-comment">// 默认构造函数中访问服务定位器</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">A</span><span class="hljs-params">()</span> &#123;<br>    	<span class="hljs-built_in">this</span>.b = ServiceLocator.getBean(BInterface.class);<br>    &#125;<br>    <span class="hljs-comment">// 函数中访问服务定位器</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">Amethod</span><span class="hljs-params">()</span> &#123;<br>    	<span class="hljs-built_in">this</span>.b = (BInterface)ServiceLocator.getBean(<span class="hljs-string">&quot;OneOfBImplementation&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ServiceLocator</span> &#123;<br>    <span class="hljs-comment">// 指定方法获取某个接口对象</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> BInterface <span class="hljs-title function_">getB</span><span class="hljs-params">()</span> &#123;<br>        ...<br>    &#125;<br>    <span class="hljs-comment">// 通过接口类型获取对象</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> &lt;T&gt; T <span class="hljs-title function_">getBean</span><span class="hljs-params">(Class&lt;T&gt; requiredType)</span> &#123;<br>        ...<br>    &#125;<br>    <br>    <span class="hljs-comment">// 通过名称获取对象</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Object <span class="hljs-title function_">getBean</span><span class="hljs-params">(String name)</span> &#123;<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">A</span> &#123;<br>    <span class="hljs-comment">// 字段初始化时访问服务定位器</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-type">BInterface</span> <span class="hljs-variable">b</span> <span class="hljs-operator">=</span> ServiceLocator.getB();<br>    <span class="hljs-comment">// 默认构造函数中访问服务定位器</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">A</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-built_in">this</span>.b = ServiceLocator.getBean(BInterface.class);<br>    &#125;<br>    <span class="hljs-comment">// 函数中访问服务定位器</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">Amethod</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-built_in">this</span>.b = (BInterface)ServiceLocator.getBean(<span class="hljs-string">&quot;OneOfBImplementation&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 <p>从这里看，服务定位也消除了模块<code>A</code>对<code>B</code>接口具体实现的依赖。模块<code>A</code>对于依赖链接的时机是了解的，是在模块<code>A</code>内部显示定义的。模块<code>A</code>也没有提供相应的回调函数，等待被外部调用。但对于<code>B</code>接口具体实现的实例化过程，是不了解的。因此笔者认为服务定位模式不完全实现了<code>IoC</code>。</p>
 <p>对比<code>DI</code>和服务定位，在<code>DI</code>中，模块对于外部的认知是最少的，甚至不知道容器的存在；而在服务定位中，所有模块都需要依赖服务定位器。服务定位器是一个全局单例，有着全局变量的缺点，例如可能会掩盖模块间的依赖关系。</p>
 <p>在<code>Spring</code>中，<code>BeanFactory</code>容器，同时完成了<code>DI</code>和服务定位两种功能。服务定位对应的就是<code>BeanFactory</code>中的<code>getBean</code>方法。<strong>在源码的注释中，更推荐使用<code>DI</code>来完成依赖链接的功能。</strong></p>
