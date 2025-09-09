@@ -16,15 +16,15 @@
   <meta name="author" content="DracoYu">
   <meta name="keywords" content="学习笔记,Java,JavaScript,后端,前端">
   
-    <meta name="description" content="单例模式(Singleton)是一种创建型模式。目的是，确保类只有一个实例， 并提供一个访问该实例的全局节点。 会产生这样的需求，理由也十分自然：在全局范围内使用同一个对象或资源，方便统一配置与管理。典型的场景如：配置类、日志类、资源管理类（数据库连接池）等。 在SpringBoot常见的分层架构中，Controller层、Service层通常不需要多个实例，因其成员变量通常为对其他Serv">
+    <meta name="description" content="中介者模式通过引入一个中介对象，让原本相互依赖的多个对象改为通过中介者间接通信，从而降低耦合、提高灵活性和可维护性。 场景 有时会遇到这样的开发场景：多个组件互相依赖、交互，整体构成了一个大的应用。 最常见的例子是GUI，一个窗口内包含了各种组件，例如文本框、标签、按钮等。组件之间可能存在依赖关系。例如点击提交按钮，会对其他文本框的内容进行校验；选择某个单选按钮，其他按钮就会移除被选中的状态">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Design-Pattern-Singleton">
-<meta property="og:url" content="http://dracoyus.github.io/2024/05/15/Design-Pattern-Singleton/index.html">
+<meta property="og:title" content="Design-Pattern-Mediator">
+<meta property="og:url" content="http://dracoyus.github.io/2025/08/22/Design-Pattern-Mediator/index.html">
 <meta property="og:site_name" content="DracoYu&#39;s MindCache">
-<meta property="og:description" content="单例模式(Singleton)是一种创建型模式。目的是，确保类只有一个实例， 并提供一个访问该实例的全局节点。 会产生这样的需求，理由也十分自然：在全局范围内使用同一个对象或资源，方便统一配置与管理。典型的场景如：配置类、日志类、资源管理类（数据库连接池）等。 在SpringBoot常见的分层架构中，Controller层、Service层通常不需要多个实例，因其成员变量通常为对其他Serv">
+<meta property="og:description" content="中介者模式通过引入一个中介对象，让原本相互依赖的多个对象改为通过中介者间接通信，从而降低耦合、提高灵活性和可维护性。 场景 有时会遇到这样的开发场景：多个组件互相依赖、交互，整体构成了一个大的应用。 最常见的例子是GUI，一个窗口内包含了各种组件，例如文本框、标签、按钮等。组件之间可能存在依赖关系。例如点击提交按钮，会对其他文本框的内容进行校验；选择某个单选按钮，其他按钮就会移除被选中的状态">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-05-15T03:00:24.000Z">
-<meta property="article:modified_time" content="2025-09-09T08:35:07.055Z">
+<meta property="article:published_time" content="2025-08-22T02:34:19.000Z">
+<meta property="article:modified_time" content="2025-09-09T10:55:03.417Z">
 <meta property="article:author" content="DracoYu">
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="DesignPattern">
@@ -32,7 +32,7 @@
   
   
   
-  <title>Design-Pattern-Singleton - DracoYu&#39;s MindCache</title>
+  <title>Design-Pattern-Mediator - DracoYu&#39;s MindCache</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -198,7 +198,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Design-Pattern-Singleton"></span>
+            <span id="subtitle" data-typed-text="Design-Pattern-Mediator"></span>
           
         </div>
 
@@ -209,8 +209,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-05-15 11:00" pubdate>
-          2024年5月15日 上午
+        <time datetime="2025-08-22 10:34" pubdate>
+          2025年8月22日 上午
         </time>
       </span>
     
@@ -269,39 +269,79 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Design-Pattern-Singleton</h1>
+            <h1 id="seo-header">Design-Pattern-Mediator</h1>
             
             
               <div class="markdown-body">
                 
-                <p><strong>单例模式<code>(Singleton)</code></strong>是一种创建型模式。目的是，<strong>确保类只有一个实例</strong>，
-并提供一个<strong>访问该实例的全局节点</strong>。</p>
-<p>会产生这样的需求，理由也十分自然：在全局范围内使用同一个对象或资源，方便统一配置与管理。典型的场景如：配置类、日志类、资源管理类（数据库连接池）等。</p>
-<p>在<code>SpringBoot</code>常见的分层架构中，<code>Controller</code>层、<code>Service</code>层通常不需要多个实例，因其成员变量通常为对其他<code>Service</code>的引用，几乎不包含状态信息。如果有多个实例，实例间也无法体现差异。因此在<code>Spring</code>框架中，容器中的各种<code>bean</code>默认是单实例的。并通过<code>IoC</code>和<code>DI</code>，去组织不同单实例间的依赖关系。需要注意单实例不一定是单例模式，因为其并不是全局范围都能访问，而是通过<code>DI</code>组织了依赖关系。但如果是通过<code>BeanFactory.getBean()</code>来获取单实例，则和单例模式十分相似。</p>
-<p>不同实例间的差异体现在其成员变量上。如果创建的多个实例成员变量都相同，并且实例在全局范围内有比较多使用的地方，则可以考虑使用单例模式。</p>
-<h2 id="单例模式vs静态公共方法">单例模式VS静态公共方法</h2>
-<p>如果为了提供一些方法和变量的全局访问权限，在<code>java</code>中可以将这些方法和变量设置为<code>public static</code>，可以得到类似的效果。静态公共方法可以在任意位置通过<strong>类名.方法名</strong>调用。类的加载机制又保证了，在不同位置调用的方法，引用的都是相同的静态成员变量，模拟了只有一个实例的效果。</p>
-<p>但这么做也多了很多限制：静态方法中只能引用静态变量；静态变量属于类而不是实例，无法被继承，也无法实现接口；无法通过多态来进行动态调用；无法控制其生命周期；无法进行垃圾回收；无法实现延迟初始化等等。</p>
-<p>由于单例模式比静态公共方法灵活得多，因此更多使用单例模式来达成全局访问的效果。</p>
-<h2 id="单例模式vs全局变量">单例模式VS全局变量</h2>
-<p>在一些面向对象语言中，如<code>C++</code>、<code>Python</code>，可以通过全局变量的方式来建立全局访问的效果。通常我们认为全局变量是需要避免的。而单例模式，很多人认为其是对全局变量的一种包装，因此也反对使用单例模式。例如<code>C++ Core Guidelines</code>中就不建议使用<a
-target="_blank" rel="noopener" href="https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#Ri-singleton">单例模式</a>。</p>
-<p>使用全局变量的缺点同样也是单例模式的缺点。例如全局范围内的访问和修改可能会导致全局变量的状态无法估计；需要考虑并发访问，线程安全性；使得模块之间的依赖关系变得隐匿（如两个模块共同与全局变量进行了交互），造成了模块间的耦合；使得单元测试变得更困难，无法<code>mock</code>替换；<code>C++</code>中无法保证全局变量初始化的顺序。</p>
-<p>可以看出，这些缺点很多都与全局的写权限有关。因此单例模式如果不提供写的权限，或者不包含状态类型的变量（状态通常会在程序运行中改变），或者本身就是不可变对象，那么可以很好地规避上述缺点。此时单例模式的使用通常是合适且优雅的。</p>
-<p>网上关于设计模式、反设计模式的讨论还有很多。程序员需要根据实际情况，来决定是否使用，而不是一昧支持或反对。</p>
-<h2 id="单例模式的通用实现">单例模式的通用实现</h2>
-<p>单例模式在不同语言中，根据每种语言的特性，有着不同的实现。在不同实现中，有一些共同之处。综合这些共同之处，便是一个通用实现。</p>
-<p>为了符合单例模式<strong>确保类只有一个实例</strong>的特性，需要限制程序员在其他地方主动<code>new</code>实例的权限，把类的构造函数设置为<code>private</code>。而<strong>全局访问</strong>的特性，通常会在类内定义一个<code>public static</code>静态方法，返回一个类对象。</p>
-<p>这个单例对象需要被某个变量引用。基于其全局唯一的特性，通常会定义为类的静态变量。并在静态方法中作为方法返回值。</p>
-<p>基于上述描述，可以给出如下<code>java</code>代码：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Singleton</span> &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Singleton</span> <span class="hljs-variable">INSTANCE</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Singleton</span>();<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-title function_">Singleton</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-comment">// 私有构造方法防止外部实例化</span><br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Singleton <span class="hljs-title function_">getInstance</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">return</span> INSTANCE;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-<p>其中，静态变量<code>INSTANCE</code>通过直接赋值来进行初始化。对于静态变量，初始化会在类被加载时执行。而<strong>类的加载机制</strong>保证了线程安全性，<code>new Singleton()</code>只会被执行一次，确保全局只会存在一个实例。</p>
-<p>由于上述过程中，类被加载时就会完成实例的初始化，初始化的时机比较早，此方法被称作“<strong>饿汉式</strong>"。</p>
-<p>与之相对的是，在<code>getInstance()</code>被首次调用时才完成初始化，初始化时机更晚，被称作“<strong>懒汉式</strong>”。在懒汉式中。由于静态方法可能被多线程同时调用，多个线程只能有一个完成对象的创建和初始化，需要在方法中通过锁机制，来保证线程安全性。关于如何实现线程安全太过细节，为了避免掩盖单例模式的特点，在此不再赘述。</p>
+                <p><strong>中介者模式</strong>通过引入一个中介对象，让原本相互依赖的多个对象改为通过中介者间接通信，从而降低耦合、提高灵活性和可维护性。</p>
+<h2 id="场景">场景</h2>
+<p>有时会遇到这样的开发场景：<strong>多个组件互相依赖、交互，整体构成了一个大的应用</strong>。</p>
+<p>最常见的例子是<code>GUI</code>，一个窗口内包含了各种组件，例如文本框、标签、按钮等。组件之间可能存在依赖关系。例如点击提交按钮，会对其他文本框的内容进行校验；选择某个单选按钮，其他按钮就会移除被选中的状态。</p>
+<p>检查、修改其他组件的内容，最直接的方法就是添加对这些组件的依赖，并调用对应的方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Button</span> &#123;<br>    <span class="hljs-keyword">private</span> TestField testfield;<br>    <span class="hljs-keyword">private</span> Lable lable;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">click</span><span class="hljs-params">()</span> &#123;<br>        testfield.check();<br>        lable.change(<span class="hljs-string">&quot;new lable&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>上例代码运行正确。但当想新增另一个按钮时，发现已有的按钮几乎无法复用，因为其已经和太多特定组件耦合，而其他按钮可能不依赖这些组件。</p>
+<p><strong>组件间的单向依赖，可以使用图论中的邻接矩阵来表示。如果有<code>N</code>个组件，最多可以有<span
+class="math inline">\(N×(N−1)\)</span>个单向依赖关系</strong>。</p>
+<h2 id="中介者模式">中介者模式</h2>
+<p>中介者模式通过引入一个<strong>中介者对象</strong>，并调整所有组件都依赖这个中介者，中介者也依赖所有的组件。</p>
+<p>各个组件通过中介者形成间接依赖。组件如果要访问其他组件的内容，则要通过中介者去传递。</p>
+<p>在这种情况下，<strong><code>N</code>个组件，如果不考虑中介者对于组件的依赖，只会有<code>N</code>个单向依赖关系，即<code>N</code>个组件对中介者的依赖</strong>。</p>
+<p>对于中介者来说，会收到来自组件的请求，并把这些请求转发到其他组件，由具体组件去执行逻辑。基于这种场景，我们可以在中介者中设置通知方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Mediator</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">sendMessage</span><span class="hljs-params">(String msg, Component sender, Component receiver)</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>在通知方法中，通常需要指定<strong>请求的发起方，请求的接收方，以及通知的具体内容</strong>。当然这些也不都是必须的，只是一个相对通用的方法签名选择。例如可以移除接收者，则认为是广播，所有的组件都会收到消息。</p>
+<p>有时需要方法的返回值，例如查询和校验的场景，发送者需要了解接收者的信息，则可以在中介者中定义带返回值的方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Mediator</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">validate</span><span class="hljs-params">(String rule)</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>方法体中，可能会有一个巨大的<code>if</code>或<code>switch</code>语句，或者通过<code>Map</code>储存了入参到实际执行的组件对象。校验的过程可以定义在中介者中，也可以定义在每个组件中。如果是定义在组件中，则中介者还需要委派校验请求给具体组件。</p>
+<p>综上，中介者与组件交互的方法实际是十分自由的，方法的入参、出参都没什么限制，也可以使用自定义的上下文或结果对象。后文以最常见的通知场景为例。</p>
+<p>中介者和组件也可以进行抽象。提取中介者接口和组件抽象类，那么组件可以仅依赖中介者接口，中介者可以仅依赖组件接口，进一步解耦。根据以上设计，可以给出类图。</p>
+<pre><code class=" mermaid">classDiagram
+    direction LR
+    class Mediator &#123;
+        &lt;&lt;interface&gt;&gt;
+        +send(message: String, Component: Component)
+    &#125;
+    
+    class ConcreteMediator &#123;
+        -Components: List&lt;Component&gt;
+        +send(message: String, Component: Component)
+    &#125;
+    
+    class Component &#123;
+        &lt;&lt;abstract&gt;&gt;
+        -mediator: Mediator
+        +send(message: String)
+        +receive(message: String)
+    &#125;
+    
+    class ConcreteComponentA &#123;
+        +send(message: String)
+        +receive(message: String)
+    &#125;
+    
+    class ConcreteComponentB &#123;
+        +send(message: String)
+        +receive(message: String)
+    &#125;
+    
+    Mediator &lt;|-- ConcreteMediator
+    Component &lt;|-- ConcreteComponentA
+    Component &lt;|-- ConcreteComponentB
+    ConcreteMediator --&gt; Component
+    Component --&gt; Mediator
+</code></pre>
+<h2 id="一些想法">一些想法</h2>
+<p>中介者模式比较简单，整体介绍就结束了。但还是有雾里看花的感觉，觉得不切实际，所以举一些其他例子。</p>
+<p>在很多程序中有引擎的概念。笔者曾经使用过<code>scrapy</code>爬虫框架。在<code>scrapy</code>中，主要存在爬虫、下载器、调度器、数据管道等组件，每个组件负责不同功能，例如请求页面，解析页面，处理数据，存储数据等。所有组件通过爬虫引擎集中调度，通过信号触发组件间的交互。在此爬虫引擎就是中介者的角色，使得组件间不必相互依赖，仅需和引擎交互即可。</p>
+<p>有些程序也会有总线的概念，例如企业服务总线
+<code>ESB（Enterprise Service Bus）</code>。不同的服务注册在总线上。当需要依赖某个服务时，通过总线来访问。各个服务只与
+ESB
+交互，而不直接调用其他服务，在此<code>ESB</code>就担任了中介者的角色。</p>
+<p>在真正使用中，不一定要求所有的组件都实现了同一个接口，组件本身也可以有较大差异（虽然这会增加中介者对组件的耦合）。只要不同组件，不是互相直接交互，而是通过一个中介者来间接交互，都可以说是符合中介者模式的核心思想。</p>
+<p>另一个话题，是否需要专门新增一个中介者类，去实现中介者模式。这通常是不需要的。在多个组件共同完成某一个功能的应用中，通常存在一个统领全局的<strong>中心协调者</strong>，包含需要的所有组件。例如在上文例子中，GUI会存在一个窗口对象，就算不采用中介者模式，其本身也会依赖所有组件。这类<strong>中心协调者</strong>可以担任中介者的位置，而且不需要改动很多就可以实现中介者模式。</p>
 <h2 id="总结">总结</h2>
-<p>单例模式是一种创建型模式，旨在确保一个类只有一个实例，并提供一个全局访问点。</p>
-<p>由于单例模式的全局性，通常会把其与全局变量比较。全局变量的缺点，可能在单例模式上也存在。通常可以通过在单例中不包含状态或提供改变状态的方法来避免这些缺点。程序员需要根据实际情况判断场景是否适合单例模式。</p>
-<p>单例模式的通用实现的特点是，把构造函数私有化，以及提供一个公开静态函数。前者支持<strong>唯一性</strong>，后者提供<strong>全局访问性</strong>。</p>
+<p>中介者模式通过引入一个中介对象来封装一组对象之间的交互逻辑，使这些对象无需直接相互引用，从而降低耦合度、提升可维护性。</p>
+<p>中介者通常会定义一个用于通知组件的方法，这个方法的入参，出参十分灵活，可以根据实际情况调整。</p>
 
                 
               </div>
@@ -349,8 +389,8 @@ target="_blank" rel="noopener" href="https://isocpp.github.io/CppCoreGuidelines/
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Design-Pattern-Singleton</div>
-      <div>http://dracoyus.github.io/2024/05/15/Design-Pattern-Singleton/</div>
+      <div>Design-Pattern-Mediator</div>
+      <div>http://dracoyus.github.io/2025/08/22/Design-Pattern-Mediator/</div>
     </div>
     <div class="license-meta">
       
@@ -362,7 +402,7 @@ target="_blank" rel="noopener" href="https://isocpp.github.io/CppCoreGuidelines/
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年5月15日</div>
+          <div>2025年8月22日</div>
         </div>
       
       
@@ -394,18 +434,12 @@ target="_blank" rel="noopener" href="https://isocpp.github.io/CppCoreGuidelines/
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/07/03/Design-Pattern-Adapter/" title="Design-Pattern-Adapter">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Design-Pattern-Adapter</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/04/23/SpringBoot-Term-Definaition-BeanFactory/" title="SpringBoot-Term-Definaition-BeanFactory">
-                        <span class="hidden-mobile">SpringBoot-Term-Definaition-BeanFactory</span>
+                      <a href="/2025/08/07/Design-Pattern-Iterator/" title="Design-Pattern-Iterator">
+                        <span class="hidden-mobile">Design-Pattern-Iterator</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

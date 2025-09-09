@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>Design-Pattern-Mediator</title>
+    <link href="/2025/08/22/Design-Pattern-Mediator/"/>
+    <url>/2025/08/22/Design-Pattern-Mediator/</url>
+    
+    <content type="html"><![CDATA[<p><strong>中介者模式</strong>通过引入一个中介对象，让原本相互依赖的多个对象改为通过中介者间接通信，从而降低耦合、提高灵活性和可维护性。</p><h2 id="场景">场景</h2><p>有时会遇到这样的开发场景：<strong>多个组件互相依赖、交互，整体构成了一个大的应用</strong>。</p><p>最常见的例子是<code>GUI</code>，一个窗口内包含了各种组件，例如文本框、标签、按钮等。组件之间可能存在依赖关系。例如点击提交按钮，会对其他文本框的内容进行校验；选择某个单选按钮，其他按钮就会移除被选中的状态。</p><p>检查、修改其他组件的内容，最直接的方法就是添加对这些组件的依赖，并调用对应的方法。</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Button</span> &#123;<br>    <span class="hljs-keyword">private</span> TestField testfield;<br>    <span class="hljs-keyword">private</span> Lable lable;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">click</span><span class="hljs-params">()</span> &#123;<br>        testfield.check();<br>        lable.change(<span class="hljs-string">&quot;new lable&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure><p>上例代码运行正确。但当想新增另一个按钮时，发现已有的按钮几乎无法复用，因为其已经和太多特定组件耦合，而其他按钮可能不依赖这些组件。</p><p><strong>组件间的单向依赖，可以使用图论中的邻接矩阵来表示。如果有<code>N</code>个组件，最多可以有<spanclass="math inline">\(N×(N−1)\)</span>个单向依赖关系</strong>。</p><h2 id="中介者模式">中介者模式</h2><p>中介者模式通过引入一个<strong>中介者对象</strong>，并调整所有组件都依赖这个中介者，中介者也依赖所有的组件。</p><p>各个组件通过中介者形成间接依赖。组件如果要访问其他组件的内容，则要通过中介者去传递。</p><p>在这种情况下，<strong><code>N</code>个组件，如果不考虑中介者对于组件的依赖，只会有<code>N</code>个单向依赖关系，即<code>N</code>个组件对中介者的依赖</strong>。</p><p>对于中介者来说，会收到来自组件的请求，并把这些请求转发到其他组件，由具体组件去执行逻辑。基于这种场景，我们可以在中介者中设置通知方法。</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Mediator</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">sendMessage</span><span class="hljs-params">(String msg, Component sender, Component receiver)</span>;<br>&#125;<br></code></pre></td></tr></table></figure><p>在通知方法中，通常需要指定<strong>请求的发起方，请求的接收方，以及通知的具体内容</strong>。当然这些也不都是必须的，只是一个相对通用的方法签名选择。例如可以移除接收者，则认为是广播，所有的组件都会收到消息。</p><p>有时需要方法的返回值，例如查询和校验的场景，发送者需要了解接收者的信息，则可以在中介者中定义带返回值的方法。</p><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Mediator</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">validate</span><span class="hljs-params">(String rule)</span>;<br>&#125;<br></code></pre></td></tr></table></figure><p>方法体中，可能会有一个巨大的<code>if</code>或<code>switch</code>语句，或者通过<code>Map</code>储存了入参到实际执行的组件对象。校验的过程可以定义在中介者中，也可以定义在每个组件中。如果是定义在组件中，则中介者还需要委派校验请求给具体组件。</p><p>综上，中介者与组件交互的方法实际是十分自由的，方法的入参、出参都没什么限制，也可以使用自定义的上下文或结果对象。后文以最常见的通知场景为例。</p><p>中介者和组件也可以进行抽象。提取中介者接口和组件抽象类，那么组件可以仅依赖中介者接口，中介者可以仅依赖组件接口，进一步解耦。根据以上设计，可以给出类图。</p><pre><code class=" mermaid">classDiagram    direction LR    class Mediator &#123;        &lt;&lt;interface&gt;&gt;        +send(message: String, Component: Component)    &#125;        class ConcreteMediator &#123;        -Components: List&lt;Component&gt;        +send(message: String, Component: Component)    &#125;        class Component &#123;        &lt;&lt;abstract&gt;&gt;        -mediator: Mediator        +send(message: String)        +receive(message: String)    &#125;        class ConcreteComponentA &#123;        +send(message: String)        +receive(message: String)    &#125;        class ConcreteComponentB &#123;        +send(message: String)        +receive(message: String)    &#125;        Mediator &lt;|-- ConcreteMediator    Component &lt;|-- ConcreteComponentA    Component &lt;|-- ConcreteComponentB    ConcreteMediator --&gt; Component    Component --&gt; Mediator</code></pre><h2 id="一些想法">一些想法</h2><p>中介者模式比较简单，整体介绍就结束了。但还是有雾里看花的感觉，觉得不切实际，所以举一些其他例子。</p><p>在很多程序中有引擎的概念。笔者曾经使用过<code>scrapy</code>爬虫框架。在<code>scrapy</code>中，主要存在爬虫、下载器、调度器、数据管道等组件，每个组件负责不同功能，例如请求页面，解析页面，处理数据，存储数据等。所有组件通过爬虫引擎集中调度，通过信号触发组件间的交互。在此爬虫引擎就是中介者的角色，使得组件间不必相互依赖，仅需和引擎交互即可。</p><p>有些程序也会有总线的概念，例如企业服务总线<code>ESB（Enterprise Service Bus）</code>。不同的服务注册在总线上。当需要依赖某个服务时，通过总线来访问。各个服务只与ESB交互，而不直接调用其他服务，在此<code>ESB</code>就担任了中介者的角色。</p><p>在真正使用中，不一定要求所有的组件都实现了同一个接口，组件本身也可以有较大差异（虽然这会增加中介者对组件的耦合）。只要不同组件，不是互相直接交互，而是通过一个中介者来间接交互，都可以说是符合中介者模式的核心思想。</p><p>另一个话题，是否需要专门新增一个中介者类，去实现中介者模式。这通常是不需要的。在多个组件共同完成某一个功能的应用中，通常存在一个统领全局的<strong>中心协调者</strong>，包含需要的所有组件。例如在上文例子中，GUI会存在一个窗口对象，就算不采用中介者模式，其本身也会依赖所有组件。这类<strong>中心协调者</strong>可以担任中介者的位置，而且不需要改动很多就可以实现中介者模式。</p><h2 id="总结">总结</h2><p>中介者模式通过引入一个中介对象来封装一组对象之间的交互逻辑，使这些对象无需直接相互引用，从而降低耦合度、提升可维护性。</p><p>中介者通常会定义一个用于通知组件的方法，这个方法的入参，出参十分灵活，可以根据实际情况调整。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>DesignPattern</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Java</tag>
+      
+      <tag>DesignPattern</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Design-Pattern-Iterator</title>
     <link href="/2025/08/07/Design-Pattern-Iterator/"/>
     <url>/2025/08/07/Design-Pattern-Iterator/</url>
@@ -20,9 +47,9 @@
     
     <tags>
       
-      <tag>DesignPattern</tag>
-      
       <tag>Java</tag>
+      
+      <tag>DesignPattern</tag>
       
     </tags>
     
@@ -47,9 +74,9 @@
     
     <tags>
       
-      <tag>DesignPattern</tag>
-      
       <tag>Java</tag>
+      
+      <tag>DesignPattern</tag>
       
     </tags>
     
@@ -74,9 +101,9 @@
     
     <tags>
       
-      <tag>DesignPattern</tag>
-      
       <tag>Java</tag>
+      
+      <tag>DesignPattern</tag>
       
     </tags>
     
@@ -101,9 +128,9 @@
     
     <tags>
       
-      <tag>DesignPattern</tag>
-      
       <tag>Java</tag>
+      
+      <tag>DesignPattern</tag>
       
     </tags>
     
@@ -128,9 +155,9 @@
     
     <tags>
       
-      <tag>DesignPattern</tag>
-      
       <tag>Java</tag>
+      
+      <tag>DesignPattern</tag>
       
     </tags>
     
@@ -155,9 +182,9 @@
     
     <tags>
       
-      <tag>DesignPattern</tag>
-      
       <tag>Java</tag>
+      
+      <tag>DesignPattern</tag>
       
     </tags>
     
@@ -182,11 +209,11 @@
     
     <tags>
       
-      <tag>Java</tag>
-      
       <tag>Architecture</tag>
       
       <tag>Microservices</tag>
+      
+      <tag>Java</tag>
       
     </tags>
     
@@ -211,9 +238,9 @@
     
     <tags>
       
-      <tag>DesignPattern</tag>
-      
       <tag>Java</tag>
+      
+      <tag>DesignPattern</tag>
       
     </tags>
     
@@ -238,9 +265,9 @@
     
     <tags>
       
-      <tag>DesignPattern</tag>
-      
       <tag>Java</tag>
+      
+      <tag>DesignPattern</tag>
       
     </tags>
     
@@ -296,9 +323,9 @@
     
     <tags>
       
-      <tag>DesignPattern</tag>
-      
       <tag>Java</tag>
+      
+      <tag>DesignPattern</tag>
       
     </tags>
     
@@ -323,9 +350,9 @@
     
     <tags>
       
-      <tag>DesignPattern</tag>
-      
       <tag>Java</tag>
+      
+      <tag>DesignPattern</tag>
       
     </tags>
     
@@ -350,9 +377,9 @@
     
     <tags>
       
-      <tag>DesignPattern</tag>
-      
       <tag>Java</tag>
+      
+      <tag>DesignPattern</tag>
       
     </tags>
     
@@ -406,9 +433,9 @@
     
     <tags>
       
-      <tag>DesignPattern</tag>
-      
       <tag>Java</tag>
+      
+      <tag>DesignPattern</tag>
       
       <tag>SpringBoot</tag>
       
@@ -437,9 +464,9 @@
     
     <tags>
       
-      <tag>DesignPattern</tag>
-      
       <tag>Java</tag>
+      
+      <tag>DesignPattern</tag>
       
     </tags>
     
@@ -464,9 +491,9 @@
     
     <tags>
       
-      <tag>DesignPattern</tag>
-      
       <tag>Java</tag>
+      
+      <tag>DesignPattern</tag>
       
     </tags>
     
@@ -491,9 +518,9 @@
     
     <tags>
       
-      <tag>DesignPattern</tag>
-      
       <tag>Java</tag>
+      
+      <tag>DesignPattern</tag>
       
     </tags>
     
@@ -518,9 +545,9 @@
     
     <tags>
       
-      <tag>DesignPattern</tag>
-      
       <tag>Java</tag>
+      
+      <tag>DesignPattern</tag>
       
     </tags>
     
@@ -601,9 +628,9 @@
     
     <tags>
       
-      <tag>DesignPattern</tag>
-      
       <tag>Java</tag>
+      
+      <tag>DesignPattern</tag>
       
     </tags>
     
@@ -655,9 +682,9 @@
     
     <tags>
       
-      <tag>DesignPattern</tag>
-      
       <tag>Java</tag>
+      
+      <tag>DesignPattern</tag>
       
     </tags>
     
