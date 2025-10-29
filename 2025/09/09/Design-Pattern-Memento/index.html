@@ -16,15 +16,15 @@
   <meta name="author" content="DracoYu">
   <meta name="keywords" content="学习笔记,Java,JavaScript,后端,前端">
   
-    <meta name="description" content="中介者模式通过引入一个中介对象，让原本相互依赖的多个对象改为通过中介者间接通信，从而降低耦合、提高灵活性和可维护性。 场景 有时会遇到这样的开发场景：多个组件互相依赖、交互，整体构成了一个大的应用。 最常见的例子是GUI，一个窗口内包含了各种组件，例如文本框、标签、按钮等。组件之间可能存在依赖关系。例如点击提交按钮，会对其他文本框的内容进行校验；选择某个单选按钮，其他按钮就会移除被选中的状态">
+    <meta name="description" content="备忘录模式（Memento Pattern）是一种行为型设计模式，用于在不破坏封装的前提下，​捕获并外部化一个对象的内部状态，以便在需要时将对象恢复到此前保存的状态。它常被称为快照模式，典型用于实现撤销&#x2F;重做（Undo&#x2F;Redo）​、历史记录与回滚等能力。 在Design-Pattern-Command中提到过，命令模式常和撤销操作一起实现。而撤销的一种实现方式，就是使用状态快照，也就是将需要恢">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Design-Pattern-Mediator">
-<meta property="og:url" content="http://dracoyus.github.io/2025/08/22/Design-Pattern-Mediator/index.html">
+<meta property="og:title" content="Design-Pattern-Memento">
+<meta property="og:url" content="http://dracoyus.github.io/2025/09/09/Design-Pattern-Memento/index.html">
 <meta property="og:site_name" content="DracoYu&#39;s MindCache">
-<meta property="og:description" content="中介者模式通过引入一个中介对象，让原本相互依赖的多个对象改为通过中介者间接通信，从而降低耦合、提高灵活性和可维护性。 场景 有时会遇到这样的开发场景：多个组件互相依赖、交互，整体构成了一个大的应用。 最常见的例子是GUI，一个窗口内包含了各种组件，例如文本框、标签、按钮等。组件之间可能存在依赖关系。例如点击提交按钮，会对其他文本框的内容进行校验；选择某个单选按钮，其他按钮就会移除被选中的状态">
+<meta property="og:description" content="备忘录模式（Memento Pattern）是一种行为型设计模式，用于在不破坏封装的前提下，​捕获并外部化一个对象的内部状态，以便在需要时将对象恢复到此前保存的状态。它常被称为快照模式，典型用于实现撤销&#x2F;重做（Undo&#x2F;Redo）​、历史记录与回滚等能力。 在Design-Pattern-Command中提到过，命令模式常和撤销操作一起实现。而撤销的一种实现方式，就是使用状态快照，也就是将需要恢">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-08-22T02:34:19.000Z">
-<meta property="article:modified_time" content="2025-09-09T10:55:03.417Z">
+<meta property="article:published_time" content="2025-09-09T11:03:58.000Z">
+<meta property="article:modified_time" content="2025-10-29T02:31:08.088Z">
 <meta property="article:author" content="DracoYu">
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="DesignPattern">
@@ -32,7 +32,7 @@
   
   
   
-  <title>Design-Pattern-Mediator - DracoYu&#39;s MindCache</title>
+  <title>Design-Pattern-Memento - DracoYu&#39;s MindCache</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -198,7 +198,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Design-Pattern-Mediator"></span>
+            <span id="subtitle" data-typed-text="Design-Pattern-Memento"></span>
           
         </div>
 
@@ -209,8 +209,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-08-22 10:34" pubdate>
-          2025年8月22日 上午
+        <time datetime="2025-09-09 19:03" pubdate>
+          2025年9月9日 晚上
         </time>
       </span>
     
@@ -221,7 +221,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.6k 字
+          2.1k 字
         
       </span>
     
@@ -232,7 +232,7 @@
         
         
         
-          14 分钟
+          18 分钟
         
       </span>
     
@@ -269,79 +269,43 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Design-Pattern-Mediator</h1>
+            <h1 id="seo-header">Design-Pattern-Memento</h1>
             
             
               <div class="markdown-body">
                 
-                <p><strong>中介者模式</strong>通过引入一个中介对象，让原本相互依赖的多个对象改为通过中介者间接通信，从而降低耦合、提高灵活性和可维护性。</p>
+                <p><strong>备忘录模式<code>（Memento Pattern）</code></strong>是一种行为型设计模式，用于在不破坏封装的前提下，​捕获并外部化一个对象的内部状态，以便在需要时将对象恢复到此前保存的状态。它常被称为快照模式，典型用于实现撤销/重做<code>（Undo/Redo）</code>​、历史记录与回滚等能力。</p>
+<p>在<a href="/2025/06/10/Design-Pattern-Command/" title="Design-Pattern-Command">Design-Pattern-Command</a>中提到过，命令模式常和撤销操作一起实现。而撤销的一种实现方式，就是使用<strong>状态快照</strong>，也就是将需要恢复的状态，储存起来。本文详细讨论此<strong>状态快照对象如何获取、储存</strong>等。</p>
 <h2 id="场景">场景</h2>
-<p>有时会遇到这样的开发场景：<strong>多个组件互相依赖、交互，整体构成了一个大的应用</strong>。</p>
-<p>最常见的例子是<code>GUI</code>，一个窗口内包含了各种组件，例如文本框、标签、按钮等。组件之间可能存在依赖关系。例如点击提交按钮，会对其他文本框的内容进行校验；选择某个单选按钮，其他按钮就会移除被选中的状态。</p>
-<p>检查、修改其他组件的内容，最直接的方法就是添加对这些组件的依赖，并调用对应的方法。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Button</span> &#123;<br>    <span class="hljs-keyword">private</span> TestField testfield;<br>    <span class="hljs-keyword">private</span> Lable lable;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">click</span><span class="hljs-params">()</span> &#123;<br>        testfield.check();<br>        lable.change(<span class="hljs-string">&quot;new lable&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-<p>上例代码运行正确。但当想新增另一个按钮时，发现已有的按钮几乎无法复用，因为其已经和太多特定组件耦合，而其他按钮可能不依赖这些组件。</p>
-<p><strong>组件间的单向依赖，可以使用图论中的邻接矩阵来表示。如果有<code>N</code>个组件，最多可以有<span
-class="math inline">\(N×(N−1)\)</span>个单向依赖关系</strong>。</p>
-<h2 id="中介者模式">中介者模式</h2>
-<p>中介者模式通过引入一个<strong>中介者对象</strong>，并调整所有组件都依赖这个中介者，中介者也依赖所有的组件。</p>
-<p>各个组件通过中介者形成间接依赖。组件如果要访问其他组件的内容，则要通过中介者去传递。</p>
-<p>在这种情况下，<strong><code>N</code>个组件，如果不考虑中介者对于组件的依赖，只会有<code>N</code>个单向依赖关系，即<code>N</code>个组件对中介者的依赖</strong>。</p>
-<p>对于中介者来说，会收到来自组件的请求，并把这些请求转发到其他组件，由具体组件去执行逻辑。基于这种场景，我们可以在中介者中设置通知方法。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Mediator</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">sendMessage</span><span class="hljs-params">(String msg, Component sender, Component receiver)</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
-<p>在通知方法中，通常需要指定<strong>请求的发起方，请求的接收方，以及通知的具体内容</strong>。当然这些也不都是必须的，只是一个相对通用的方法签名选择。例如可以移除接收者，则认为是广播，所有的组件都会收到消息。</p>
-<p>有时需要方法的返回值，例如查询和校验的场景，发送者需要了解接收者的信息，则可以在中介者中定义带返回值的方法。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Mediator</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">validate</span><span class="hljs-params">(String rule)</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
-<p>方法体中，可能会有一个巨大的<code>if</code>或<code>switch</code>语句，或者通过<code>Map</code>储存了入参到实际执行的组件对象。校验的过程可以定义在中介者中，也可以定义在每个组件中。如果是定义在组件中，则中介者还需要委派校验请求给具体组件。</p>
-<p>综上，中介者与组件交互的方法实际是十分自由的，方法的入参、出参都没什么限制，也可以使用自定义的上下文或结果对象。后文以最常见的通知场景为例。</p>
-<p>中介者和组件也可以进行抽象。提取中介者接口和组件抽象类，那么组件可以仅依赖中介者接口，中介者可以仅依赖组件接口，进一步解耦。根据以上设计，可以给出类图。</p>
-<pre><code class=" mermaid">classDiagram
-    direction LR
-    class Mediator &#123;
-        &lt;&lt;interface&gt;&gt;
-        +send(message: String, Component: Component)
-    &#125;
-    
-    class ConcreteMediator &#123;
-        -Components: List&lt;Component&gt;
-        +send(message: String, Component: Component)
-    &#125;
-    
-    class Component &#123;
-        &lt;&lt;abstract&gt;&gt;
-        -mediator: Mediator
-        +send(message: String)
-        +receive(message: String)
-    &#125;
-    
-    class ConcreteComponentA &#123;
-        +send(message: String)
-        +receive(message: String)
-    &#125;
-    
-    class ConcreteComponentB &#123;
-        +send(message: String)
-        +receive(message: String)
-    &#125;
-    
-    Mediator &lt;|-- ConcreteMediator
-    Component &lt;|-- ConcreteComponentA
-    Component &lt;|-- ConcreteComponentB
-    ConcreteMediator --&gt; Component
-    Component --&gt; Mediator
-</code></pre>
-<h2 id="一些想法">一些想法</h2>
-<p>中介者模式比较简单，整体介绍就结束了。但还是有雾里看花的感觉，觉得不切实际，所以举一些其他例子。</p>
-<p>在很多程序中有引擎的概念。笔者曾经使用过<code>scrapy</code>爬虫框架。在<code>scrapy</code>中，主要存在爬虫、下载器、调度器、数据管道等组件，每个组件负责不同功能，例如请求页面，解析页面，处理数据，存储数据等。所有组件通过爬虫引擎集中调度，通过信号触发组件间的交互。在此爬虫引擎就是中介者的角色，使得组件间不必相互依赖，仅需和引擎交互即可。</p>
-<p>有些程序也会有总线的概念，例如企业服务总线
-<code>ESB（Enterprise Service Bus）</code>。不同的服务注册在总线上。当需要依赖某个服务时，通过总线来访问。各个服务只与
-ESB
-交互，而不直接调用其他服务，在此<code>ESB</code>就担任了中介者的角色。</p>
-<p>在真正使用中，不一定要求所有的组件都实现了同一个接口，组件本身也可以有较大差异（虽然这会增加中介者对组件的耦合）。只要不同组件，不是互相直接交互，而是通过一个中介者来间接交互，都可以说是符合中介者模式的核心思想。</p>
-<p>另一个话题，是否需要专门新增一个中介者类，去实现中介者模式。这通常是不需要的。在多个组件共同完成某一个功能的应用中，通常存在一个统领全局的<strong>中心协调者</strong>，包含需要的所有组件。例如在上文例子中，GUI会存在一个窗口对象，就算不采用中介者模式，其本身也会依赖所有组件。这类<strong>中心协调者</strong>可以担任中介者的位置，而且不需要改动很多就可以实现中介者模式。</p>
+<p>首先需要定义什么是状态。在日常应用中，<strong>状态通常指程序运行时对象的瞬时数据集合，这些数据共同定义了对象在某一时刻的具体表现</strong>。以常见的<code>Word</code>为例，状态体现为文本内容、段落格式（如字体、字号、颜色）、光标所在位置等信息；而在游戏中，状态则可能涵盖角色的坐标位置、生命值与攻击力等属性、背包中的道具清单等。尽管不同应用的场景差异显著，但从程序设计的角度看，状态本质上都是<strong>一组描述对象当前情况的数据</strong>，这些数据通常集中或分散存储在一个或多个对象（如文本缓冲区、角色实体类等）的属性中，共同构成了对象在特定时刻的完整快照。</p>
+<p>要储存这些状态，最直接的想法，就是新建一个同类对象，把原对象中的属性复制到新对象中。在需要恢复的时候，再将新对象的值一一赋值给旧对象。如果这个备份和恢复的方法定义在其它类中，那么就需要此类对被备份类的所有属性有访问权限，例如将属性设为<code>public</code>，或者是提供所有字段的<code>get、set</code>方法。这显然不合适，<strong>破坏了原类的封装性</strong>。不仅如此，如果把所有字段都设置为<code>public</code>，还会引起额外的问题。一旦被备份类中新增了某个字段，所有负责复制的类都需要同步变动，也就是<strong>增加了其他类对原类的依赖</strong>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Status</span> &#123;<br>    <span class="hljs-keyword">public</span> String name;<br>    <span class="hljs-keyword">public</span> String age;<br>&#125;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Backup</span> &#123;<br>    <span class="hljs-keyword">public</span> Status <span class="hljs-title function_">backup</span><span class="hljs-params">(Status exist)</span> &#123;<br>        <span class="hljs-type">Status</span> <span class="hljs-variable">backup</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Status</span>();<br>        backup.name = exist.name;<br>        backup.age = exist.age;<br>        <span class="hljs-keyword">return</span> backup;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>所以更合适的做法是将备份和恢复的方法定义在原类中。我们可以通过<strong>原型模式</strong>轻松地获取某个对象的复制。根据类的访问权限，<strong>同一个类的对象可以互相访问私有属性</strong>，因此也能轻松地恢复属性。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Status</span> &#123;<br>    <span class="hljs-keyword">private</span> String name;<br>    <span class="hljs-keyword">private</span> String age;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">recover</span><span class="hljs-params">(Status backup)</span> &#123;<br>        <span class="hljs-comment">// 直接访问备份对象的成员变量</span><br>        <span class="hljs-built_in">this</span>.name = backup.name;<br>        <span class="hljs-built_in">this</span>.age = backup.age;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>但还是有不合适的地方。快照对象和原对象一样包含所有的方法，这些方法对于快照对象是完全不需要的。从单一职责原则考虑，<strong>快照不该有这些方法的执行权限</strong>。所以需要新建一个快照类，这个类拥有原类的所有需要备份的属性，但不包含原对象的方法，就像生成器模式中的生成器类。但新建的快照类和原对象类，又会产生属性访问权限的问题。快照对象需要被用来恢复原对象，这意味着原类有快照类的属性访问权限，或快照有原类的属性访问权限。</p>
+<h2 id="备忘录模式">备忘录模式</h2>
+<p>总的来说，上述描述讨论了为了实现状态储存、恢复的几个问题：</p>
+<p>1.状态存哪里？</p>
+<p>2.产生备份、从备份中恢复的方法定义在哪里？</p>
+<p>3.快照类、原类、其他类之间的互相访问权限如何？</p>
+<p>对于第1点，从单一职责原则考虑，肯定需要<strong>新建一个快照类</strong>。</p>
+<p>第2和第3点是互相关联的，需要一起考虑。从上述例子中，可以看出定义在其它类中不太合适，因为其他类不该有快照类、原类的状态访问权限和依赖。而对于原类和快照类，二者通常为一对多关系。原对象生成多个快照，并由原对象主动选择快照恢复。从语义上看，备份/恢复操作的发起方应为原类，故<strong>建议将相关方法定义在原类中</strong>。</p>
+<p>备份/恢复方法体中需要完成原对象和快照对象的状态赋值。当方法定义在原类中，那么原类需要有对快照类状态的访问权限，同时不希望快照类的状态暴露给除原类外的其他类。这种访问权限的限制，在不同语言中有不同处理方法。</p>
+<p>在<code>java</code>中可以使用<strong>嵌套类</strong>的特性来实现上述要求，具体来说是将快照类定义为<code>public static</code>的嵌套类。<code>public</code>意味着其他类可以引用、储存快照类，<code>static</code>意味着快照对象不是必须引用原类对象。同时将快照类的状态设置为<code>private</code>，此时只有其外部类拥有其状态的访问权限，其他类不能访问。如果其他类不需要引用快照对象，而是由原类自行存储，那可以进一步把类的访问修饰改为<code>private</code>，实现更好的封装性。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// Originator.java</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Originator</span> &#123;<br>    <span class="hljs-keyword">private</span> String state;<br>    <br>    <span class="hljs-keyword">public</span> Memento <span class="hljs-title function_">save</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Memento</span>(state);<br>    &#125;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">restore</span><span class="hljs-params">(Memento m)</span> &#123;<br>        <span class="hljs-built_in">this</span>.state = m.savedState;<br>    &#125;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Memento</span> &#123;<br>        <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String savedState;<br><br>        <span class="hljs-keyword">private</span> <span class="hljs-title function_">Memento</span><span class="hljs-params">(String state)</span> &#123;<br>            <span class="hljs-built_in">this</span>.savedState = state;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>在一些不支持嵌套类的语言中，无法使用上面这个方案。备选的方案使用接口，其他类引用的是备忘录接口，来避免其他类对具体备忘录类的依赖。整体来说，这些使用接口的方案有点过度设计的感觉，不推荐也不过多介绍。</p>
+<p>至此，整个备忘录模式已经介绍完毕了，规范下此模式中的角色术语：</p>
+<ul>
+<li><strong>原发器</strong>（<code>Originator</code>）类可以生成自身状态的快照，也可以在需要时通过快照恢复自身状态。</li>
+<li><strong>备忘录</strong>（<code>Memento</code>）是原发器状态快照的值对象。通常做法是将备忘录设为不可变的，并通过构造函数一次性传递数据。</li>
+<li><strong>负责人</strong>（<code>Caretaker</code>）仅知道“何时”和“为何”捕捉原发器的状态，以及何时恢复状态。负责人通过保存备忘录栈来记录原发器的历史状态。当原发器需要回溯历史状态时，负责人将从栈中获取最顶部的备忘录，并将其传递给原发器的恢复（<code>restoration</code>）方法。</li>
+</ul>
+<p>撤销操作通常针对最近一次变更，也就是说，最后保存的状态快照往往是最先被使用的。这种后进先出的特性，与栈的数据结构天然契合。因此，在备忘录模式中，负责人通常会采用栈来管理历史快照：当进行状态备份时，将新的快照压入栈顶；当需要恢复状态时，则从栈顶弹出最近保存的快照。这种设计不仅逻辑直观，也符合用户对于撤销操作的普遍预期。</p>
+<p>在一些场景下，原发器和负责人可以是同一个角色。例如在一个简单的文本编辑器工具中，该工具类既负责管理当前编辑的内容（即作为原发器，创建和恢复文本状态的快照），又负责维护编辑过程中的历史版本（即作为负责人，保存和管理这些快照）。由于功能相对单一、状态管理逻辑不复杂，将这两个角色合并到同一个类中，一定程度违背了单一职责原则，但能避免为少量状态管理单独拆分类所带来的额外复杂度。</p>
 <h2 id="总结">总结</h2>
-<p>中介者模式通过引入一个中介对象来封装一组对象之间的交互逻辑，使这些对象无需直接相互引用，从而降低耦合度、提升可维护性。</p>
-<p>中介者通常会定义一个用于通知组件的方法，这个方法的入参，出参十分灵活，可以根据实际情况调整。</p>
+<p>备忘录模式的动机，是在复制、恢复原发器的状态的同时，不破坏封装性。</p>
+<p>备忘录模式使用备忘录类，储存原发器的状态。通过将其设置嵌套类，调整访问修饰符，来避免破坏封装性。</p>
+<p>负责人通常使用栈保存备忘录对象。</p>
 
                 
               </div>
@@ -389,8 +353,8 @@ ESB
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Design-Pattern-Mediator</div>
-      <div>http://dracoyus.github.io/2025/08/22/Design-Pattern-Mediator/</div>
+      <div>Design-Pattern-Memento</div>
+      <div>http://dracoyus.github.io/2025/09/09/Design-Pattern-Memento/</div>
     </div>
     <div class="license-meta">
       
@@ -402,7 +366,7 @@ ESB
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年8月22日</div>
+          <div>2025年9月9日</div>
         </div>
       
       
@@ -434,18 +398,12 @@ ESB
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/09/09/Design-Pattern-Memento/" title="Design-Pattern-Memento">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Design-Pattern-Memento</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/08/07/Design-Pattern-Iterator/" title="Design-Pattern-Iterator">
-                        <span class="hidden-mobile">Design-Pattern-Iterator</span>
+                      <a href="/2025/08/22/Design-Pattern-Mediator/" title="Design-Pattern-Mediator">
+                        <span class="hidden-mobile">Design-Pattern-Mediator</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
