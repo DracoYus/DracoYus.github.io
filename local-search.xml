@@ -4,6 +4,33 @@
   
   
   <entry>
+    <title>Design-Pattern-Subscriber</title>
+    <link href="/2025/10/29/Design-Pattern-Observer/"/>
+    <url>/2025/10/29/Design-Pattern-Observer/</url>
+    
+    <content type="html"><![CDATA[<p><strong>观察者模式</strong>是一种行为设计模式，允许定义一种订阅机制，可在对象事件发生时通知多个“观察”该对象的其他对象。</p><h2 id="场景">场景</h2><p>在开发中，经常会使用异步任务，来处理耗时的操作（如网络请求、数据库查询、文件读写等I/O密集型任务）。由于任务实际耗时与完成时机不确定，若发起方需关注结果，可以通过以一定频率主动查询的方式获取处理状态，这种方式也被称为轮询（<code>polling</code>）。也可以由处理方，在结束后主动通知任务发起方。</p><p>这两种模式也被称为推拉模型。由发起方<strong>主动轮询</strong>任务状态，属于发起方拉取数据，称为<strong>拉模型</strong>。任务完成后<strong>主动通知</strong>发起方，属于任务推动结果，称为<strong>推模型</strong>。</p><p>轮询的缺点也很显而易见，当结果未处理完时，多次的查询可能是无意义，且消耗性能能资源的。而处理方主动通知的模式中，若单个处理方对应多个任务发起者，可能面临通知目标不明确的问题。若采取都通知的方案，则有许多发起方会收到并不需要的处理结果通知。</p><h2 id="观察者模式">观察者模式</h2><p>解决这个问题的思路也显而易见：如果处理方知道要通知哪些就行了！</p><p>规范下术语，在观察者模式中，发出通知的角色（上文中的处理方）通常称为发布者（<code>publisher</code>），接受通知结果的角色（上文中的发起方）称为订阅者（<code>subscriber</code>）。</p><p>可能这些名词会让人疑惑，怎么发起方不是发布者？这是两个角度的称呼。发起方指的是在异步任务中，添加任务并交由处理方去处理的角色，属于任务的发起方。而发布者，则是任务完成时，发布消息通知的角色，属于消息的发布者。</p><p>显然，需要在发布者中，记录需要通知的订阅者。可以通过在发布者中定义成员变量来储存订阅者，并通过提供对应的<code>add/remove</code>方法，来添加和修改订阅者。</p><p>为了将发布者和订阅者解耦，上文提到的订阅者通常是一种接口。这样新增订阅者时，仅需实现订阅者接口，而无需变动发布者的相关代码。而前文提到的通知，实际在代码中体现为调用订阅者某个方法。显然这个方法也需要声明在接口中，由具体订阅者去实现。而如果发布者本身也可以扩展，则可以将发布者也定义为接口，并声明简单的订阅、取消订阅的功能即可。</p><p>至此观察者模式的设计思路已经全部介绍完毕。根据前文描述可以给出类图。</p><pre><code class=" mermaid">classDiagram    direction LR    class Publisher &#123;    -subscribers: Subscriber[]        +subscribe(Subscriber s)        +unsubscribe(Subscriber s)        +notifySubscribers()    &#125;    class Subscriber &#123;        &lt;&lt;interface&gt;&gt;        +update()    &#125;    class ConcreteSubscriber &#123;        +update()    &#125;    class client &#123;    &#125;        Subscriber &lt;|-- ConcreteSubscriber    Publisher o--&gt; Subscriber    client --&gt; Publisher    client --&gt; ConcreteSubscriber</code></pre><p>回头看，开发中常用的回调函数本质也是观察者模式：发起方通过设置回调函数（如为异步任务指定完成后的处理逻辑），相当于<strong>隐式添加订阅</strong>；当特定事件（如异步任务完成）触发时，任务内部调用该回调函数，即完成了对订阅者的<strong>通知</strong>。以<code>Java</code>为例，设置回调函数通常体现为传入一个函数式接口的匿名实现类（如<code>Runnable</code>、<code>Consumer&lt;T&gt;</code>），其核心逻辑与观察者模式机制一致。可以说<strong>回调函数是观察者模式的一种简化实现方式</strong>。</p><p>而发布者和订阅者的一对多星型拓扑关系，和之前介绍的<strong>中介者模式</strong>很像。其实也很容易区分。中介者模式中，组件间<strong>不直接通信</strong>，所有交互必须通过中介者这个中心节点进行转发（中介者本身承担逻辑协调与消息路由职能）；而观察者模式中，订阅者之间<strong>无需相互感知</strong>，发布者仅负责直接通知所有观察者，不介入它们之间的具体交互逻辑。</p><h2 id="总结">总结</h2><p>观察者模式中，发布者储存需要通知的订阅者，并在特定状态时，通知储存的订阅者。</p><p>回调函数本质是观察者模式的一种简单实现。</p>]]></content>
+    
+    
+    <categories>
+      
+      <category>DesignPattern</category>
+      
+    </categories>
+    
+    
+    <tags>
+      
+      <tag>Java</tag>
+      
+      <tag>DesignPattern</tag>
+      
+    </tags>
+    
+  </entry>
+  
+  
+  
+  <entry>
     <title>Design-Pattern-Memento</title>
     <link href="/2025/09/09/Design-Pattern-Memento/"/>
     <url>/2025/09/09/Design-Pattern-Memento/</url>

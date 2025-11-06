@@ -16,15 +16,15 @@
   <meta name="author" content="DracoYu">
   <meta name="keywords" content="学习笔记,Java,JavaScript,后端,前端">
   
-    <meta name="description" content="备忘录模式（Memento Pattern）是一种行为型设计模式，用于在不破坏封装的前提下，​捕获并外部化一个对象的内部状态，以便在需要时将对象恢复到此前保存的状态。它常被称为快照模式，典型用于实现撤销&#x2F;重做（Undo&#x2F;Redo）​、历史记录与回滚等能力。 在Design-Pattern-Command中提到过，命令模式常和撤销操作一起实现。而撤销的一种实现方式，就是使用状态快照，也就是将需要恢">
+    <meta name="description" content="观察者模式是一种行为设计模式，允许定义一种订阅机制，可在对象事件发生时通知多个“观察”该对象的其他对象。 场景 在开发中，经常会使用异步任务，来处理耗时的操作（如网络请求、数据库查询、文件读写等I&#x2F;O密集型任务）。由于任务实际耗时与完成时机不确定，若发起方需关注结果，可以通过以一定频率主动查询的方式获取处理状态，这种方式也被称为轮询（polling）。也可以由处理方，在结束后主动通知任务发起方">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Design-Pattern-Memento">
-<meta property="og:url" content="http://dracoyus.github.io/2025/09/09/Design-Pattern-Memento/index.html">
+<meta property="og:title" content="Design-Pattern-Subscriber">
+<meta property="og:url" content="http://dracoyus.github.io/2025/10/29/Design-Pattern-Observer/index.html">
 <meta property="og:site_name" content="DracoYu&#39;s MindCache">
-<meta property="og:description" content="备忘录模式（Memento Pattern）是一种行为型设计模式，用于在不破坏封装的前提下，​捕获并外部化一个对象的内部状态，以便在需要时将对象恢复到此前保存的状态。它常被称为快照模式，典型用于实现撤销&#x2F;重做（Undo&#x2F;Redo）​、历史记录与回滚等能力。 在Design-Pattern-Command中提到过，命令模式常和撤销操作一起实现。而撤销的一种实现方式，就是使用状态快照，也就是将需要恢">
+<meta property="og:description" content="观察者模式是一种行为设计模式，允许定义一种订阅机制，可在对象事件发生时通知多个“观察”该对象的其他对象。 场景 在开发中，经常会使用异步任务，来处理耗时的操作（如网络请求、数据库查询、文件读写等I&#x2F;O密集型任务）。由于任务实际耗时与完成时机不确定，若发起方需关注结果，可以通过以一定频率主动查询的方式获取处理状态，这种方式也被称为轮询（polling）。也可以由处理方，在结束后主动通知任务发起方">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-09-09T11:03:58.000Z">
-<meta property="article:modified_time" content="2025-10-29T02:31:08.088Z">
+<meta property="article:published_time" content="2025-10-29T02:38:01.000Z">
+<meta property="article:modified_time" content="2025-11-06T09:19:30.349Z">
 <meta property="article:author" content="DracoYu">
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="DesignPattern">
@@ -32,7 +32,7 @@
   
   
   
-  <title>Design-Pattern-Memento - DracoYu&#39;s MindCache</title>
+  <title>Design-Pattern-Subscriber - DracoYu&#39;s MindCache</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -198,7 +198,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Design-Pattern-Memento"></span>
+            <span id="subtitle" data-typed-text="Design-Pattern-Subscriber"></span>
           
         </div>
 
@@ -209,8 +209,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-09-09 19:03" pubdate>
-          2025年9月9日 晚上
+        <time datetime="2025-10-29 10:38" pubdate>
+          2025年10月29日 上午
         </time>
       </span>
     
@@ -221,7 +221,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.1k 字
+          1.2k 字
         
       </span>
     
@@ -232,7 +232,7 @@
         
         
         
-          18 分钟
+          10 分钟
         
       </span>
     
@@ -269,43 +269,59 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Design-Pattern-Memento</h1>
+            <h1 id="seo-header">Design-Pattern-Subscriber</h1>
             
             
               <div class="markdown-body">
                 
-                <p><strong>备忘录模式<code>（Memento Pattern）</code></strong>是一种行为型设计模式，用于在不破坏封装的前提下，​捕获并外部化一个对象的内部状态，以便在需要时将对象恢复到此前保存的状态。它常被称为快照模式，典型用于实现撤销/重做<code>（Undo/Redo）</code>​、历史记录与回滚等能力。</p>
-<p>在<a href="/2025/06/10/Design-Pattern-Command/" title="Design-Pattern-Command">Design-Pattern-Command</a>中提到过，命令模式常和撤销操作一起实现。而撤销的一种实现方式，就是使用<strong>状态快照</strong>，也就是将需要恢复的状态，储存起来。本文详细讨论此<strong>状态快照对象如何获取、储存</strong>等。</p>
+                <p><strong>观察者模式</strong>是一种行为设计模式，允许定义一种订阅机制，可在对象事件发生时通知多个“观察”该对象的其他对象。</p>
 <h2 id="场景">场景</h2>
-<p>首先需要定义什么是状态。在日常应用中，<strong>状态通常指程序运行时对象的瞬时数据集合，这些数据共同定义了对象在某一时刻的具体表现</strong>。以常见的<code>Word</code>为例，状态体现为文本内容、段落格式（如字体、字号、颜色）、光标所在位置等信息；而在游戏中，状态则可能涵盖角色的坐标位置、生命值与攻击力等属性、背包中的道具清单等。尽管不同应用的场景差异显著，但从程序设计的角度看，状态本质上都是<strong>一组描述对象当前情况的数据</strong>，这些数据通常集中或分散存储在一个或多个对象（如文本缓冲区、角色实体类等）的属性中，共同构成了对象在特定时刻的完整快照。</p>
-<p>要储存这些状态，最直接的想法，就是新建一个同类对象，把原对象中的属性复制到新对象中。在需要恢复的时候，再将新对象的值一一赋值给旧对象。如果这个备份和恢复的方法定义在其它类中，那么就需要此类对被备份类的所有属性有访问权限，例如将属性设为<code>public</code>，或者是提供所有字段的<code>get、set</code>方法。这显然不合适，<strong>破坏了原类的封装性</strong>。不仅如此，如果把所有字段都设置为<code>public</code>，还会引起额外的问题。一旦被备份类中新增了某个字段，所有负责复制的类都需要同步变动，也就是<strong>增加了其他类对原类的依赖</strong>。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Status</span> &#123;<br>    <span class="hljs-keyword">public</span> String name;<br>    <span class="hljs-keyword">public</span> String age;<br>&#125;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Backup</span> &#123;<br>    <span class="hljs-keyword">public</span> Status <span class="hljs-title function_">backup</span><span class="hljs-params">(Status exist)</span> &#123;<br>        <span class="hljs-type">Status</span> <span class="hljs-variable">backup</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Status</span>();<br>        backup.name = exist.name;<br>        backup.age = exist.age;<br>        <span class="hljs-keyword">return</span> backup;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-<p>所以更合适的做法是将备份和恢复的方法定义在原类中。我们可以通过<strong>原型模式</strong>轻松地获取某个对象的复制。根据类的访问权限，<strong>同一个类的对象可以互相访问私有属性</strong>，因此也能轻松地恢复属性。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Status</span> &#123;<br>    <span class="hljs-keyword">private</span> String name;<br>    <span class="hljs-keyword">private</span> String age;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">recover</span><span class="hljs-params">(Status backup)</span> &#123;<br>        <span class="hljs-comment">// 直接访问备份对象的成员变量</span><br>        <span class="hljs-built_in">this</span>.name = backup.name;<br>        <span class="hljs-built_in">this</span>.age = backup.age;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-<p>但还是有不合适的地方。快照对象和原对象一样包含所有的方法，这些方法对于快照对象是完全不需要的。从单一职责原则考虑，<strong>快照不该有这些方法的执行权限</strong>。所以需要新建一个快照类，这个类拥有原类的所有需要备份的属性，但不包含原对象的方法，就像生成器模式中的生成器类。但新建的快照类和原对象类，又会产生属性访问权限的问题。快照对象需要被用来恢复原对象，这意味着原类有快照类的属性访问权限，或快照有原类的属性访问权限。</p>
-<h2 id="备忘录模式">备忘录模式</h2>
-<p>总的来说，上述描述讨论了为了实现状态储存、恢复的几个问题：</p>
-<p>1.状态存哪里？</p>
-<p>2.产生备份、从备份中恢复的方法定义在哪里？</p>
-<p>3.快照类、原类、其他类之间的互相访问权限如何？</p>
-<p>对于第1点，从单一职责原则考虑，肯定需要<strong>新建一个快照类</strong>。</p>
-<p>第2和第3点是互相关联的，需要一起考虑。从上述例子中，可以看出定义在其它类中不太合适，因为其他类不该有快照类、原类的状态访问权限和依赖。而对于原类和快照类，二者通常为一对多关系。原对象生成多个快照，并由原对象主动选择快照恢复。从语义上看，备份/恢复操作的发起方应为原类，故<strong>建议将相关方法定义在原类中</strong>。</p>
-<p>备份/恢复方法体中需要完成原对象和快照对象的状态赋值。当方法定义在原类中，那么原类需要有对快照类状态的访问权限，同时不希望快照类的状态暴露给除原类外的其他类。这种访问权限的限制，在不同语言中有不同处理方法。</p>
-<p>在<code>java</code>中可以使用<strong>嵌套类</strong>的特性来实现上述要求，具体来说是将快照类定义为<code>public static</code>的嵌套类。<code>public</code>意味着其他类可以引用、储存快照类，<code>static</code>意味着快照对象不是必须引用原类对象。同时将快照类的状态设置为<code>private</code>，此时只有其外部类拥有其状态的访问权限，其他类不能访问。如果其他类不需要引用快照对象，而是由原类自行存储，那可以进一步把类的访问修饰改为<code>private</code>，实现更好的封装性。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// Originator.java</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Originator</span> &#123;<br>    <span class="hljs-keyword">private</span> String state;<br>    <br>    <span class="hljs-keyword">public</span> Memento <span class="hljs-title function_">save</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Memento</span>(state);<br>    &#125;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">restore</span><span class="hljs-params">(Memento m)</span> &#123;<br>        <span class="hljs-built_in">this</span>.state = m.savedState;<br>    &#125;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Memento</span> &#123;<br>        <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String savedState;<br><br>        <span class="hljs-keyword">private</span> <span class="hljs-title function_">Memento</span><span class="hljs-params">(String state)</span> &#123;<br>            <span class="hljs-built_in">this</span>.savedState = state;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-<p>在一些不支持嵌套类的语言中，无法使用上面这个方案。备选的方案使用接口，其他类引用的是备忘录接口，来避免其他类对具体备忘录类的依赖。整体来说，这些使用接口的方案有点过度设计的感觉，不推荐也不过多介绍。</p>
-<p>至此，整个备忘录模式已经介绍完毕了，规范下此模式中的角色术语：</p>
-<ul>
-<li><strong>原发器</strong>（<code>Originator</code>）类可以生成自身状态的快照，也可以在需要时通过快照恢复自身状态。</li>
-<li><strong>备忘录</strong>（<code>Memento</code>）是原发器状态快照的值对象。通常做法是将备忘录设为不可变的，并通过构造函数一次性传递数据。</li>
-<li><strong>负责人</strong>（<code>Caretaker</code>）仅知道“何时”和“为何”捕捉原发器的状态，以及何时恢复状态。负责人通过保存备忘录栈来记录原发器的历史状态。当原发器需要回溯历史状态时，负责人将从栈中获取最顶部的备忘录，并将其传递给原发器的恢复（<code>restoration</code>）方法。</li>
-</ul>
-<p>撤销操作通常针对最近一次变更，也就是说，最后保存的状态快照往往是最先被使用的。这种后进先出的特性，与栈的数据结构天然契合。因此，在备忘录模式中，负责人通常会采用栈来管理历史快照：当进行状态备份时，将新的快照压入栈顶；当需要恢复状态时，则从栈顶弹出最近保存的快照。这种设计不仅逻辑直观，也符合用户对于撤销操作的普遍预期。</p>
-<p>在一些场景下，原发器和负责人可以是同一个角色。例如在一个简单的文本编辑器工具中，该工具类既负责管理当前编辑的内容（即作为原发器，创建和恢复文本状态的快照），又负责维护编辑过程中的历史版本（即作为负责人，保存和管理这些快照）。由于功能相对单一、状态管理逻辑不复杂，将这两个角色合并到同一个类中，一定程度违背了单一职责原则，但能避免为少量状态管理单独拆分类所带来的额外复杂度。</p>
+<p>在开发中，经常会使用异步任务，来处理耗时的操作（如网络请求、数据库查询、文件读写等I/O密集型任务）。由于任务实际耗时与完成时机不确定，若发起方需关注结果，可以通过以一定频率主动查询的方式获取处理状态，这种方式也被称为轮询（<code>polling</code>）。也可以由处理方，在结束后主动通知任务发起方。</p>
+<p>这两种模式也被称为推拉模型。由发起方<strong>主动轮询</strong>任务状态，属于发起方拉取数据，称为<strong>拉模型</strong>。任务完成后<strong>主动通知</strong>发起方，属于任务推动结果，称为<strong>推模型</strong>。</p>
+<p>轮询的缺点也很显而易见，当结果未处理完时，多次的查询可能是无意义，且消耗性能能资源的。而处理方主动通知的模式中，若单个处理方对应多个任务发起者，可能面临通知目标不明确的问题。若采取都通知的方案，则有许多发起方会收到并不需要的处理结果通知。</p>
+<h2 id="观察者模式">观察者模式</h2>
+<p>解决这个问题的思路也显而易见：如果处理方知道要通知哪些就行了！</p>
+<p>规范下术语，在观察者模式中，发出通知的角色（上文中的处理方）通常称为发布者（<code>publisher</code>），接受通知结果的角色（上文中的发起方）称为订阅者（<code>subscriber</code>）。</p>
+<p>可能这些名词会让人疑惑，怎么发起方不是发布者？这是两个角度的称呼。发起方指的是在异步任务中，添加任务并交由处理方去处理的角色，属于任务的发起方。而发布者，则是任务完成时，发布消息通知的角色，属于消息的发布者。</p>
+<p>显然，需要在发布者中，记录需要通知的订阅者。可以通过在发布者中定义成员变量来储存订阅者，并通过提供对应的<code>add/remove</code>方法，来添加和修改订阅者。</p>
+<p>为了将发布者和订阅者解耦，上文提到的订阅者通常是一种接口。这样新增订阅者时，仅需实现订阅者接口，而无需变动发布者的相关代码。而前文提到的通知，实际在代码中体现为调用订阅者某个方法。显然这个方法也需要声明在接口中，由具体订阅者去实现。而如果发布者本身也可以扩展，则可以将发布者也定义为接口，并声明简单的订阅、取消订阅的功能即可。</p>
+<p>至此观察者模式的设计思路已经全部介绍完毕。根据前文描述可以给出类图。</p>
+<pre><code class=" mermaid">classDiagram
+    direction LR
+
+    class Publisher &#123;
+	    -subscribers: Subscriber[]
+        +subscribe(Subscriber s)
+        +unsubscribe(Subscriber s)
+        +notifySubscribers()
+    &#125;
+
+    class Subscriber &#123;
+        &lt;&lt;interface&gt;&gt;
+        +update()
+    &#125;
+
+    class ConcreteSubscriber &#123;
+        +update()
+    &#125;
+
+    class client &#123;
+    &#125;
+    
+    Subscriber &lt;|-- ConcreteSubscriber
+    Publisher o--&gt; Subscriber
+    client --&gt; Publisher
+    client --&gt; ConcreteSubscriber
+
+</code></pre>
+<p>回头看，开发中常用的回调函数本质也是观察者模式：发起方通过设置回调函数（如为异步任务指定完成后的处理逻辑），相当于<strong>隐式添加订阅</strong>；当特定事件（如异步任务完成）触发时，任务内部调用该回调函数，即完成了对订阅者的<strong>通知</strong>。以
+<code>Java</code>
+为例，设置回调函数通常体现为传入一个函数式接口的匿名实现类（如
+<code>Runnable</code>、<code>Consumer&lt;T&gt;</code>），其核心逻辑与观察者模式机制一致。可以说<strong>回调函数是观察者模式的一种简化实现方式</strong>。</p>
+<p>而发布者和订阅者的一对多星型拓扑关系，和之前介绍的<strong>中介者模式</strong>很像。其实也很容易区分。中介者模式中，组件间<strong>不直接通信</strong>，所有交互必须通过中介者这个中心节点进行转发（中介者本身承担逻辑协调与消息路由职能）；而观察者模式中，订阅者之间<strong>无需相互感知</strong>，发布者仅负责直接通知所有观察者，不介入它们之间的具体交互逻辑。</p>
 <h2 id="总结">总结</h2>
-<p>备忘录模式的动机，是在复制、恢复原发器的状态的同时，不破坏封装性。</p>
-<p>备忘录模式使用备忘录类，储存原发器的状态。通过将其设置嵌套类，调整访问修饰符，来避免破坏封装性。</p>
-<p>负责人通常使用栈保存备忘录对象。</p>
+<p>观察者模式中，发布者储存需要通知的订阅者，并在特定状态时，通知储存的订阅者。</p>
+<p>回调函数本质是观察者模式的一种简单实现。</p>
 
                 
               </div>
@@ -353,8 +369,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Design-Pattern-Memento</div>
-      <div>http://dracoyus.github.io/2025/09/09/Design-Pattern-Memento/</div>
+      <div>Design-Pattern-Subscriber</div>
+      <div>http://dracoyus.github.io/2025/10/29/Design-Pattern-Observer/</div>
     </div>
     <div class="license-meta">
       
@@ -366,7 +382,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年9月9日</div>
+          <div>2025年10月29日</div>
         </div>
       
       
@@ -398,18 +414,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/10/29/Design-Pattern-Observer/" title="Design-Pattern-Subscriber">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Design-Pattern-Subscriber</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/08/22/Design-Pattern-Mediator/" title="Design-Pattern-Mediator">
-                        <span class="hidden-mobile">Design-Pattern-Mediator</span>
+                      <a href="/2025/09/09/Design-Pattern-Memento/" title="Design-Pattern-Memento">
+                        <span class="hidden-mobile">Design-Pattern-Memento</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
