@@ -24,10 +24,10 @@
 <meta property="og:description" content="装饰模式（Decorator Pattern）是一种结构型设计模式，允许在不修改现有对象结构的前提下向对象添加新的功能。 场景 假设我们正在开发一款爬虫软件，并准备将爬取到的数据写入csv文件中。按照模块化编程的思想，会把csv相关的代码保存到一个独立的类CsvWriter中。而后可能又需要把同样的数据写入txt、json、数据库中，也会诞生相应的TxtWriter、JsonWriter、S">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-10-28T08:44:25.000Z">
-<meta property="article:modified_time" content="2025-08-07T02:16:21.758Z">
+<meta property="article:modified_time" content="2025-11-06T11:41:16.958Z">
 <meta property="article:author" content="DracoYu">
-<meta property="article:tag" content="Java">
 <meta property="article:tag" content="DesignPattern">
+<meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary_large_image">
   
   
@@ -400,9 +400,9 @@ Decorators），定义了可动态添加到部件的额外行为。
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/Java/" class="print-no-link">#Java</a>
-      
         <a href="/tags/DesignPattern/" class="print-no-link">#DesignPattern</a>
+      
+        <a href="/tags/Java/" class="print-no-link">#Java</a>
       
     </div>
   
@@ -534,6 +534,21 @@ Decorators），定义了可动态添加到部件的额外行为。
 
 
 
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.utils.listenDOMLoaded(function() {
+      Fluid.events.registerRefreshCallback(function() {
+        if ('mermaid' in window) {
+          mermaid.init();
+        }
+      });
+    });
+  });
+</script>
 
 
 

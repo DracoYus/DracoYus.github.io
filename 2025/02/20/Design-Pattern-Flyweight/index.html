@@ -24,10 +24,10 @@
 <meta property="og:description" content="享元模式（Flyweight）是一种结构型设计模式，它摒弃了在每个对象中保存所有数据的方式，旨在通过共享对象来减少内存使用和提高性能。 场景 在一些2D平面游戏中，玩家可以控制一个角色，在地图中移动，和不同单位交互。对于这类游戏，内存中存在一个数组，表示游戏的地图数据，包含例如某个地格的地形、位置、障碍物、是否有道具&#x2F;角色可交互对象等数据。游戏的图像引擎，通过遍历每个地格的数据，渲染成游戏界面">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-02-20T08:34:27.000Z">
-<meta property="article:modified_time" content="2025-08-07T02:16:26.303Z">
+<meta property="article:modified_time" content="2025-11-06T11:40:54.216Z">
 <meta property="article:author" content="DracoYu">
-<meta property="article:tag" content="Java">
 <meta property="article:tag" content="DesignPattern">
+<meta property="article:tag" content="Java">
 <meta name="twitter:card" content="summary_large_image">
   
   
@@ -356,9 +356,9 @@
     <div class="post-meta">
       <i class="iconfont icon-tags"></i>
       
-        <a href="/tags/Java/" class="print-no-link">#Java</a>
-      
         <a href="/tags/DesignPattern/" class="print-no-link">#DesignPattern</a>
+      
+        <a href="/tags/Java/" class="print-no-link">#Java</a>
       
     </div>
   
@@ -490,6 +490,21 @@
 
 
 
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.utils.listenDOMLoaded(function() {
+      Fluid.events.registerRefreshCallback(function() {
+        if ('mermaid' in window) {
+          mermaid.init();
+        }
+      });
+    });
+  });
+</script>
 
 
 
