@@ -16,15 +16,15 @@
   <meta name="author" content="DracoYu">
   <meta name="keywords" content="学习笔记,Java,JavaScript,后端,前端">
   
-    <meta name="description" content="观察者模式是一种行为设计模式，允许定义一种订阅机制，可在对象事件发生时通知多个“观察”该对象的其他对象。 场景 在开发中，经常会使用异步任务，来处理耗时的操作（如网络请求、数据库查询、文件读写等I&#x2F;O密集型任务）。由于任务实际耗时与完成时机不确定，若发起方需关注结果，可以通过以一定频率主动查询的方式获取处理状态，这种方式也被称为轮询（polling）。也可以由处理方，在结束后主动通知任务发起方">
+    <meta name="description" content="状态模式是一种行为设计模式，它允许对象在其内部状态改变时改变它的行为，对象看起来好像修改了它的类。 场景 笔者曾基于按键精灵开发过一些自动化软件，用于在PC端及移动设备上模拟用户点击与输入操作，从而自动完成游戏内的日常任务。其底层实现逻辑为：程序通过一个持续运行的死循环，定时截取当前屏幕画面，基于图像特征判断当前所处的游戏界面状态（如主菜单、战斗中、战斗结束等），随后依据预先配置的操作策略，执">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Design-Pattern-Subscriber">
-<meta property="og:url" content="http://dracoyus.github.io/2025/10/29/Design-Pattern-Observer/index.html">
+<meta property="og:title" content="Design-Pattern-State">
+<meta property="og:url" content="http://dracoyus.github.io/2025/11/07/Design-Pattern-State/index.html">
 <meta property="og:site_name" content="DracoYu&#39;s MindCache">
-<meta property="og:description" content="观察者模式是一种行为设计模式，允许定义一种订阅机制，可在对象事件发生时通知多个“观察”该对象的其他对象。 场景 在开发中，经常会使用异步任务，来处理耗时的操作（如网络请求、数据库查询、文件读写等I&#x2F;O密集型任务）。由于任务实际耗时与完成时机不确定，若发起方需关注结果，可以通过以一定频率主动查询的方式获取处理状态，这种方式也被称为轮询（polling）。也可以由处理方，在结束后主动通知任务发起方">
+<meta property="og:description" content="状态模式是一种行为设计模式，它允许对象在其内部状态改变时改变它的行为，对象看起来好像修改了它的类。 场景 笔者曾基于按键精灵开发过一些自动化软件，用于在PC端及移动设备上模拟用户点击与输入操作，从而自动完成游戏内的日常任务。其底层实现逻辑为：程序通过一个持续运行的死循环，定时截取当前屏幕画面，基于图像特征判断当前所处的游戏界面状态（如主菜单、战斗中、战斗结束等），随后依据预先配置的操作策略，执">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-10-29T02:38:01.000Z">
-<meta property="article:modified_time" content="2025-11-06T11:39:22.458Z">
+<meta property="article:published_time" content="2025-11-07T07:10:44.000Z">
+<meta property="article:modified_time" content="2025-11-18T09:26:27.987Z">
 <meta property="article:author" content="DracoYu">
 <meta property="article:tag" content="DesignPattern">
 <meta property="article:tag" content="Java">
@@ -32,7 +32,7 @@
   
   
   
-  <title>Design-Pattern-Subscriber - DracoYu&#39;s MindCache</title>
+  <title>Design-Pattern-State - DracoYu&#39;s MindCache</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -198,7 +198,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Design-Pattern-Subscriber"></span>
+            <span id="subtitle" data-typed-text="Design-Pattern-State"></span>
           
         </div>
 
@@ -209,8 +209,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-10-29 10:38" pubdate>
-          2025年10月29日 上午
+        <time datetime="2025-11-07 15:10" pubdate>
+          2025年11月7日 下午
         </time>
       </span>
     
@@ -221,7 +221,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.2k 字
+          1.5k 字
         
       </span>
     
@@ -232,7 +232,7 @@
         
         
         
-          10 分钟
+          13 分钟
         
       </span>
     
@@ -269,59 +269,68 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Design-Pattern-Subscriber</h1>
+            <h1 id="seo-header">Design-Pattern-State</h1>
             
             
               <div class="markdown-body">
                 
-                <p><strong>观察者模式</strong>是一种行为设计模式，允许定义一种订阅机制，可在对象事件发生时通知多个“观察”该对象的其他对象。</p>
+                <p><strong>状态模式</strong>是一种行为设计模式，它允许对象在其内部状态改变时改变它的行为，对象看起来好像修改了它的类。</p>
 <h2 id="场景">场景</h2>
-<p>在开发中，经常会使用异步任务，来处理耗时的操作（如网络请求、数据库查询、文件读写等I/O密集型任务）。由于任务实际耗时与完成时机不确定，若发起方需关注结果，可以通过以一定频率主动查询的方式获取处理状态，这种方式也被称为轮询（<code>polling</code>）。也可以由处理方，在结束后主动通知任务发起方。</p>
-<p>这两种模式也被称为推拉模型。由发起方<strong>主动轮询</strong>任务状态，属于发起方拉取数据，称为<strong>拉模型</strong>。任务完成后<strong>主动通知</strong>发起方，属于任务推动结果，称为<strong>推模型</strong>。</p>
-<p>轮询的缺点也很显而易见，当结果未处理完时，多次的查询可能是无意义，且消耗性能能资源的。而处理方主动通知的模式中，若单个处理方对应多个任务发起者，可能面临通知目标不明确的问题。若采取都通知的方案，则有许多发起方会收到并不需要的处理结果通知。</p>
-<h2 id="观察者模式">观察者模式</h2>
-<p>解决这个问题的思路也显而易见：如果处理方知道要通知哪些就行了！</p>
-<p>规范下术语，在观察者模式中，发出通知的角色（上文中的处理方）通常称为发布者（<code>publisher</code>），接受通知结果的角色（上文中的发起方）称为订阅者（<code>subscriber</code>）。</p>
-<p>可能这些名词会让人疑惑，怎么发起方不是发布者？这是两个角度的称呼。发起方指的是在异步任务中，添加任务并交由处理方去处理的角色，属于任务的发起方。而发布者，则是任务完成时，发布消息通知的角色，属于消息的发布者。</p>
-<p>显然，需要在发布者中，记录需要通知的订阅者。可以通过在发布者中定义成员变量来储存订阅者，并通过提供对应的<code>add/remove</code>方法，来添加和修改订阅者。</p>
-<p>为了将发布者和订阅者解耦，上文提到的订阅者通常是一种接口。这样新增订阅者时，仅需实现订阅者接口，而无需变动发布者的相关代码。而前文提到的通知，实际在代码中体现为调用订阅者某个方法。显然这个方法也需要声明在接口中，由具体订阅者去实现。而如果发布者本身也可以扩展，则可以将发布者也定义为接口，并声明简单的订阅、取消订阅的功能即可。</p>
-<p>至此观察者模式的设计思路已经全部介绍完毕。根据前文描述可以给出类图。</p>
+<p>笔者曾基于按键精灵开发过一些自动化软件，用于在<code>PC</code>端及移动设备上模拟用户点击与输入操作，从而自动完成游戏内的日常任务。其底层实现逻辑为：程序通过一个持续运行的死循环，定时截取当前屏幕画面，基于图像特征判断当前所处的游戏界面状态（如主菜单、战斗中、战斗结束等），随后依据预先配置的操作策略，执行对应的自动化动作——例如当识别到主菜单界面时，触发“开始战斗”按钮的点击操作；当检测到战斗结束界面时，则自动完成“结算”操作。在具体代码实现层面，这一系列界面状态判断与操作分发的逻辑，最初是通过传统的<code>if</code>条件分支或<code>switch</code>语句结构来完成的。</p>
+<p>对于上述过程，其核心设计思想在于：程序在运行过程中始终仅处于若干种<strong>预定义的有限状态</strong>之一。针对每一种特定的状态，程序会展现出<strong>差异化的行为逻辑</strong>，并且能够在<strong>无需中间过渡过程的情况下</strong>，直接从一个状态切换至另一个状态。然而，状态的变更并非必然发生——程序可能基于当前状态触发向其他状态的<strong>跳转</strong>，也可能保持当前状态<strong>持续运行</strong>。这些预先设定且数量有限的、定义了"在何种状态下应如何转换至其他状态（或维持原状态）"的规则，被统称为<strong>状态转移（<code>State Transition</code>）</strong>。这类程序可以抽象为<strong>有限状态机</strong>。显然，有限状态机由有限个状态、状态下的行为、状态转移规则所定义。</p>
+<p>随着向自动化软件添加了更多状态和行为，整个程序变得<strong>难以维护</strong>，原本简洁的<code>if-else</code>或<code>switch-case</code>会膨胀为冗长的嵌套分支。例如：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">if</span> (currentScreen.equals(MAIN_MENU)) &#123;<br>    clickStartBattle();<br>&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (currentScreen.equals(BATTLE_FIELD)) &#123;<br>    <span class="hljs-keyword">if</span> (battlePhase.equals(BATTLE_ONGOING)) &#123;<br>        checkHpAndUseSkill();<br>    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (battlePhase.equals(BATTLE_ENDED)) &#123;<br>        clickSettlement();<br>    &#125;<br>&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (currentScreen.equals(INVENTORY)) &#123;<br>    <span class="hljs-comment">// 使用switch判断选中物品</span><br>    <span class="hljs-keyword">switch</span> (selectedItem) &#123;<br>        <span class="hljs-keyword">case</span> ITEM_POTION:<br>            usePotion();<br>            <span class="hljs-keyword">break</span>;<br>        <span class="hljs-keyword">case</span> ITEM_EQUIPMENT:<br>            equipItem();<br>            <span class="hljs-keyword">break</span>;<br>        <span class="hljs-keyword">default</span>:<br>            System.out.println(<span class="hljs-string">&quot;未识别的物品选择&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="状态模式">状态模式</h2>
+<p>状态模式的核心思想是将对象的行为与其状态解耦，通过以下方式实现：</p>
+<ol type="1">
+<li><strong>状态抽象化</strong>：为对象的每个可能状态创建一个独立的类，将原本分散在<code>if/switch</code>分支中的状态相关行为抽取到对应的状态类中。每个状态类负责封装该状态下对象应表现的行为逻辑。</li>
+<li><strong>上下文委托</strong>：原始对象（称为上下文<code>Context</code>）不再自行处理所有状态相关的行为，而是：
+<ul>
+<li>持有一个表示当前状态的状态对象引用</li>
+<li>将所有状态相关的操作委托给当前状态对象处理</li>
+<li>提供状态切换接口供状态对象修改当前状态</li>
+</ul></li>
+<li><strong>状态转换机制</strong>：状态对象在执行行为逻辑后，可以：
+<ul>
+<li>保持当前状态不变（当无需切换时）</li>
+<li>通过上下文切换到其他状态（当满足转换条件时）</li>
+</ul></li>
+</ol>
+<p>显然需要定义一个状态接口，使得上下文可以方便的引用和切换不同状态。状态接口中需要声明哪些方法，<strong>通常取决于具体的业务场景以及上下文对象的行为变化</strong>。例如上文中的自动化软件的例子，程序仅根据所处状态决定执行逻辑，而不涉及复杂的业务操作。那可以仅简单声明一个<code>handle</code>方法。</p>
+<p>然而，在更复杂的业务系统中，比如订单系统。订单有几种状态：待支付、已支付、已发货、已完成等。每种状态下，对某些操作（如支付、取消、发货）的响应是不同的。此时仅通过状态无法确定执行逻辑，还需要额外根据<strong>每一种可能的业务操作</strong>。因此需要在状态接口中声明<code>pay()</code>、<code>cancel()</code>、<code>ship()</code>等方法。</p>
+<p>至此，<strong>有限个状态、状态下的行为</strong>已经定义完毕，还需要实现状态转移规则。每个具体状态中，需要根据执行逻辑的结果，切换到下一个状态，或继续保持当前状态。要在状态类中切换上下文的状态，那么需要上下文类需要提供<code>public setter</code>。而状态类如何引用上下文对象，有两个策略：通过构造函数和成员变量引用、通过方法的入参引用。如果通过成员变量引用，意味着状态对象和某个具体上下文对象绑定了，无法构建上下文和状态多对多的关系，也不利于复用状态对象。所以笔者还是更建议通过方法入参传递上下文对象引用。</p>
+<p>基于上述描述，可以给出如下类图。</p>
 <pre><code class=" mermaid">classDiagram
     direction LR
-
-    class Publisher &#123;
-	    -subscribers: Subscriber[]
-        +subscribe(Subscriber s)
-        +unsubscribe(Subscriber s)
-        +notifySubscribers()
+    class Context &#123;
+        -state: State
+        +Context(initialState: State)
+        +setState(state: State)
+        +request()
     &#125;
 
-    class Subscriber &#123;
+    class State &#123;
         &lt;&lt;interface&gt;&gt;
-        +update()
+        +handle(context: Context)
     &#125;
 
-    class ConcreteSubscriber &#123;
-        +update()
-    &#125;
-
-    class client &#123;
+    class ConcreteState &#123;
+        +handle(context: Context)
     &#125;
     
-    Subscriber &lt;|-- ConcreteSubscriber
-    Publisher o--&gt; Subscriber
-    client --&gt; Publisher
-    client --&gt; ConcreteSubscriber
+    class Client &#123;
+    &#125;
 
+    Context --o State : 维护当前状态
+    State &lt;|-- ConcreteState
+    Context &lt;-- ConcreteState
+    Client --&gt; Context
+    Client --&gt; ConcreteState
 </code></pre>
-<p>回头看，开发中常用的回调函数本质也是观察者模式：发起方通过设置回调函数（如为异步任务指定完成后的处理逻辑），相当于<strong>隐式添加订阅</strong>；当特定事件（如异步任务完成）触发时，任务内部调用该回调函数，即完成了对订阅者的<strong>通知</strong>。以
-<code>Java</code>
-为例，设置回调函数通常体现为传入一个函数式接口的匿名实现类（如
-<code>Runnable</code>、<code>Consumer&lt;T&gt;</code>），其核心逻辑与观察者模式机制一致。可以说<strong>回调函数是观察者模式的一种简化实现方式</strong>。</p>
-<p>而发布者和订阅者的一对多星型拓扑关系，和之前介绍的<strong>中介者模式</strong>很像。其实也很容易区分。中介者模式中，组件间<strong>不直接通信</strong>，所有交互必须通过中介者这个中心节点进行转发（中介者本身承担逻辑协调与消息路由职能）；而观察者模式中，订阅者之间<strong>无需相互感知</strong>，发布者仅负责直接通知所有观察者，不介入它们之间的具体交互逻辑。</p>
 <h2 id="总结">总结</h2>
-<p>观察者模式中，发布者储存需要通知的订阅者，并在特定状态时，通知储存的订阅者。</p>
-<p>回调函数本质是观察者模式的一种简单实现。</p>
+<p>当代码中出现复杂的<code>if/switch</code>语句，可以考虑使用状态模式。</p>
+<p>状态模式中，代码中的不同<code>if/switch</code>分支被抽取为状态类。在原上下文对象中通过引用和切换状态对象，来表现出不同行为。</p>
+<p>每个状态类中，需要定义具体的执行逻辑，并根据执行结果决定下一个状态。</p>
 
                 
               </div>
@@ -369,8 +378,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Design-Pattern-Subscriber</div>
-      <div>http://dracoyus.github.io/2025/10/29/Design-Pattern-Observer/</div>
+      <div>Design-Pattern-State</div>
+      <div>http://dracoyus.github.io/2025/11/07/Design-Pattern-State/</div>
     </div>
     <div class="license-meta">
       
@@ -382,7 +391,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年10月29日</div>
+          <div>2025年11月7日</div>
         </div>
       
       
@@ -414,18 +423,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/11/07/Design-Pattern-State/" title="Design-Pattern-State">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Design-Pattern-State</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/09/09/Design-Pattern-Memento/" title="Design-Pattern-Memento">
-                        <span class="hidden-mobile">Design-Pattern-Memento</span>
+                      <a href="/2025/10/29/Design-Pattern-Observer/" title="Design-Pattern-Subscriber">
+                        <span class="hidden-mobile">Design-Pattern-Subscriber</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
