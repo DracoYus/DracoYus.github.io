@@ -16,15 +16,15 @@
   <meta name="author" content="DracoYu">
   <meta name="keywords" content="学习笔记,Java,JavaScript,后端,前端">
   
-    <meta name="description" content="单例模式(Singleton)是一种创建型模式。目的是，确保类只有一个实例， 并提供一个访问该实例的全局节点。 会产生这样的需求，理由也十分自然：在全局范围内使用同一个对象或资源，方便统一配置与管理。典型的场景如：配置类、日志类、资源管理类（数据库连接池）等。 在SpringBoot常见的分层架构中，Controller层、Service层通常不需要多个实例，因其成员变量通常为对其他Serv">
+    <meta name="description" content="策略模式（Strategy Pattern）是一种行为型设计模式，它定义了一系列算法（策略），并将每个算法封装起来，使它们可以互相替换，且不影响客户端的使用。 场景 在日常生活中，做一件事通常有多种方式。例如点外卖时，可以选择距离优先，好评优先对商家进行排序。从代码开发角度，如果存在多种排序规则，则可以定义一个排序方法，接受排序规则作为入参，一段典型的代码如下： 12345678910pu">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Design-Pattern-Singleton">
-<meta property="og:url" content="http://dracoyus.github.io/2024/05/15/Design-Pattern-Singleton/index.html">
+<meta property="og:title" content="Design-Pattern-Strategy">
+<meta property="og:url" content="http://dracoyus.github.io/2025/11/19/Design-Pattern-Strategy/index.html">
 <meta property="og:site_name" content="DracoYu&#39;s MindCache">
-<meta property="og:description" content="单例模式(Singleton)是一种创建型模式。目的是，确保类只有一个实例， 并提供一个访问该实例的全局节点。 会产生这样的需求，理由也十分自然：在全局范围内使用同一个对象或资源，方便统一配置与管理。典型的场景如：配置类、日志类、资源管理类（数据库连接池）等。 在SpringBoot常见的分层架构中，Controller层、Service层通常不需要多个实例，因其成员变量通常为对其他Serv">
+<meta property="og:description" content="策略模式（Strategy Pattern）是一种行为型设计模式，它定义了一系列算法（策略），并将每个算法封装起来，使它们可以互相替换，且不影响客户端的使用。 场景 在日常生活中，做一件事通常有多种方式。例如点外卖时，可以选择距离优先，好评优先对商家进行排序。从代码开发角度，如果存在多种排序规则，则可以定义一个排序方法，接受排序规则作为入参，一段典型的代码如下： 12345678910pu">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2024-05-15T03:00:24.000Z">
-<meta property="article:modified_time" content="2025-09-09T08:35:07.055Z">
+<meta property="article:published_time" content="2025-11-19T03:21:11.000Z">
+<meta property="article:modified_time" content="2025-11-21T07:37:43.572Z">
 <meta property="article:author" content="DracoYu">
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="DesignPattern">
@@ -32,7 +32,7 @@
   
   
   
-  <title>Design-Pattern-Singleton - DracoYu&#39;s MindCache</title>
+  <title>Design-Pattern-Strategy - DracoYu&#39;s MindCache</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -198,7 +198,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Design-Pattern-Singleton"></span>
+            <span id="subtitle" data-typed-text="Design-Pattern-Strategy"></span>
           
         </div>
 
@@ -209,8 +209,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2024-05-15 11:00" pubdate>
-          2024年5月15日 上午
+        <time datetime="2025-11-19 11:21" pubdate>
+          2025年11月19日 上午
         </time>
       </span>
     
@@ -221,7 +221,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.6k 字
+          967 字
         
       </span>
     
@@ -232,7 +232,7 @@
         
         
         
-          14 分钟
+          9 分钟
         
       </span>
     
@@ -269,39 +269,51 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Design-Pattern-Singleton</h1>
+            <h1 id="seo-header">Design-Pattern-Strategy</h1>
             
             
               <div class="markdown-body">
                 
-                <p><strong>单例模式<code>(Singleton)</code></strong>是一种创建型模式。目的是，<strong>确保类只有一个实例</strong>，
-并提供一个<strong>访问该实例的全局节点</strong>。</p>
-<p>会产生这样的需求，理由也十分自然：在全局范围内使用同一个对象或资源，方便统一配置与管理。典型的场景如：配置类、日志类、资源管理类（数据库连接池）等。</p>
-<p>在<code>SpringBoot</code>常见的分层架构中，<code>Controller</code>层、<code>Service</code>层通常不需要多个实例，因其成员变量通常为对其他<code>Service</code>的引用，几乎不包含状态信息。如果有多个实例，实例间也无法体现差异。因此在<code>Spring</code>框架中，容器中的各种<code>bean</code>默认是单实例的。并通过<code>IoC</code>和<code>DI</code>，去组织不同单实例间的依赖关系。需要注意单实例不一定是单例模式，因为其并不是全局范围都能访问，而是通过<code>DI</code>组织了依赖关系。但如果是通过<code>BeanFactory.getBean()</code>来获取单实例，则和单例模式十分相似。</p>
-<p>不同实例间的差异体现在其成员变量上。如果创建的多个实例成员变量都相同，并且实例在全局范围内有比较多使用的地方，则可以考虑使用单例模式。</p>
-<h2 id="单例模式vs静态公共方法">单例模式VS静态公共方法</h2>
-<p>如果为了提供一些方法和变量的全局访问权限，在<code>java</code>中可以将这些方法和变量设置为<code>public static</code>，可以得到类似的效果。静态公共方法可以在任意位置通过<strong>类名.方法名</strong>调用。类的加载机制又保证了，在不同位置调用的方法，引用的都是相同的静态成员变量，模拟了只有一个实例的效果。</p>
-<p>但这么做也多了很多限制：静态方法中只能引用静态变量；静态变量属于类而不是实例，无法被继承，也无法实现接口；无法通过多态来进行动态调用；无法控制其生命周期；无法进行垃圾回收；无法实现延迟初始化等等。</p>
-<p>由于单例模式比静态公共方法灵活得多，因此更多使用单例模式来达成全局访问的效果。</p>
-<h2 id="单例模式vs全局变量">单例模式VS全局变量</h2>
-<p>在一些面向对象语言中，如<code>C++</code>、<code>Python</code>，可以通过全局变量的方式来建立全局访问的效果。通常我们认为全局变量是需要避免的。而单例模式，很多人认为其是对全局变量的一种包装，因此也反对使用单例模式。例如<code>C++ Core Guidelines</code>中就不建议使用<a
-target="_blank" rel="noopener" href="https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#Ri-singleton">单例模式</a>。</p>
-<p>使用全局变量的缺点同样也是单例模式的缺点。例如全局范围内的访问和修改可能会导致全局变量的状态无法估计；需要考虑并发访问，线程安全性；使得模块之间的依赖关系变得隐匿（如两个模块共同与全局变量进行了交互），造成了模块间的耦合；使得单元测试变得更困难，无法<code>mock</code>替换；<code>C++</code>中无法保证全局变量初始化的顺序。</p>
-<p>可以看出，这些缺点很多都与全局的写权限有关。因此单例模式如果不提供写的权限，或者不包含状态类型的变量（状态通常会在程序运行中改变），或者本身就是不可变对象，那么可以很好地规避上述缺点。此时单例模式的使用通常是合适且优雅的。</p>
-<p>网上关于设计模式、反设计模式的讨论还有很多。程序员需要根据实际情况，来决定是否使用，而不是一昧支持或反对。</p>
-<h2 id="单例模式的通用实现">单例模式的通用实现</h2>
-<p>单例模式在不同语言中，根据每种语言的特性，有着不同的实现。在不同实现中，有一些共同之处。综合这些共同之处，便是一个通用实现。</p>
-<p>为了符合单例模式<strong>确保类只有一个实例</strong>的特性，需要限制程序员在其他地方主动<code>new</code>实例的权限，把类的构造函数设置为<code>private</code>。而<strong>全局访问</strong>的特性，通常会在类内定义一个<code>public static</code>静态方法，返回一个类对象。</p>
-<p>这个单例对象需要被某个变量引用。基于其全局唯一的特性，通常会定义为类的静态变量。并在静态方法中作为方法返回值。</p>
-<p>基于上述描述，可以给出如下<code>java</code>代码：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Singleton</span> &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Singleton</span> <span class="hljs-variable">INSTANCE</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Singleton</span>();<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-title function_">Singleton</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-comment">// 私有构造方法防止外部实例化</span><br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Singleton <span class="hljs-title function_">getInstance</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">return</span> INSTANCE;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-<p>其中，静态变量<code>INSTANCE</code>通过直接赋值来进行初始化。对于静态变量，初始化会在类被加载时执行。而<strong>类的加载机制</strong>保证了线程安全性，<code>new Singleton()</code>只会被执行一次，确保全局只会存在一个实例。</p>
-<p>由于上述过程中，类被加载时就会完成实例的初始化，初始化的时机比较早，此方法被称作“<strong>饿汉式</strong>"。</p>
-<p>与之相对的是，在<code>getInstance()</code>被首次调用时才完成初始化，初始化时机更晚，被称作“<strong>懒汉式</strong>”。在懒汉式中。由于静态方法可能被多线程同时调用，多个线程只能有一个完成对象的创建和初始化，需要在方法中通过锁机制，来保证线程安全性。关于如何实现线程安全太过细节，为了避免掩盖单例模式的特点，在此不再赘述。</p>
+                <p><strong>策略模式（Strategy
+Pattern）</strong>是一种<strong>行为型设计模式</strong>，它定义了一系列<strong>算法（策略）</strong>，并将每个算法封装起来，使它们可以<strong>互相替换</strong>，且<strong>不影响客户端的使用</strong>。</p>
+<h2 id="场景">场景</h2>
+<p>在日常生活中，做一件事通常有多种方式。例如点外卖时，可以选择距离优先，好评优先对商家进行排序。从代码开发角度，如果存在多种排序规则，则可以定义一个排序方法，接受排序规则作为入参，一段典型的代码如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> List&lt;Merchant&gt; <span class="hljs-title function_">merchant_sort</span><span class="hljs-params">(List&lt;Merchant&gt; merchants, String strategy)</span> &#123;<br>    <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;FASTEST&quot;</span>.equals(strategy)) &#123;<br>        <span class="hljs-comment">// 最快配送排序</span><br>    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;RATING&quot;</span>.equals(strategy)) &#123;<br>        <span class="hljs-comment">// 商家评分排序</span><br>    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;RANKING&quot;</span>.equals(strategy)) &#123;<br>        <span class="hljs-comment">// 销量排序</span><br>    &#125;<br>    ....<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>但后续需要新增或修改排序规则时，就需要修改上述方法，这不符合开闭原则。并且难以维护，所有逻辑混在一起，逻辑复杂时难以阅读。</p>
+<h2 id="策略模式">策略模式</h2>
+<p>既然已经想到可以将排序规则字符串作为入参传入，那么很容易进一步联想到：也可以直接把算法本身作为入参传入。在<code>C</code>语言中，这种将方法作为参数传入的特性被称为<strong>可变方法</strong>，其本质是通过<strong>函数指针</strong>来实现<strong>动态调用不同的函数</strong>。而在<code>Java</code>中，由于<strong>万事万物皆对象</strong>的特性，方法无法单独存在，必须依托对象作为载体进行传入。为了让调用方能够灵活切换不同的方法，自然需要先定义一个策略接口，每当新增一个算法时，就对应新增一个实现该接口的具体类。</p>
+<p>至此已将策略模式中的角色介绍完毕，十分简洁的模式结构。规范下术语，定义不同算法签名的接口称为策略接口；其具体实现类称为具体策略；调用策略的类称为上下文；客户端通过将具体策略传递给上下文，来达到运行时切换上下类实现某功能的算法。各个角色的关系类图如下。</p>
+<pre><code class=" mermaid">classDiagram
+    direction LR
+    class Context &#123;
+        -strategy: Strategy
+        +setStrategy(strategy: Strategy)
+        +method()
+    &#125;
+
+    class Strategy &#123;
+        &lt;&lt;interface&gt;&gt;
+        +execute(data: Data)
+    &#125;
+
+    class ConcreteStrategy &#123;
+        +execute(data: Data)
+    &#125;
+    
+    class Client &#123;
+    &#125;
+
+    Context --o Strategy
+    Strategy &lt;|-- ConcreteStrategy
+    Client --&gt; Context
+    Client --&gt; ConcreteStrategy
+</code></pre>
+<p>上下文可以通过成员变量引用策略，也可以通过方法参数切换不同具体策略，均是可以的。类图中使用的是通过成员变量绑定了具体策略。</p>
+<p>若策略接口仅声明一个方法，它便成为<code>Java</code>中的函数式接口。对于那些以函数式接口作为参数的方法，若策略仅在局部使用、不会在多处被重复调用，甚至无需显式定义策略实现类——可直接在调用上下文方法时，通过匿名实现类快速实现策略逻辑。例如<code>JDK</code>中的<code>Comparator</code>函数式接口和<code>Collections</code>的<code>sort</code>方法。再进一步，可以用<code>lambda</code>表达式替换匿名实现类。</p>
+<p>从结构与使用方式上看，策略模式与状态模式高度相似。语义层面而言，不同状态下的行为逻辑，本质上可视作策略的具体表现。二者最核心的差异在于：状态模式中，状态对象需感知其他状态的存在，并可能在执行逻辑时主动切换至其他状态；而策略模式里的策略对象彼此独立、互不感知。</p>
 <h2 id="总结">总结</h2>
-<p>单例模式是一种创建型模式，旨在确保一个类只有一个实例，并提供一个全局访问点。</p>
-<p>由于单例模式的全局性，通常会把其与全局变量比较。全局变量的缺点，可能在单例模式上也存在。通常可以通过在单例中不包含状态或提供改变状态的方法来避免这些缺点。程序员需要根据实际情况判断场景是否适合单例模式。</p>
-<p>单例模式的通用实现的特点是，把构造函数私有化，以及提供一个公开静态函数。前者支持<strong>唯一性</strong>，后者提供<strong>全局访问性</strong>。</p>
+<p>策略模式定义策略接口，使得上下文可以动态切换不同的具体策略。</p>
+<p>在<code>java</code>中，若策略仅在局部使用，可以通过函数式接口、<code>lambda</code>表达式替换简化。</p>
 
                 
               </div>
@@ -349,8 +361,8 @@ target="_blank" rel="noopener" href="https://isocpp.github.io/CppCoreGuidelines/
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Design-Pattern-Singleton</div>
-      <div>http://dracoyus.github.io/2024/05/15/Design-Pattern-Singleton/</div>
+      <div>Design-Pattern-Strategy</div>
+      <div>http://dracoyus.github.io/2025/11/19/Design-Pattern-Strategy/</div>
     </div>
     <div class="license-meta">
       
@@ -362,7 +374,7 @@ target="_blank" rel="noopener" href="https://isocpp.github.io/CppCoreGuidelines/
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2024年5月15日</div>
+          <div>2025年11月19日</div>
         </div>
       
       
@@ -394,18 +406,12 @@ target="_blank" rel="noopener" href="https://isocpp.github.io/CppCoreGuidelines/
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2024/07/03/Design-Pattern-Adapter/" title="Design-Pattern-Adapter">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Design-Pattern-Adapter</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2024/04/23/SpringBoot-Term-Definaition-BeanFactory/" title="SpringBoot-Term-Definaition-BeanFactory">
-                        <span class="hidden-mobile">SpringBoot-Term-Definaition-BeanFactory</span>
+                      <a href="/2025/11/07/Design-Pattern-State/" title="Design-Pattern-State">
+                        <span class="hidden-mobile">Design-Pattern-State</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -469,6 +475,21 @@ target="_blank" rel="noopener" href="https://isocpp.github.io/CppCoreGuidelines/
 
 
 
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.utils.listenDOMLoaded(function() {
+      Fluid.events.registerRefreshCallback(function() {
+        if ('mermaid' in window) {
+          mermaid.init();
+        }
+      });
+    });
+  });
+</script>
 
 
 
