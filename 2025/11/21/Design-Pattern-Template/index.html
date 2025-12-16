@@ -16,15 +16,15 @@
   <meta name="author" content="DracoYu">
   <meta name="keywords" content="学习笔记,Java,JavaScript,后端,前端">
   
-    <meta name="description" content="策略模式（Strategy Pattern）是一种行为型设计模式，它定义了一系列算法（策略），并将每个算法封装起来，使它们可以互相替换，且不影响客户端的使用。 场景 在日常生活中，做一件事通常有多种方式。例如点外卖时，可以选择距离优先，好评优先对商家进行排序。从代码开发角度，如果存在多种排序规则，则可以定义一个排序方法，接受排序规则作为入参，一段典型的代码如下： 12345678910pu">
+    <meta name="description" content="模板模式（Template Pattern）是一种行为型设计模式，其核心思想是：在抽象父类中定义一个操作的算法骨架（模板），将部分步骤的具体实现延迟到子类中完成。通过这种方式，子类可以在不改变算法整体结构的前提下，重新定义算法中的某些特定步骤。 场景 假设需要生成三种格式的报表（PDF&#x2F;Excel&#x2F;HTML），初始方案简单定义了三个独立类分别处理数据生成与报表渲染。 12345678910">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Design-Pattern-Strategy">
-<meta property="og:url" content="http://dracoyus.github.io/2025/11/19/Design-Pattern-Strategy/index.html">
+<meta property="og:title" content="Design-Pattern-Template">
+<meta property="og:url" content="http://dracoyus.github.io/2025/11/21/Design-Pattern-Template/index.html">
 <meta property="og:site_name" content="DracoYu&#39;s MindCache">
-<meta property="og:description" content="策略模式（Strategy Pattern）是一种行为型设计模式，它定义了一系列算法（策略），并将每个算法封装起来，使它们可以互相替换，且不影响客户端的使用。 场景 在日常生活中，做一件事通常有多种方式。例如点外卖时，可以选择距离优先，好评优先对商家进行排序。从代码开发角度，如果存在多种排序规则，则可以定义一个排序方法，接受排序规则作为入参，一段典型的代码如下： 12345678910pu">
+<meta property="og:description" content="模板模式（Template Pattern）是一种行为型设计模式，其核心思想是：在抽象父类中定义一个操作的算法骨架（模板），将部分步骤的具体实现延迟到子类中完成。通过这种方式，子类可以在不改变算法整体结构的前提下，重新定义算法中的某些特定步骤。 场景 假设需要生成三种格式的报表（PDF&#x2F;Excel&#x2F;HTML），初始方案简单定义了三个独立类分别处理数据生成与报表渲染。 12345678910">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-11-19T03:21:11.000Z">
-<meta property="article:modified_time" content="2025-11-21T07:37:43.572Z">
+<meta property="article:published_time" content="2025-11-21T07:40:45.000Z">
+<meta property="article:modified_time" content="2025-12-16T06:40:41.062Z">
 <meta property="article:author" content="DracoYu">
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="DesignPattern">
@@ -32,7 +32,7 @@
   
   
   
-  <title>Design-Pattern-Strategy - DracoYu&#39;s MindCache</title>
+  <title>Design-Pattern-Template - DracoYu&#39;s MindCache</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -198,7 +198,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Design-Pattern-Strategy"></span>
+            <span id="subtitle" data-typed-text="Design-Pattern-Template"></span>
           
         </div>
 
@@ -209,8 +209,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-11-19 11:21" pubdate>
-          2025年11月19日 上午
+        <time datetime="2025-11-21 15:40" pubdate>
+          2025年11月21日 下午
         </time>
       </span>
     
@@ -221,7 +221,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          967 字
+          1.3k 字
         
       </span>
     
@@ -232,7 +232,7 @@
         
         
         
-          9 分钟
+          11 分钟
         
       </span>
     
@@ -269,51 +269,38 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Design-Pattern-Strategy</h1>
+            <h1 id="seo-header">Design-Pattern-Template</h1>
             
             
               <div class="markdown-body">
                 
-                <p><strong>策略模式（Strategy
-Pattern）</strong>是一种<strong>行为型设计模式</strong>，它定义了一系列<strong>算法（策略）</strong>，并将每个算法封装起来，使它们可以<strong>互相替换</strong>，且<strong>不影响客户端的使用</strong>。</p>
+                <p>模板模式（Template
+Pattern）是一种<strong>行为型设计模式</strong>，其核心思想是：<strong>在抽象父类中定义一个操作的算法骨架（模板），将部分步骤的具体实现延迟到子类中完成</strong>。通过这种方式，子类可以在不改变算法整体结构的前提下，重新定义算法中的某些特定步骤。</p>
 <h2 id="场景">场景</h2>
-<p>在日常生活中，做一件事通常有多种方式。例如点外卖时，可以选择距离优先，好评优先对商家进行排序。从代码开发角度，如果存在多种排序规则，则可以定义一个排序方法，接受排序规则作为入参，一段典型的代码如下：</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> List&lt;Merchant&gt; <span class="hljs-title function_">merchant_sort</span><span class="hljs-params">(List&lt;Merchant&gt; merchants, String strategy)</span> &#123;<br>    <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;FASTEST&quot;</span>.equals(strategy)) &#123;<br>        <span class="hljs-comment">// 最快配送排序</span><br>    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;RATING&quot;</span>.equals(strategy)) &#123;<br>        <span class="hljs-comment">// 商家评分排序</span><br>    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;RANKING&quot;</span>.equals(strategy)) &#123;<br>        <span class="hljs-comment">// 销量排序</span><br>    &#125;<br>    ....<br>&#125;<br></code></pre></td></tr></table></figure>
-<p>但后续需要新增或修改排序规则时，就需要修改上述方法，这不符合开闭原则。并且难以维护，所有逻辑混在一起，逻辑复杂时难以阅读。</p>
-<h2 id="策略模式">策略模式</h2>
-<p>既然已经想到可以将排序规则字符串作为入参传入，那么很容易进一步联想到：也可以直接把算法本身作为入参传入。在<code>C</code>语言中，这种将方法作为参数传入的特性被称为<strong>可变方法</strong>，其本质是通过<strong>函数指针</strong>来实现<strong>动态调用不同的函数</strong>。而在<code>Java</code>中，由于<strong>万事万物皆对象</strong>的特性，方法无法单独存在，必须依托对象作为载体进行传入。为了让调用方能够灵活切换不同的方法，自然需要先定义一个策略接口，每当新增一个算法时，就对应新增一个实现该接口的具体类。</p>
-<p>至此已将策略模式中的角色介绍完毕，十分简洁的模式结构。规范下术语，定义不同算法签名的接口称为策略接口；其具体实现类称为具体策略；调用策略的类称为上下文；客户端通过将具体策略传递给上下文，来达到运行时切换上下类实现某功能的算法。各个角色的关系类图如下。</p>
-<pre><code class=" mermaid">classDiagram
-    direction LR
-    class Context &#123;
-        -strategy: Strategy
-        +setStrategy(strategy: Strategy)
-        +method()
-    &#125;
-
-    class Strategy &#123;
-        &lt;&lt;interface&gt;&gt;
-        +execute(data: Data)
-    &#125;
-
-    class ConcreteStrategy &#123;
-        +execute(data: Data)
-    &#125;
-    
-    class Client &#123;
-    &#125;
-
-    Context --o Strategy
-    Strategy &lt;|-- ConcreteStrategy
-    Client --&gt; Context
-    Client --&gt; ConcreteStrategy
-</code></pre>
-<p>上下文可以通过成员变量引用策略，也可以通过方法参数切换不同具体策略，均是可以的。类图中使用的是通过成员变量绑定了具体策略。</p>
-<p>若策略接口仅声明一个方法，它便成为<code>Java</code>中的函数式接口。对于那些以函数式接口作为参数的方法，若策略仅在局部使用、不会在多处被重复调用，甚至无需显式定义策略实现类——可直接在调用上下文方法时，通过匿名实现类快速实现策略逻辑。例如<code>JDK</code>中的<code>Comparator</code>函数式接口和<code>Collections</code>的<code>sort</code>方法。再进一步，可以用<code>lambda</code>表达式替换匿名实现类。</p>
-<p>从结构与使用方式上看，策略模式与状态模式高度相似。语义层面而言，不同状态下的行为逻辑，本质上可视作策略的具体表现。二者最核心的差异在于：状态模式中，状态对象需感知其他状态的存在，并可能在执行逻辑时主动切换至其他状态；而策略模式里的策略对象彼此独立、互不感知。</p>
+<p>假设需要生成三种格式的报表（<code>PDF/Excel/HTML</code>），初始方案简单定义了三个独立类分别处理数据生成与报表渲染。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">PdfReportGenerator</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">generate</span><span class="hljs-params">()</span> &#123;<br>        List&lt;String&gt; rawData = fetchDataFromDB();<br>        List&lt;String&gt; processedData = processData(rawData);<br>        renderPdf(processedData);<br>        saveToFile();<br>    &#125;<br><br>    <span class="hljs-keyword">private</span> List&lt;String&gt; <span class="hljs-title function_">fetchDataFromDB</span><span class="hljs-params">()</span> &#123;<br>        ...<br>    &#125;<br><br>    <span class="hljs-keyword">private</span> List&lt;String&gt; <span class="hljs-title function_">processData</span><span class="hljs-params">(List&lt;String&gt; rawData)</span> &#123;<br>        ...<br>    &#125;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">renderPdf</span><span class="hljs-params">(List&lt;String&gt; processedData)</span> &#123;<br>        ...<br>    &#125;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">saveToFile</span><span class="hljs-params">()</span> &#123;<br>        ...<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ExcelReportGenerator</span> &#123;...&#125;<br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">HtmlReportGenerator</span> &#123;...&#125;<br></code></pre></td></tr></table></figure>
+<p>对比三个类的代码，其中一部分代码是重复冗余的——所有报表的生成流程相同：</p>
+<ol type="1">
+<li>连接数据库获取数据</li>
+<li>处理数据（过滤、排序、计算）</li>
+<li>渲染为指定格式</li>
+<li>输出文件</li>
+</ol>
+<p>而客户端在调用生成器的方法时，不同生成器所属的类不同，因此可能要写多遍重复的调用代码。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-type">PdfReportGenerator</span> <span class="hljs-variable">pdfGenerator</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">PdfReportGenerator</span>();<br>pdfGenerator.generate();<br><br><span class="hljs-type">ExcelReportGenerator</span> <span class="hljs-variable">excelGenerator</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">ExcelReportGenerator</span>();<br>excelGenerator.generate();<br><br><span class="hljs-type">HtmlReportGenerator</span> <span class="hljs-variable">htmlGenerator</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">HtmlReportGenerator</span>();<br>htmlGenerator.generate();<br></code></pre></td></tr></table></figure>
+<p>一个直观的改进思路是，先<strong>定义统一的生成器接口</strong>，再由各具体生成器类实现接口中的方法——这样客户端只需通过接口即可灵活引用各类具体生成器。不过，该方案仍无法解决三个具体生成器类中存在重复代码的问题。</p>
+<h2 id="模板模式">模板模式</h2>
+<p><strong>对于重复的代码和流程，可以将其抽取到一个抽象基类中</strong>。在上例中，就是将生成报表的过程，定义在抽象基类中。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">AbstractReportGenerator</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">generate</span><span class="hljs-params">()</span> &#123;<br>        List&lt;String&gt; rawData = fetchDataFromDB();<br>        List&lt;String&gt; processedData = processData(rawData);<br>        render(processedData);<br>        saveToFile();<br>    &#125;<br>    <br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">abstract</span> List&lt;String&gt; <span class="hljs-title function_">fetchDataFromDB</span><span class="hljs-params">()</span>;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">abstract</span> List&lt;String&gt; <span class="hljs-title function_">processData</span><span class="hljs-params">(List&lt;String&gt; rawData)</span>;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">render</span><span class="hljs-params">(List&lt;String&gt; processedData)</span>；<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">saveToFile</span><span class="hljs-params">()</span>;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>在抽取的流程代码中，<strong>定义了操作流程的框架，依次调用了四个抽象方法</strong>。将方法声明为抽象方法可以强制子类实现其功能，体现不同子类的差异化。如果大部分子类都没明显差别，也可以在基类中提供默认实现，仅在少数子类去重写。</p>
+<p>模板模式包含两个核心角色，<strong>抽象模板类</strong>定义了算法的<strong>骨架</strong>（模板方法），包含一系列按顺序执行的步骤。其中，<strong>不变的步骤</strong>由抽象类自身实现，<strong>可变的步骤</strong>声明为抽象方法，由子类实现。通常会将模板方法声明为
+<code>final</code>，防止子类重写算法的整体结构。<strong>具体子类</strong>实现抽象模板类中定义的抽象方法，为算法的可变步骤提供具体实现。</p>
+<p>至此模板模式已介绍完毕，结构简单得没有绘制类图的必要。模板模式的应用，有一个很有意思的特点：<strong>它在实践中往往悄无声息地落地</strong>。当我们在代码库中发现多个类存在大量重复代码或相似执行逻辑时，自然会想到将这些共性内容抽取到抽象基类中，仅在子类里实现差异化的具体细节。完成这样的改造后，代码结构其实就已经符合模板模式的设计思想了。这一过程的本质，正是模板模式的典型应用场景。硬要细究这两者的差异，模板模式最核心的特征在于定义了一个算法框架，并在框架中依次调用了抽象方法。</p>
+<p>在一些框架中，会有<strong>预留的、可在指定方法前后执行的可重写方法</strong>，称为<strong>钩子函数</strong>。例如在<code>Servlet</code>中重写<code>init</code>和<code>destroy</code>方法，以支持<code>Servlet</code>的初始化和销毁资源。这也是模板模式的一种实践。</p>
+<p>在模板模式的具体实现类中，其对多个抽象方法的实现通常是互相绑定，配套使用的。例如上例中声明的获取数据、处理数据、生成报表、保存文件四个抽象方法，其在实现时不能任意组合。生成<code>pdf</code>的具体类定义的处理数据方法，不该能替换成生成<code>Excel</code>的具体类中的处理数据方法，因为方法的返回值会被作为生成报表过程的入参。而若抽象方法的实现也需要支持能够互相替换任意组合，则可以采取策略模式，直接由调用方传入，而不是在模板方法中在定义抽象方法。</p>
 <h2 id="总结">总结</h2>
-<p>策略模式定义策略接口，使得上下文可以动态切换不同的具体策略。</p>
-<p>在<code>java</code>中，若策略仅在局部使用，可以通过函数式接口、<code>lambda</code>表达式替换简化。</p>
+<p>模板模式将多个类中相同的流程步骤抽取到抽象基类中，形成算法骨架。在算法骨架中调用多个抽象方法，并在具体子类中实现这些抽象方法。</p>
+<p>如果算法骨架中的抽象方法也需要可以替换具体实现，则可以使用策略模式。</p>
 
                 
               </div>
@@ -361,8 +348,8 @@ Pattern）</strong>是一种<strong>行为型设计模式</strong>，它定义�
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Design-Pattern-Strategy</div>
-      <div>http://dracoyus.github.io/2025/11/19/Design-Pattern-Strategy/</div>
+      <div>Design-Pattern-Template</div>
+      <div>http://dracoyus.github.io/2025/11/21/Design-Pattern-Template/</div>
     </div>
     <div class="license-meta">
       
@@ -374,7 +361,7 @@ Pattern）</strong>是一种<strong>行为型设计模式</strong>，它定义�
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年11月19日</div>
+          <div>2025年11月21日</div>
         </div>
       
       
@@ -406,18 +393,12 @@ Pattern）</strong>是一种<strong>行为型设计模式</strong>，它定义�
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2025/11/21/Design-Pattern-Template/" title="Design-Pattern-Template">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Design-Pattern-Template</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/11/07/Design-Pattern-State/" title="Design-Pattern-State">
-                        <span class="hidden-mobile">Design-Pattern-State</span>
+                      <a href="/2025/11/19/Design-Pattern-Strategy/" title="Design-Pattern-Strategy">
+                        <span class="hidden-mobile">Design-Pattern-Strategy</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -481,21 +462,6 @@ Pattern）</strong>是一种<strong>行为型设计模式</strong>，它定义�
 
 
 
-
-
-  <script>
-  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
-    mermaid.initialize({"theme":"default"});
-
-    Fluid.utils.listenDOMLoaded(function() {
-      Fluid.events.registerRefreshCallback(function() {
-        if ('mermaid' in window) {
-          mermaid.init();
-        }
-      });
-    });
-  });
-</script>
 
 
 
