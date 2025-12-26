@@ -1,0 +1,793 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/Memcached.svg">
+  <link rel="icon" href="/img/Memcached.svg">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="DracoYu">
+  <meta name="keywords" content="学习笔记,Java,JavaScript,后端,前端">
+  
+    <meta name="description" content="访问者模式（Visitor）是一种行为型设计模式。其核心思想在于：分离数据结构与数据操作，支持在不修改现有数据结构的前提下，为其扩展新的操作逻辑。 场景 假设需开发一款办公文档处理程序，该文档由多种核心元素构成，具体包括标题、段落、文本、图片等。基于上述各类元素的共性特征，设计并定义了元素接口Element，各类具体元素均为该接口的实现类。 当前需对这些元素执行一系列操作，例如元素导出、格式">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Design-Pattern-Visitor">
+<meta property="og:url" content="http://dracoyus.github.io/2025/12/16/Design-Pattern-Visitor/index.html">
+<meta property="og:site_name" content="DracoYu&#39;s MindCache">
+<meta property="og:description" content="访问者模式（Visitor）是一种行为型设计模式。其核心思想在于：分离数据结构与数据操作，支持在不修改现有数据结构的前提下，为其扩展新的操作逻辑。 场景 假设需开发一款办公文档处理程序，该文档由多种核心元素构成，具体包括标题、段落、文本、图片等。基于上述各类元素的共性特征，设计并定义了元素接口Element，各类具体元素均为该接口的实现类。 当前需对这些元素执行一系列操作，例如元素导出、格式">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2025-12-16T11:28:32.000Z">
+<meta property="article:modified_time" content="2025-12-26T09:58:51.420Z">
+<meta property="article:author" content="DracoYu">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="DesignPattern">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+  
+  <title>Design-Pattern-Visitor - DracoYu&#39;s MindCache</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"dracoyus.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>DracoYu&#39;s MindCache</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Design-Pattern-Visitor"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-12-16 19:28" pubdate>
+          2025年12月16日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          22 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Design-Pattern-Visitor</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p><strong>访问者模式（<code>Visitor</code>）</strong>是一种行为型设计模式。其核心思想在于：分离数据结构与数据操作，支持在不修改现有数据结构的前提下，为其扩展新的操作逻辑。</p>
+<h2 id="场景">场景</h2>
+<p>假设需开发一款办公文档处理程序，该文档由多种核心元素构成，具体包括标题、段落、文本、图片等。基于上述各类元素的共性特征，设计并定义了元素接口<code>Element</code>，各类具体元素均为该接口的实现类。</p>
+<p>当前需对这些元素执行一系列操作，例如元素导出、格式转换、内容字数统计等。由于不同元素对应的操作实现逻辑存在差异，无法在抽象基类中统一定义通用实现，因此需为各类元素分别实现专属的操作逻辑。</p>
+<p>一种直观的思路是将这些操作实现在对应的数据结构中，例如将标题的导出功能实现在标题类内部。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">Element</span> &#123;<br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">export</span><span class="hljs-params">()</span>;<br>&#125;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Title</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Element</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">export</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-comment">// 标题的导出实现</span><br>        ...<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Text</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Element</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">export</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-comment">// 文本的导出实现</span><br>        ...<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>但该实现方式存在明显缺陷，即<strong>数据与操作存在耦合</strong>。关于该实现方式的具体利弊，本文后续将展开详细探讨，此处暂不赘述。若需遵循数据与操作分离的设计原则，则需单独设计数据操作类，暂将其命名为访问者（<code>Visitor</code>）类。后续可将同类型操作（如标题导出、文本导出等）统一封装于该访问者类中。</p>
+<p>在<code>Visitor</code>类中实现各元素的操作方法时，需关注以下要点：操作方法需接收一个入参。若所有数据共用同一个操作方法，该入参通常以<code>Element</code>接口类型传入，此时需在操作方法内部判断入参的实际类型（例如通过<code>instanceof</code>关键字或反射机制实现）。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">ExportVisitor</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">export</span><span class="hljs-params">(Element element)</span> &#123;<br>        <span class="hljs-keyword">if</span> (element <span class="hljs-keyword">instanceof</span> Title) &#123;<br>            <span class="hljs-comment">// 标题的导出实现</span><br>            ...<br>        &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (element <span class="hljs-keyword">instanceof</span> Text) &#123;<br>            <span class="hljs-comment">// 文本的导出实现</span><br>            ...<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>该实现方式不仅繁琐，且当新增数据类型时，需在所有访问者类中新增<code>else</code>分支，直接违反了设计模式中的开闭原则。</p>
+<p>是否可以利用语言特性解决这个问题？例如通过函数重载机制，定义多个同名函数，利用入参类型差异实现区分，从而自动匹配并执行对应的操作实现方法。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">ExportVisitor</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">export</span><span class="hljs-params">(Element element)</span> &#123;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">export</span><span class="hljs-params">(Title title)</span> &#123;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">export</span><span class="hljs-params">(Text text)</span> &#123;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>但该方案并不可行。函数重载属于编译期行为，仅在编译阶段对入参类型进行校验。若调用方法时传入的变量类型为<code>Element</code>接口类型，则仅会匹配并调用入参为<code>Element</code>类型的方法，无法根据变量运行时的实际类型，自动匹配对应的具体导出方法。</p>
+<p>另一种思路是定义不同名称的方法，但本质上只是将类型判断的责任从操作类转移到了客户端，并未从根本上解决问题。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ExportVisitor</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">exportTitle</span><span class="hljs-params">(Title element)</span> &#123;<br>        <span class="hljs-comment">// 标题的导出实现</span><br>        ...<br>    &#125;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">exportText</span><span class="hljs-params">(Text element)</span> &#123;<br>        <span class="hljs-comment">// 文本的导出实现</span><br>        ...<br>    &#125;<br>&#125;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Client</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">methodA</span><span class="hljs-params">()</span>&#123;<br>        ...<br>        <span class="hljs-keyword">if</span> (element <span class="hljs-keyword">instanceof</span> Title)<br>            visitor.exportTitle((Title) element);<br>        <span class="hljs-keyword">if</span> (element <span class="hljs-keyword">instanceof</span> Text)<br>            visitor.exportText((Text) element);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>归根结底，该问题的核心成因在于：<strong>访问者类无法知晓数据的实际类型，却需依据数据类型匹配并执行对应的代码逻辑</strong>。</p>
+<h2 id="访问者模式">访问者模式</h2>
+<p>对于客户端与访问者类而言，数据的实际类型具有不确定性；但在每个具体数据类内部，其自身类型是明确的。因此，可将<strong>根据类型匹配操作</strong>的逻辑委派给数据类承担。</p>
+<p>由此，方法调用方向发生反转：不再是访问者接收数据对象，而是数据对象接收访问者。数据对象明确自身类型，因此能够精准调用访问者中对应的操作方法。</p>
+<p>为确定最终执行的操作方法，需经过两次分派过程，即<strong>双分派</strong>：第一次分派针对数据对象——通常通过接口引用，根据数据对象运行时的实际类型，调用其对应的方法；第二次分派发生在数据对象的方法内部，数据对象根据自身类型，调用访问者类中匹配的操作方法。</p>
+<p>数据对象中用于接收访问者的方法，为保证通用性，其入参通常定义为访问者接口类型。方法体内可通过两种方式实现匹配：一是调用访问者中特定名称的操作方法；二是将自身对象传入访问者中存在多个重载版本的操作方法。双分派设计让编译期静态的重载特性，具备了运行期动态匹配的效果。</p>
+<pre><code class=" mermaid">classDiagram
+    direction TB
+    
+    class Visitor &#123;
+        &lt;&lt;interface&gt;&gt;
+        +visitConcreteElementA(element: ConcreteElementA): void
+        +visitConcreteElementB(element: ConcreteElementB): void
+    &#125;
+
+    class ConcreteVisitorA &#123;
+        +visitConcreteElementA(element: ConcreteElementA): void
+        +visitConcreteElementB(element: ConcreteElementB): void
+    &#125;
+
+    class ConcreteVisitorB &#123;
+        +visitConcreteElementA(element: ConcreteElementA): void
+        +visitConcreteElementB(element: ConcreteElementB): void
+    &#125;
+
+    class Element &#123;
+        &lt;&lt;interface&gt;&gt;
+        +accept(visitor: Visitor): void
+    &#125;
+
+    class ConcreteElementA &#123;
+        +accept(visitor: Visitor): void
+    &#125;
+
+    class ConcreteElementB &#123;
+        +accept(visitor: Visitor): void
+    &#125;
+
+    class Client &#123;
+        -elements: List~Element~
+        +addElement(element: Element): void
+        +removeElement(element: Element): void
+        +accept(visitor: Visitor): void // 遍历所有元素并调用accept
+    &#125;
+
+
+    Visitor &lt;|-- ConcreteVisitorA
+    Visitor &lt;|-- ConcreteVisitorB
+    Element &lt;|-- ConcreteElementA
+    Element &lt;|-- ConcreteElementB
+
+    Client *-- Element
+
+    Element --&gt; Visitor : accept(Visitor) 
+    ConcreteElementA --&gt; Visitor : visitConcreteElementA(this)
+    ConcreteElementB --&gt; Visitor : visitConcreteElementB(this)
+    Client --&gt; Visitor
+</code></pre>
+<p>至此，访问者模式的核心内容已介绍完毕。在学习过程中，笔者发现访问者模式与策略模式<a href="/2025/11/19/Design-Pattern-Strategy/" title="Design-Pattern-Strategy">Design-Pattern-Strategy</a>存在较高相似度：从角色对应关系来看，访问者对应策略模式中的策略角色，元素对应上下文角色；二者的核心目标一致，均为在运行时动态替换不同的算法或操作</p>
+<p>二者的核心区别在于维度差异：策略模式属于<strong>一维</strong>设计，即具体算法的选择仅由策略对象决定，不受上下文影响；访问者模式则属于<strong>二维</strong>设计，具体操作的执行由访问者与元素共同决定。正是这种维度差异，使得访问者模式需要采用看似复杂冗余的结构设计。</p>
+<h2 id="数据和操作分离">数据和操作分离</h2>
+<p>访问者模式复杂的结构设计与调用逻辑，导致笔者对该设计模式的接受度较低，认为其缺乏统一、简洁的代码美感。而这种复杂结构的产生，核心初衷是实现数据与操作的分离。</p>
+<p>若无需严格区分数据与操作，整体实现结构可大幅简化。例如，可将需支持的操作定义在元素接口中，再由各具体元素类分别实现这些操作。调用阶段仅通过多态特性，即可实现具体操作的动态匹配——本质上是将设计维度降低一维，即由客户端直接确定操作的具体类型。</p>
+<p>诸多讲解访问者模式的教材与博客，均强调此类实现方式存在明显缺陷，具体可归纳为三点：一是违反开闭原则，即若需为元素新增操作，需修改元素接口及所有具体元素类的实现；二是违反单一职责原则，元素类既承担数据存储职责，又包含业务操作逻辑，易导致代码臃肿；三是操作逻辑分散，相同业务场景的操作逻辑被拆分至多个元素类的方法中，不利于维护。</p>
+<p>但需客观看待这一问题：若新增操作时，仅在各元素类中新增方法而非修改已有方法，则对现有代码的改动相对可控，并非完全违反开闭原则。此外，代码组织存在多元方案，对于“操作与元素”的二维对应关系，无论按任一维度汇总组织，在语义上均具备合理性。例如，将同类操作聚合管理，或把同一元素的相关操作集中封装，两种方式均符合逻辑。具体选择何种维度，通常可参考三类因素：其一，比较元素与操作的种类数量，按数量更少的维度组织，可减少类的创建成本；其二，考量变化频率，将变动更频繁的维度作为组织依据，能降低长期维护成本；其三，评估不同元素操作间的相似性，按相似性更高的维度组织，可提升代码可读性。</p>
+<p>因此，笔者认为，数据与操作的分离并非必然选择，实际开发中亦存在大量不分离的合理范例。</p>
+<p>在<strong>小型项目、操作固定、需求简单</strong>的场景下，数据与操作耦合具备显著优势：代码逻辑直观、调用方式简便、无需理解额外中间层，甚至可提升开发效率。</p>
+<p>分离设计的本质是<strong>牺牲元素扩展的灵活性，换取操作扩展的灵活性</strong>。具体选型需结合实际场景权衡：<strong>当数据结构稳定、操作数量少且无变化需求时，不分离是最高效的方案；当操作需频繁新增或修改时，分离设计可避免改动数据类代码</strong>。是否采用分离设计，需结合实际需求对各类影响因素综合取舍。</p>
+<h2 id="总结">总结</h2>
+<p>访问者模式的核心是实现数据与操作的分离：为每类操作单独定义访问者类，并在该类中统一实现所有元素对应此类操作的逻辑。</p>
+<p>数据侧需提供接收访问者的接口，并在接口实现中根据自身类型，主动调用访问者类中对应的操作方法。这种调用机制即双分派，其核心价值在于让静态的函数重载具备动态匹配的特性。</p>
+<p>访问者模式的结构设计相对复杂，其优势仅在特定场景下凸显：即当数据结构相对稳定、操作需求频繁变化时，采用该模式才能显著降低维护成本、提升扩展效率。</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/DesignPattern/" class="category-chain-item">DesignPattern</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Java/" class="print-no-link">#Java</a>
+      
+        <a href="/tags/DesignPattern/" class="print-no-link">#DesignPattern</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Design-Pattern-Visitor</div>
+      <div>http://dracoyus.github.io/2025/12/16/Design-Pattern-Visitor/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>DracoYu</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年12月16日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/11/21/Design-Pattern-Template/" title="Design-Pattern-Template">
+                        <span class="hidden-mobile">Design-Pattern-Template</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.utils.listenDOMLoaded(function() {
+      Fluid.events.registerRefreshCallback(function() {
+        if ('mermaid' in window) {
+          mermaid.init();
+        }
+      });
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
