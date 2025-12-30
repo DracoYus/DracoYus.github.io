@@ -7,8 +7,11 @@
 
 <head>
   <meta charset="UTF-8">
+
   <link rel="apple-touch-icon" sizes="76x76" href="/img/Memcached.svg">
   <link rel="icon" href="/img/Memcached.svg">
+  
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
@@ -49,7 +52,7 @@
 <!-- 主题依赖的图标库，不要自行修改 -->
 <!-- Do not modify the link that theme dependent icons -->
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
 
 
 
@@ -70,7 +73,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"dracoyus.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
+    var CONFIG = {"hostname":"dracoyus.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null},"gtag":null,"woyaola":null,"cnzz":null},"search_path":"/local-search.xml","include_content_in_search":true};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -83,7 +86,7 @@
 
 
   
-<meta name="generator" content="Hexo 6.3.0"></head>
+<meta name="generator" content="Hexo 7.3.0"></head>
 
 
 <body>
@@ -277,11 +280,11 @@
                 <p>本篇简单描述生成器模式<code>(Builder)</code>的结构和特征，并着重讨论<strong>为什么要使用生成器模式</strong>的思考。</p>
 <h3 id="场景">场景</h3>
 <p><strong>生成器模式</strong>是一种<strong>创建型模式</strong>，目的是创建一个对象。通常创建对象，可以通过<code>new</code>关键字调用构造函数，并在构造函数中传入需要的参数。这在对象结构简单时十分容易。但当类的成员变量变得众多类型复杂，且某些参数可以不是必输的时候，会变得复杂。在一些语言，例如<code>Python</code>中，可以通过提供方法的<strong>默认参数</strong>，避开这个问题，来满足不同场景下的构造函数调用。</p>
-<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">MyClass</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, name=<span class="hljs-string">&quot;default_name&quot;</span>, age=<span class="hljs-number">0</span></span>):<br>        self.name = name<br>        self.age = age<br><br>obj1 = MyClass()<br>obj2 = MyClass(<span class="hljs-string">&quot;Draco&quot;</span>)<br>obj3 = MyClass(age=<span class="hljs-number">35</span>)<br>obj4 = MyClass(<span class="hljs-string">&quot;Draco&quot;</span>, <span class="hljs-number">35</span>)<br></code></pre></td></tr></table></figure>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">class</span> <span class="hljs-title class_">MyClass</span>:<br>    <span class="hljs-keyword">def</span> <span class="hljs-title function_">__init__</span>(<span class="hljs-params">self, name=<span class="hljs-string">&quot;default_name&quot;</span>, age=<span class="hljs-number">0</span></span>):<br>        <span class="hljs-variable language_">self</span>.name = name<br>        <span class="hljs-variable language_">self</span>.age = age<br><br>obj1 = MyClass()<br>obj2 = MyClass(<span class="hljs-string">&quot;Draco&quot;</span>)<br>obj3 = MyClass(age=<span class="hljs-number">35</span>)<br>obj4 = MyClass(<span class="hljs-string">&quot;Draco&quot;</span>, <span class="hljs-number">35</span>)<br></code></pre></td></tr></table></figure>
 <p><code>Java</code>不支持方法默认参数，但可以通过<strong>函数重载</strong>，定义多个不同参数数量，种类组合的构造函数，来适应这种参数非必输时，使用构造函数来创建对象。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java">MyClass() &#123; ... &#125;<br>MyClass(String name) &#123; ... &#125;<br>MyClass(Integer age) &#123; ... &#125;<br>MyClass(String name, Integer age) &#123; ... &#125;<br></code></pre></td></tr></table></figure>
 <p>但这会出现一些问题。当对象有<code>n</code>个成员变量需要初始化，那么需要
-<span class="math inline">\(2^n\)</span>
+<span class="math inline">2<sup><em>n</em></sup></span>
 个构造函数。这种指数增长的构造函数显然是不合理的。并且当相邻两个参数为相同类型时，去掉其中任意一个参数会导致方法签名完全一致，编译器无法区分两个方法的区别，会显示编译错误。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java">MyClass() &#123; ... &#125;<br>MyClass(String name) &#123; ... &#125;<br>MyClass(String age) &#123; ... &#125; <span class="hljs-comment">// 编译错误，重复定义</span><br>MyClass(String name, String age) &#123; ... &#125;<br></code></pre></td></tr></table></figure>
 <p>又或者不提供所有的构造函数，只提供一个全参的构造函数，如果某个参数无需初始化时，则在构造时将对应参数位置传入<code>null</code>。</p>
@@ -420,7 +423,7 @@
               
                 <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
                   <span class="hint--top hint--rounded" aria-label="BY - 署名">
-                    <i class="iconfont icon-by"></i>
+                    <i class="iconfont icon-cc-by"></i>
                   </span>
                 </a>
               
@@ -561,7 +564,6 @@
     <div class="footer-content">
        <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
     </div>
-  
   
   
   

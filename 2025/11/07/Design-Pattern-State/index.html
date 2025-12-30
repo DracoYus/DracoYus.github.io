@@ -7,8 +7,11 @@
 
 <head>
   <meta charset="UTF-8">
+
   <link rel="apple-touch-icon" sizes="76x76" href="/img/Memcached.svg">
   <link rel="icon" href="/img/Memcached.svg">
+  
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
@@ -49,7 +52,7 @@
 <!-- 主题依赖的图标库，不要自行修改 -->
 <!-- Do not modify the link that theme dependent icons -->
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
 
 
 
@@ -70,7 +73,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"dracoyus.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
+    var CONFIG = {"hostname":"dracoyus.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null},"gtag":null,"woyaola":null,"cnzz":null},"search_path":"/local-search.xml","include_content_in_search":true};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -83,7 +86,7 @@
 
 
   
-<meta name="generator" content="Hexo 6.3.0"></head>
+<meta name="generator" content="Hexo 7.3.0"></head>
 
 
 <body>
@@ -277,7 +280,7 @@
                 <p><strong>状态模式</strong>是一种行为设计模式，它允许对象在其内部状态改变时改变它的行为，对象看起来好像修改了它的类。</p>
 <h2 id="场景">场景</h2>
 <p>笔者曾基于按键精灵开发过一些自动化软件，用于在<code>PC</code>端及移动设备上模拟用户点击与输入操作，从而自动完成游戏内的日常任务。其底层实现逻辑为：程序通过一个持续运行的死循环，定时截取当前屏幕画面，基于图像特征判断当前所处的游戏界面状态（如主菜单、战斗中、战斗结束等），随后依据预先配置的操作策略，执行对应的自动化动作——例如当识别到主菜单界面时，触发“开始战斗”按钮的点击操作；当检测到战斗结束界面时，则自动完成“结算”操作。在具体代码实现层面，这一系列界面状态判断与操作分发的逻辑，最初是通过传统的<code>if</code>条件分支或<code>switch</code>语句结构来完成的。</p>
-<p>对于上述过程，其核心设计思想在于：程序在运行过程中始终仅处于若干种<strong>预定义的有限状态</strong>之一。针对每一种特定的状态，程序会展现出<strong>差异化的行为逻辑</strong>，并且能够在<strong>无需中间过渡过程的情况下</strong>，直接从一个状态切换至另一个状态。然而，状态的变更并非必然发生——程序可能基于当前状态触发向其他状态的<strong>跳转</strong>，也可能保持当前状态<strong>持续运行</strong>。这些预先设定且数量有限的、定义了"在何种状态下应如何转换至其他状态（或维持原状态）"的规则，被统称为<strong>状态转移（<code>State Transition</code>）</strong>。这类程序可以抽象为<strong>有限状态机</strong>。显然，有限状态机由有限个状态、状态下的行为、状态转移规则所定义。</p>
+<p>对于上述过程，其核心设计思想在于：程序在运行过程中始终仅处于若干种<strong>预定义的有限状态</strong>之一。针对每一种特定的状态，程序会展现出<strong>差异化的行为逻辑</strong>，并且能够在<strong>无需中间过渡过程的情况下</strong>，直接从一个状态切换至另一个状态。然而，状态的变更并非必然发生——程序可能基于当前状态触发向其他状态的<strong>跳转</strong>，也可能保持当前状态<strong>持续运行</strong>。这些预先设定且数量有限的、定义了”在何种状态下应如何转换至其他状态（或维持原状态）“的规则，被统称为<strong>状态转移（<code>State Transition</code>）</strong>。这类程序可以抽象为<strong>有限状态机</strong>。显然，有限状态机由有限个状态、状态下的行为、状态转移规则所定义。</p>
 <p>随着向自动化软件添加了更多状态和行为，整个程序变得<strong>难以维护</strong>，原本简洁的<code>if-else</code>或<code>switch-case</code>会膨胀为冗长的嵌套分支。例如：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">if</span> (currentScreen.equals(MAIN_MENU)) &#123;<br>    clickStartBattle();<br>&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (currentScreen.equals(BATTLE_FIELD)) &#123;<br>    <span class="hljs-keyword">if</span> (battlePhase.equals(BATTLE_ONGOING)) &#123;<br>        checkHpAndUseSkill();<br>    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (battlePhase.equals(BATTLE_ENDED)) &#123;<br>        clickSettlement();<br>    &#125;<br>&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (currentScreen.equals(INVENTORY)) &#123;<br>    <span class="hljs-comment">// 使用switch判断选中物品</span><br>    <span class="hljs-keyword">switch</span> (selectedItem) &#123;<br>        <span class="hljs-keyword">case</span> ITEM_POTION:<br>            usePotion();<br>            <span class="hljs-keyword">break</span>;<br>        <span class="hljs-keyword">case</span> ITEM_EQUIPMENT:<br>            equipItem();<br>            <span class="hljs-keyword">break</span>;<br>        <span class="hljs-keyword">default</span>:<br>            System.out.println(<span class="hljs-string">&quot;未识别的物品选择&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 <h2 id="状态模式">状态模式</h2>
@@ -404,7 +407,7 @@
               
                 <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
                   <span class="hint--top hint--rounded" aria-label="BY - 署名">
-                    <i class="iconfont icon-by"></i>
+                    <i class="iconfont icon-cc-by"></i>
                   </span>
                 </a>
               
@@ -560,7 +563,6 @@
     <div class="footer-content">
        <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
     </div>
-  
   
   
   

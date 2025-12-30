@@ -7,8 +7,11 @@
 
 <head>
   <meta charset="UTF-8">
+
   <link rel="apple-touch-icon" sizes="76x76" href="/img/Memcached.svg">
   <link rel="icon" href="/img/Memcached.svg">
+  
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
@@ -49,7 +52,7 @@
 <!-- 主题依赖的图标库，不要自行修改 -->
 <!-- Do not modify the link that theme dependent icons -->
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
 
 
 
@@ -70,7 +73,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"dracoyus.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
+    var CONFIG = {"hostname":"dracoyus.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null},"gtag":null,"woyaola":null,"cnzz":null},"search_path":"/local-search.xml","include_content_in_search":true};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -83,7 +86,7 @@
 
 
   
-<meta name="generator" content="Hexo 6.3.0"></head>
+<meta name="generator" content="Hexo 7.3.0"></head>
 
 
 <body>
@@ -283,7 +286,7 @@
 <p>保存功能也可能会被其他地方使用。例如通过菜单，或者通过快捷键来触发。按照上例的做法，<code>SaveMenu</code>和<code>SaveShortcut</code>中，会有重复的代码，这显然不是个良好的设计。</p>
 <h2 id="命令模式">命令模式</h2>
 <p>对于带来问题的继承，在<a href="/2023/06/27/Design-Pattern-Design-Principle/" title="Design-Pattern-Design-Principle">Design-Pattern-Design-Principle</a>中也讨论过，<strong>组合优于继承</strong>，可以使用组合代替。通过继承扩展的每个具体按钮的功能，可以改为把功能作为变量，由外部传入。这样保存按钮不再是按钮的子类，而是带着保存功能的按钮类。这种形式实际上在桥接模式<a href="/2024/07/26/Design-Pattern-Bridge/" title="Design-Pattern-Bridge">Design-Pattern-Bridge</a>中也见到过。在桥接模式中，抽象和实现互相独立。通过抽象组合实现，来避免类的组合爆炸。在本例中，如果将按钮、快捷键、菜单视为抽象，将具体触发的功能视为实现，某种程度也符合桥接模式中的语义
--- 抽象部分与实现部分分离，可以独立变化，对抽象的调用会委派给实现。</p>
+– 抽象部分与实现部分分离，可以独立变化，对抽象的调用会委派给实现。</p>
 <p>但这还没解决<code>GUI</code>层直接依赖业务逻辑层的问题。不过没有什么不可以通过加一层来解决。引入中间层<strong>命令</strong>，<code>GUI</code>中只需负责调用命令的执行方法，而无需关心是哪个具体命令和执行逻辑。使得<code>GUI</code>和业务逻辑间的依赖关系发生了转变。</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs TEXT">[GUI] ----依赖----&gt; [业务逻辑]<br>[GUI] ----依赖----&gt; [命令] ----依赖----&gt; [业务逻辑]<br></code></pre></td></tr></table></figure>
 <p>这种间接依赖使得业务逻辑层的变动仅影响了命令层，只需要调整命令层的代码，而无需对<code>GUI</code>层进行改动。降低了耦合，也便于两个层独立地进行单元测试。</p>
@@ -419,7 +422,7 @@
               
                 <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
                   <span class="hint--top hint--rounded" aria-label="BY - 署名">
-                    <i class="iconfont icon-by"></i>
+                    <i class="iconfont icon-cc-by"></i>
                   </span>
                 </a>
               
@@ -575,7 +578,6 @@
     <div class="footer-content">
        <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
     </div>
-  
   
   
   

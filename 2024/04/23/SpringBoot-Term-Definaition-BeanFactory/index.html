@@ -7,8 +7,11 @@
 
 <head>
   <meta charset="UTF-8">
+
   <link rel="apple-touch-icon" sizes="76x76" href="/img/Memcached.svg">
   <link rel="icon" href="/img/Memcached.svg">
+  
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
@@ -50,7 +53,7 @@
 <!-- 主题依赖的图标库，不要自行修改 -->
 <!-- Do not modify the link that theme dependent icons -->
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
 
 
 
@@ -71,7 +74,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"dracoyus.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
+    var CONFIG = {"hostname":"dracoyus.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null},"gtag":null,"woyaola":null,"cnzz":null},"search_path":"/local-search.xml","include_content_in_search":true};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -84,7 +87,7 @@
 
 
   
-<meta name="generator" content="Hexo 6.3.0"></head>
+<meta name="generator" content="Hexo 7.3.0"></head>
 
 
 <body>
@@ -297,8 +300,8 @@ instance (a superior alternative to the Singleton design pattern, in
 which the instance is a singleton in the scope of the factory). Which
 type of instance will be returned depends on the bean factory
 configuration: the API is the same. Since Spring 2.0, further scopes are
-available depending on the concrete application context (e.g. "request"
-and "session" scopes in a web environment).</p>
+available depending on the concrete application context (e.g. “request”
+and “session” scopes in a web environment).</p>
 </blockquote>
 <p><code>BeanFactory</code>的最主要的功能，就是储存了一系列<code>BeanDefinition</code>，并且每个都使用了一个唯一的字符串来标识。我们可以通过这个唯一字符串，检索到<code>BeanDefinition</code>，并根据此来决定是使用已有的对象(<code>Singleton</code>)，还是新建一个对象(<code>Prototype</code>)。</p>
 <p>容器中大部分<code>BeanDefinition</code>，都是<code>Singleton</code>类型，因此<code>BeanDefinition</code>和大部分对象也是一一对应的关系，从而字符串到大部分对象也是一一对应的关系。所以常规中，我们会认为容器完成了字符串到对象的映射。</p>
@@ -306,16 +309,16 @@ and "session" scopes in a web environment).</p>
 <p>The point of this approach is that the BeanFactory is a central
 registry of application components, and centralizes configuration of
 application components (no more do individual objects need to read
-properties files, for example). See chapters 4 and 11 of "Expert
-One-on-One J2EE Design and Development" for a discussion of the benefits
+properties files, for example). See chapters 4 and 11 of “Expert
+One-on-One J2EE Design and Development” for a discussion of the benefits
 of this approach.</p>
 </blockquote>
 <p>容器是一种把应用中用到的所有组件，中心化配置的一种设计理念。并引用了一本书中的内容来说明这么做的好处。在此不多赘述。</p>
 <blockquote>
 <p>Note that it is generally better to rely on Dependency Injection
-("push" configuration) to configure application objects through setters
-or constructors, rather than use any form of "pull" configuration like a
-BeanFactory lookup. Spring's Dependency Injection functionality is
+(“push” configuration) to configure application objects through setters
+or constructors, rather than use any form of “pull” configuration like a
+BeanFactory lookup. Spring’s Dependency Injection functionality is
 implemented using this BeanFactory interface and its subinterfaces.</p>
 </blockquote>
 <p>在<code>spring</code>应用中，可以在对象初始化时，或在对象创建完后，通过构造函数或<code>setter</code>方法完成依赖注入，把依赖注册为成员变量。这是更推荐的“推式”注入。与之对应的是在方法内需要用到时，通过<code>BeanFactory</code>的查询方法获取对象，此为不推荐的“拉式”注入。无论是“推式”还是“拉式”，都会使用到<code>BeanFactory</code>来完成功能，因此两者的最大区别是注入的时机。广泛使用的<code>@Resource</code>或<code>@Autowired</code>就是“推式”注入。</p>
@@ -361,12 +364,12 @@ class to consider beans in ancestor factories too.</p>
 <p>The methods in this interface will just respect bean definitions of
 this factory. They will ignore any singleton beans that have been
 registered by other means like
-org.springframework.beans.factory.config.ConfigurableBeanFactory's
+org.springframework.beans.factory.config.ConfigurableBeanFactory’s
 registerSingleton method, with the exception of getBeanNamesForType and
 getBeansOfType which will check such manually registered singletons too.
-Of course, BeanFactory's getBean does allow transparent access to such
+Of course, BeanFactory’s getBean does allow transparent access to such
 special beans as well. However, in typical scenarios, all beans will be
-defined by external bean definitions anyway, so most applications don't
+defined by external bean definitions anyway, so most applications don’t
 need to worry about this differentiation.</p>
 </blockquote>
 <p><code>ListableBeanFactory</code>扩展的功能基本只考虑根据<code>BeanDefinition</code>创建的<code>bean</code>。通过其他方法例如<code>registerSingleton</code>注册进容器的<code>bean</code>，不予考虑。</p>
@@ -402,11 +405,11 @@ factory client methods in the BeanFactory interface.</p>
 application code: Stick to BeanFactory or
 org.springframework.beans.factory.ListableBeanFactory for typical needs.
 This extended interface is just meant to allow for framework-internal
-plug'n'play and for special access to bean factory configuration
+plug’n’play and for special access to bean factory configuration
 methods.</p>
 </blockquote>
 <p><code>ConfigurableBeanFactory</code>是<code>HierarchicalBeanFactory</code>和<code>SingletonBeanRegistry</code>的扩展，额外拓展了对<code>BeanFactory</code>进行配置的功能。</p>
-<p>那么这个配置指什么，查看<code>ConfigurableBeanFactory</code>新增的方法声明，<code>parentBeanFactory</code>、<code>beanClassLoader</code>、<code>tempClassLoader</code>、<code>cacheBeanMetadata</code>...</p>
+<p>那么这个配置指什么，查看<code>ConfigurableBeanFactory</code>新增的方法声明，<code>parentBeanFactory</code>、<code>beanClassLoader</code>、<code>tempClassLoader</code>、<code>cacheBeanMetadata</code>…</p>
 <p>这里出现了很多新的细节与概念，暂且搁置。而且通常用户层面更多使用<code>BeanFactory</code>和<code>ListableBeanFactory</code>访问容器，很少会有对容器进行配置的需求，因此此部分内容只是简单描述。</p>
 <h2 id="autowirecapablebeanfactory">AutowireCapableBeanFactory</h2>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> org.springframework.beans.factory.config<br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">AutowireCapableBeanFactory</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">BeanFactory</span><br></code></pre></td></tr></table></figure>
@@ -506,7 +509,7 @@ pre-instantiate singletons.</p>
               
                 <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
                   <span class="hint--top hint--rounded" aria-label="BY - 署名">
-                    <i class="iconfont icon-by"></i>
+                    <i class="iconfont icon-cc-by"></i>
                   </span>
                 </a>
               
@@ -647,7 +650,6 @@ pre-instantiate singletons.</p>
     <div class="footer-content">
        <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
     </div>
-  
   
   
   

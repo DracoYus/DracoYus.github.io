@@ -19,24 +19,23 @@
   <meta name="author" content="DracoYu">
   <meta name="keywords" content="学习笔记,Java,JavaScript,后端,前端">
   
-    <meta name="description" content="在SpringBoot-Testing提到，使用Junit测试SpringBoot项目时，需要使用@SpringBootTest来创建一个Spring容器。而当@SpringBootTest标注的测试类没有使用内嵌@Configuration注解时，会自动使用@SpringBootConfiguration上的配置。  Automatically searches for a @SpringB">
+    <meta name="description" content="今天，总算给设计模式系列画完了句号。回头看，这个系列的第一篇文章Design-Pattern-Relationships-Between-Objects是2023年6月12日发的，一晃已经过去两年半了。 这两年半的工作里，经验慢慢攒了些，心里也慢慢冒出了困惑：咱们深耕技术的价值，到底在哪儿呢？职场里仿佛是“业务为王”的天下，所有人都围着业务转，技术反倒成了无人问津的小透明。就连技术人自己，好像也">
 <meta property="og:type" content="article">
-<meta property="og:title" content="SpringBoot-Lazy-Initialization">
-<meta property="og:url" content="http://dracoyus.github.io/2023/05/04/SpringBoot-Lazy-Initialization/index.html">
+<meta property="og:title" content="Design-Pattern-Postscript">
+<meta property="og:url" content="http://dracoyus.github.io/2025/12/17/Design-Pattern-Postscript/index.html">
 <meta property="og:site_name" content="DracoYu&#39;s MindCache">
-<meta property="og:description" content="在SpringBoot-Testing提到，使用Junit测试SpringBoot项目时，需要使用@SpringBootTest来创建一个Spring容器。而当@SpringBootTest标注的测试类没有使用内嵌@Configuration注解时，会自动使用@SpringBootConfiguration上的配置。  Automatically searches for a @SpringB">
+<meta property="og:description" content="今天，总算给设计模式系列画完了句号。回头看，这个系列的第一篇文章Design-Pattern-Relationships-Between-Objects是2023年6月12日发的，一晃已经过去两年半了。 这两年半的工作里，经验慢慢攒了些，心里也慢慢冒出了困惑：咱们深耕技术的价值，到底在哪儿呢？职场里仿佛是“业务为王”的天下，所有人都围着业务转，技术反倒成了无人问津的小透明。就连技术人自己，好像也">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2023-05-04T09:32:15.000Z">
-<meta property="article:modified_time" content="2025-08-07T02:18:22.081Z">
+<meta property="article:published_time" content="2025-12-17T06:12:38.000Z">
+<meta property="article:modified_time" content="2025-12-30T12:41:42.207Z">
 <meta property="article:author" content="DracoYu">
 <meta property="article:tag" content="Java">
-<meta property="article:tag" content="SpringBoot">
-<meta property="article:tag" content="Lazy Initialization">
+<meta property="article:tag" content="DesignPattern">
 <meta name="twitter:card" content="summary_large_image">
   
   
   
-  <title>SpringBoot-Lazy-Initialization - DracoYu&#39;s MindCache</title>
+  <title>Design-Pattern-Postscript - DracoYu&#39;s MindCache</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -202,7 +201,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="SpringBoot-Lazy-Initialization"></span>
+            <span id="subtitle" data-typed-text="Design-Pattern-Postscript"></span>
           
         </div>
 
@@ -213,8 +212,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2023-05-04 17:32" pubdate>
-          2023年5月4日 下午
+        <time datetime="2025-12-17 14:12" pubdate>
+          2025年12月17日 下午
         </time>
       </span>
     
@@ -225,7 +224,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          876 字
+          1.2k 字
         
       </span>
     
@@ -236,7 +235,7 @@
         
         
         
-          8 分钟
+          11 分钟
         
       </span>
     
@@ -273,70 +272,21 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">SpringBoot-Lazy-Initialization</h1>
+            <h1 id="seo-header">Design-Pattern-Postscript</h1>
             
             
               <div class="markdown-body">
                 
-                <p>在<a href="/2023/04/13/SpringBoot-Testing/" title="SpringBoot-Testing">SpringBoot-Testing</a>提到，使用<code>Junit</code>测试<code>SpringBoot</code>项目时，需要使用<code>@SpringBootTest</code>来创建一个<code>Spring容器</code>。而当<code>@SpringBootTest</code>标注的测试类没有使用内嵌<code>@Configuration</code>注解时，会自动使用<code>@SpringBootConfiguration</code>上的配置。</p>
-<blockquote>
-<p>Automatically searches for a <span class="citation"
-data-cites="SpringBootConfiguration">@SpringBootConfiguration</span>
-when nested <span class="citation"
-data-cites="Configuration">@Configuration</span> is not used, and no
-explicit classes are specified.</p>
-</blockquote>
-<h2
-id="springbootconfiguration"><code>@SpringBootConfiguration</code></h2>
-<p><code>@SpringBootConfiguration</code>本身是一个合成注解，包含三个注解：</p>
-<ol type="1">
-<li><code>@SpringBootConfiguration</code></li>
-<li><code>@EnableAutoConfiguration</code></li>
-<li><code>@ComponentScan</code></li>
-</ol>
-<p>其中，<code>@SpringBootConfiguration</code>本身也包含<code>@Configuration</code>，也就是可以在类中通过<code>@bean</code>注解往容器中添加<code>bean</code>。<code>@EnableAutoConfiguration</code>为自动配置功能，可以根据pom文件中的依赖，自动向容器中添加<code>bean</code>。<code>@ComponentScan</code>组件扫描在<a href="/2023/04/17/SpringBoot-Configuration/" title="SpringBoot-Configuration">SpringBoot-Configuration</a>已经阐述过。</p>
-<p>测试往往只针对某个新写的方法，但默认的配置需要将整个应用程序环境都启动，会导致测试程序启动缓慢。一个很直观的解决方法就是使用自定义的配置类，而不是使用默认的主应用的程序环境。</p>
-<h2 id="自定义配置类">自定义配置类</h2>
-<p>前面提到<code>@SpringBootTest</code>标注如果带有内嵌<code>@Configuration</code>注解，则不会使用<code>@SpringBootConfiguration</code>上的配置。因此如果需要使用自定义配置类，需要在测试类上添加<code>@Configuration</code>或通过<code>@SpringBootTest</code>的<code>classes</code>属性指定自定义配置类。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Configuration</span><br><span class="hljs-keyword">static</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">TestConfiguration</span> &#123;<br>&#125;<br></code></pre></td></tr></table></figure>
-<p>内嵌自定义配置类需要定义在测试类中，并且使用<code>static</code>关键词修饰。</p>
-<blockquote>
-<p>static, non-private, non-final, nested classes annotated with <span
-class="citation" data-cites="Configuration">@Configuration</span></p>
-</blockquote>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@SpringBootTest(classes = TestConfiguration.class)</span><br></code></pre></td></tr></table></figure>
-<p>在自定义配置类中，可以如<a href="/2023/04/17/SpringBoot-Configuration/" title="SpringBoot-Configuration">SpringBoot-Configuration</a>中往容器中添加<code>bean</code></p>
-<h2 id="懒加载">懒加载</h2>
-<p>虽然Spring可以通过<code>Auto-configured Tests</code>和<code>@ComponentScan</code>来控制自动配置和包扫描规则，来避免不必要的bean导入。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@ComponentScan(excludeFilters = &#123;@ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE, classes = &#123;SomeExcludeClass.class&#125;)&#125;)</span><br></code></pre></td></tr></table></figure>
-<p>但有时很难分清哪些被使用到，哪些没有被使用到，因为bean之间的依赖关系错综复杂。手动去控制自动配置规则和扫描规则太过繁琐。因此更直觉、简便的解决方法是使用懒加载。<a
-target="_blank" rel="noopener" href="https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.spring-application.lazy-initialization">官方文档</a></p>
-<blockquote>
-<p><code>SpringApplication</code> allows an application to be
-initialized lazily. When lazy initialization is enabled, beans are
-created as they are needed rather than during application startup. As a
-result, enabling lazy initialization can reduce the time that it takes
-your application to start.</p>
-</blockquote>
-<p>懒加载就是在<code>bean</code>被使用时才去实例化，而不是程序一启动就把所有的<code>bean</code>都实例化。因此可以加快程序的启动时间，但会增加用户使用时的延迟。</p>
-<p>对于生产中的设备来说，启动时间（只启动一次，往往在半夜没用户使用时）、内存消耗是可以忽略的，但用户体验至关重要。因此生产实践中通常不开启懒加载。</p>
-<blockquote>
-<p>Lazy initialization can be enabled programmatically using the
-<code>lazyInitialization</code> method on
-<code>SpringApplicationBuilder</code> or the
-<code>setLazyInitialization</code> method on
-<code>SpringApplication</code>. Alternatively, it can be enabled using
-the <code>spring.main.lazy-initialization</code> property</p>
-</blockquote>
-<p>由于单元测试中容器是自动创建的，<code>lazyInitialization</code>和<code>setLazyInitialization</code>的方法无法执行，因此使用<code>application.properties</code>配置文件的方式是最简单优雅的。</p>
-<figure class="highlight properties"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs properties"><span class="hljs-attr">spring.main.lazy-initialization</span>=<span class="hljs-string">true</span><br></code></pre></td></tr></table></figure>
-<p>如果测试类需要使用独立的配置文件，可以在测试上使用<code>@TestPropertySource</code>注解来指定。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@TestPropertySource(&quot;classpath:application-test.properties&quot;)</span><br></code></pre></td></tr></table></figure>
-<h2 id="总结">总结</h2>
-<p><code>@SpringBootTest</code>标注的测试类，默认情况会使用<code>@SpringBootConfiguration</code>的环境设置。</p>
-<p>如果需要使用自定义配置可以使用内嵌<code>@Configuration</code>或<code>@SpringBootTest</code>的<code>classes</code>属性。</p>
-<p>懒加载是个加速程序启动的简单且有效方法。原理是将<code>bean</code>的实例化过程推迟到使用时才实例化。避免了测试过程中大部分<code>bean</code>都用不到，但会被实例化的问题。</p>
-<p>在单元测试中，简单且优雅的方式是通过<code>application.properties</code>配置文件来开启懒加载。为了避免影响生产，通常采用测试独立的配置文件，并通过<code>@TestPropertySource</code>来指定。</p>
+                <p>今天，总算给设计模式系列画完了句号。回头看，这个系列的第一篇文章<a href="/2023/06/12/Design-Pattern-Relationships-Between-Objects/" title="Design-Pattern-Relationships-Between-Objects">Design-Pattern-Relationships-Between-Objects</a>是2023年6月12日发的，一晃已经过去两年半了。</p>
+<p>这两年半的工作里，经验慢慢攒了些，心里也慢慢冒出了困惑：咱们深耕技术的价值，到底在哪儿呢？职场里仿佛是“业务为王”的天下，所有人都围着业务转，技术反倒成了无人问津的小透明。就连技术人自己，好像也总比业务人矮半头。翻出刚工作时写给未来的信，字里行间全是“要成技术大牛”的狂言，现在读来，简直和现实脱了轨，有点好笑又有点心酸。</p>
+<p>仔细想想，日常工作好像真的不需要多精深的技术就能应付，就算暂时不学习，也不会立刻出岔子。再加上ChatGPT这类大模型横空出世，好多事做得比从业人员还利落，那些熬夜啃的源码、死记硬背的八股文、一点点攒下的实战经验，仿佛都打了水漂。逛技术社区时也发现，好多人的博客都是学生时代更新得最勤，一踏入职场就渐渐没了踪迹。原来学生时代的中二热血，真的会慢慢凉下来啊，大家大概都逃不过这样的“成长暴击”吧？</p>
+<p>我们就像精密仪器里的小螺丝钉，安安稳稳做好本职工作就好，替换起来也轻而易举。我总想着再努努力，却偏偏找不到方向。长期待在“不用深钻”的安逸环境里，连集中注意力的能力都在悄悄溜走。好怀念过去的自己啊——一杯热茶就能坐一天，啃完十篇论文不在话下；闭上眼思路就像开了闸的洪水，思如泉涌。可现在写一篇技术博客，都要磕磕绊绊磨上好几天。</p>
+<p>怕自己弄丢处理复杂信息、梳理思路的能力，才咬牙建了这个技术博客。看了不少同行的文章，总觉得好多都是“填鸭式教学”，要么讲不清楚核心逻辑，要么完全没有扩展延伸。我打心底里不喜欢这种调调，于是给自己定了规矩：文章要写得通俗易懂，哪怕冒出奇奇怪怪的想法，也要追着把答案找出来、讲明白。虽然这样写可能会少点绝对的严谨性，但这是我的个人技术分享平台，核心是把技术认知讲透就行。能坚持把这个系列更完，已经很不容易了，至于以后还能坚持多久，就交给时间吧。</p>
+<p>写这个系列的这段时间，正好赶上AI技术大爆发。后面的不少文章，我都用了AI来帮忙——比如帮我想思路、润色文字。有意思的是，写的时候我会反复和AI生成的内容核对、讨论，对着那些想当然的观点追问到底，这个过程其实就是在深化对技术的理解。也正因为这样，我对设计模式和相关技术的认识更透彻了。客观说，AI确实是个不错的学习帮手，还帮我发现了自己说话、写东西语序乱、不够简洁的问题，算是意外收获。</p>
+<p>我一直都在想：怎么才能保持对技术的敏感度和敬畏心呢？想了很久，觉得关键还是在做好本职工作的前提下，多留些时间给技术学习和研究。技术积累既要看得广，又要扎根实际项目，不能光纸上谈兵，还得保持探索的热情。所以工作之余，我会经常逛Github的<a
+target="_blank" rel="noopener" href="https://github.com/trending"><code>Trending</code></a>（在我心里，愿意给开源项目贡献代码的都是厉害的程序员），看看行业里最新的动态；也会去StackOverflow和其他开发者交流，讨论技术难题；读行业大牛的博客，或者把开源项目的代码下载下来自己改改参数、调调逻辑，看看会有什么不一样的结果。要是能遇到志同道合的技术朋友，那就更幸运了。</p>
+<p>上面这些都是我的真实感悟，还好我一直喜欢写字，也能静下心来琢磨这些。希望自己能带着这份对技术的热情，一直把技术分享写下去。</p>
+<p>设计模式系列到这里就正式结束了。接下来，我会分享一些优质技术文章的解读，还有自己做技术实践的心得，争取持续输出有价值的技术内容。</p>
 
                 
               </div>
@@ -355,7 +305,7 @@ the <code>spring.main.lazy-initialization</code> property</p>
     
       <span class="category-chain">
         
-  <a href="/categories/Java/" class="category-chain-item">Java</a>
+  <a href="/categories/DesignPattern/" class="category-chain-item">DesignPattern</a>
   
   
 
@@ -372,9 +322,7 @@ the <code>spring.main.lazy-initialization</code> property</p>
       
         <a href="/tags/Java/" class="print-no-link">#Java</a>
       
-        <a href="/tags/SpringBoot/" class="print-no-link">#SpringBoot</a>
-      
-        <a href="/tags/Lazy-Initialization/" class="print-no-link">#Lazy Initialization</a>
+        <a href="/tags/DesignPattern/" class="print-no-link">#DesignPattern</a>
       
     </div>
   
@@ -386,8 +334,8 @@ the <code>spring.main.lazy-initialization</code> property</p>
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>SpringBoot-Lazy-Initialization</div>
-      <div>http://dracoyus.github.io/2023/05/04/SpringBoot-Lazy-Initialization/</div>
+      <div>Design-Pattern-Postscript</div>
+      <div>http://dracoyus.github.io/2025/12/17/Design-Pattern-Postscript/</div>
     </div>
     <div class="license-meta">
       
@@ -399,7 +347,7 @@ the <code>spring.main.lazy-initialization</code> property</p>
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2023年5月4日</div>
+          <div>2025年12月17日</div>
         </div>
       
       
@@ -431,18 +379,12 @@ the <code>spring.main.lazy-initialization</code> property</p>
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2023/05/12/Git-Commit-Message/" title="Git-Commit-Message">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Git-Commit-Message</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2023/04/27/Git-Conflict/" title="Git-Conflict">
-                        <span class="hidden-mobile">Git-Conflict</span>
+                      <a href="/2025/12/16/Design-Pattern-Visitor/" title="Design-Pattern-Visitor">
+                        <span class="hidden-mobile">Design-Pattern-Visitor</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
@@ -506,6 +448,21 @@ the <code>spring.main.lazy-initialization</code> property</p>
 
 
 
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.utils.listenDOMLoaded(function() {
+      Fluid.events.registerRefreshCallback(function() {
+        if ('mermaid' in window) {
+          mermaid.init();
+        }
+      });
+    });
+  });
+</script>
 
 
 

@@ -7,8 +7,11 @@
 
 <head>
   <meta charset="UTF-8">
+
   <link rel="apple-touch-icon" sizes="76x76" href="/img/Memcached.svg">
   <link rel="icon" href="/img/Memcached.svg">
+  
+
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
   <meta http-equiv="x-ua-compatible" content="ie=edge">
   
@@ -24,7 +27,7 @@
 <meta property="og:description" content="桥接模式(Bridge Pattern)是一种结构型模式。它的主要作用是将抽象部分与实现部分分离，使它们可以独立变化。 场景 有一个形状Shape类，从它扩展出两个子类：长方形Rectangle和 圆形Circle。假设需要在另一个维度颜色Color上，对Shape再进行扩展细分。如果只有红色Red和蓝色Blue两种颜色，那么一共需要四个类覆盖所有的组合。 12345">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-07-26T02:13:12.000Z">
-<meta property="article:modified_time" content="2025-08-18T08:59:18.801Z">
+<meta property="article:modified_time" content="2025-12-29T06:43:53.555Z">
 <meta property="article:author" content="DracoYu">
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="DesignPattern">
@@ -49,7 +52,7 @@
 <!-- 主题依赖的图标库，不要自行修改 -->
 <!-- Do not modify the link that theme dependent icons -->
 
-<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
 
 
 
@@ -70,7 +73,7 @@
   <script id="fluid-configs">
     var Fluid = window.Fluid || {};
     Fluid.ctx = Object.assign({}, Fluid.ctx)
-    var CONFIG = {"hostname":"dracoyus.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"gtag":null},"search_path":"/local-search.xml","include_content_in_search":true};
+    var CONFIG = {"hostname":"dracoyus.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null},"gtag":null,"woyaola":null,"cnzz":null},"search_path":"/local-search.xml","include_content_in_search":true};
 
     if (CONFIG.web_analytics.follow_dnt) {
       var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
@@ -83,7 +86,7 @@
 
 
   
-<meta name="generator" content="Hexo 6.3.0"></head>
+<meta name="generator" content="Hexo 7.3.0"></head>
 
 
 <body>
@@ -280,18 +283,18 @@
 圆形<code>Circle</code>。假设需要在另一个维度颜色<code>Color</code>上，对<code>Shape</code>再进行扩展细分。如果只有红色<code>Red</code>和蓝色<code>Blue</code>两种颜色，那么一共需要四个类覆盖所有的组合。</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs text">                   ----Shape---<br>                  /            \<br>         Rectangle              Circle<br>        /         \            /      \<br>BlueRectangle  RedRectangle BlueCircle RedCircle<br></code></pre></td></tr></table></figure>
 <p>在形状和颜色种类不多时，上述的继承关系并没有太大问题。但如果有一百种形状，那么想新加一种颜色，就需要新增一百个新增颜色和已有形状组合的类。更不用说需要在更多维度进行扩展，例如材质<code>Material</code>、尺寸<code>Size</code>等等。具体来说，类需要在<span
-class="math inline">\(n\)</span>个维度拓展，第<span
-class="math inline">\(i\)</span>个维度的种类为<span
-class="math inline">\(m_i\)</span>，那么类的组合数量为<span
-class="math inline">\(\prod \limits_{i=1}^n
-m_i\)</span>。这种类的数量随着维度的扩展剧烈增长，造成系统复杂性过高、难以维护的情况，称为<strong>类爆炸</strong>。</p>
+class="math inline"><em>n</em></span>个维度拓展，第<span
+class="math inline"><em>i</em></span>个维度的种类为<span
+class="math inline"><em>m</em><sub><em>i</em></sub></span>，那么类的组合数量为<span
+class="math inline">$\prod \limits_{i=1}^n
+m_i$</span>。这种类的数量随着维度的扩展剧烈增长，造成系统复杂性过高、难以维护的情况，称为<strong>类爆炸</strong>。</p>
 <p><code>BlueRectangle</code>和<code>BlueCircle</code>关于颜色方面的代码中，是高度重复的。当需要对<code>Blue</code>的代码内容进行改动时，需要改动所有和<code>Blue</code>有关的类。从另一个角度说，形状和颜色是两种不相关的维度。如果把两个维度写在同一个类中，违反了<strong>单一职责原则</strong>。这可能导致改动颜色代码时，会破坏形状中的功能。</p>
 <h2 id="桥接模式">桥接模式</h2>
 <p>解决方法也很直观。对于重复出现的<code>Bule</code>和<code>Red</code>代码，抽取到单独的类中。并在形状中，组合对颜色的引用。当形状需要访问颜色相关的特性时，委派给具体颜色对象的方法。<strong>形状中对颜色的引用，像一座桥梁，将两者的功能组合到一起，因此称其为桥接模式</strong>。此时类关系降维成了下图。</p>
 <figure class="highlight text"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs text">          ----Shape---                        Color<br>         /            \                       /   \<br>Rectangle(Color)   Circle(Color)           Blue   Red<br></code></pre></td></tr></table></figure>
-<p>重构完后，类的数量变成了<span class="math inline">\(\sum
+<p>重构完后，类的数量变成了<span class="math inline">$\sum
 \limits_{i=1}^n
-m_i\)</span>，代码重复率下降，形状和颜色的代码也不再耦合。</p>
+m_i$</span>，代码重复率下降，形状和颜色的代码也不再耦合。</p>
 <pre><code class=" mermaid">classDiagram
     direction TB
     class Client
@@ -331,8 +334,7 @@ m_i\)</span>，代码重复率下降，形状和颜色的代码也不再耦合�
 <p>桥接模式中的<strong>抽象</strong>，一般是高阶控制层，负责定义对象的行为和属性，使得客户端可以通过它与实现部分进行交互，而不必关心实现的细节；而<strong>实现</strong>定义了抽象部分所描述的操作的具体实现，关注的是如何执行操作。从这个角度看，宏观上<strong>抽象</strong>与<strong>实现</strong>之间的关系和编程语言中的<strong>接口</strong>和<strong>接口实现</strong>概念相近，都是一个负责定义行为，另一个负责具体实现，强调将接口与其实现分离，以提高灵活性和可扩展性。区别是<strong>接口</strong>与<strong>接口实现</strong>通常只涉及一个层次，而<strong>抽象</strong>与<strong>实现</strong>涉及多个层次。<strong>抽象</strong>与<strong>每个实现</strong>都对应着一组<strong>接口</strong>与<strong>接口实现</strong>。例如上例中，抽象对应着<code>Shape</code>抽象类和<code>Rectangle</code>和<code>Cirle</code>具体类，实现对应着<code>Color</code>接口和<code>Blue</code>和<code>Red</code>实现类。并且在<strong>抽象</strong>中，包含着对实现的引用，和核心业务逻辑和行为；而在<strong>接口</strong>中，无法定义成员变量，通常也不会包含实际业务代码（虽然<code>java8</code>接口也可以有默认方法）。</p>
 <p>桥接模式适用于类在多个维度上进行拓展的场景。在上例中，我们天然地认为了<strong>形状</strong>是<strong>抽象</strong>，<strong>颜色</strong>是<strong>实现</strong>，是<strong>形状</strong>持有了<strong>颜色</strong>的引用。<strong>抽象</strong>和<strong>实现</strong>无法相互替换，意味着多个维度并不是一视同仁，地位均等的。哪个为抽象，哪个为实现，主要是根据这些维度在系统中的角色，和它们对系统的设计影响来决定的。一个有颜色的形状，会比有形状的颜色要来的更符合客户端的需求。</p>
 <p>此外桥接模式中，通过抽象和实现进行分离，再通过组合，形成<span
-class="math inline">\(AB = A +
-B\)</span>的效果，需要两者功能相互独立。如果具体抽象会影响到具体实现的行为，则不适用于桥接模式。</p>
+class="math inline"><em>A</em><em>B</em> = <em>A</em> + <em>B</em></span>的效果，需要两者功能相互独立。如果具体抽象会影响到具体实现的行为，则不适用于桥接模式。</p>
 <h2 id="与适配器模式的区别">与适配器模式的区别</h2>
 <p>桥接模式中，抽象组合了实现，通过成员变量持有被包装类的对象，也是一种<strong>包装</strong>。</p>
 <p>适配器模式与桥接模式的主要区别如下：</p>
@@ -424,7 +426,7 @@ B\)</span>的效果，需要两者功能相互独立。如果具体抽象会影�
               
                 <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
                   <span class="hint--top hint--rounded" aria-label="BY - 署名">
-                    <i class="iconfont icon-by"></i>
+                    <i class="iconfont icon-cc-by"></i>
                   </span>
                 </a>
               
@@ -580,7 +582,6 @@ B\)</span>的效果，需要两者功能相互独立。如果具体抽象会影�
     <div class="footer-content">
        <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
     </div>
-  
   
   
   
