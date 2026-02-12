@@ -1,0 +1,762 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/Memcached.svg">
+  <link rel="icon" href="/img/Memcached.svg">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="DracoYu">
+  <meta name="keywords" content="学习笔记,Java,JavaScript,后端,前端">
+  
+    <meta name="description" content="泛型类型定义的限制在上一篇中，我们提到参数化类型的使用存在一些限制：无法创建参数化类型的数组、无法作为异常类型、无法作为类型字面量（如List&lt;String&gt;.class）、无法用于instanceof关键字的类型判断。 这里需要注意区分一个易混淆的概念：泛型类型定义时的限制，即定义泛型类型时，不可以将哪些特殊类作为泛型类。具体来说，泛型类型不能是枚举类、匿名内部类、异常类型。 枚举">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Java-Generics-PartIII">
+<meta property="og:url" content="http://dracoyus.github.io/2026/01/22/Java-Generics-PartIII/index.html">
+<meta property="og:site_name" content="DracoYu&#39;s MindCache">
+<meta property="og:description" content="泛型类型定义的限制在上一篇中，我们提到参数化类型的使用存在一些限制：无法创建参数化类型的数组、无法作为异常类型、无法作为类型字面量（如List&lt;String&gt;.class）、无法用于instanceof关键字的类型判断。 这里需要注意区分一个易混淆的概念：泛型类型定义时的限制，即定义泛型类型时，不可以将哪些特殊类作为泛型类。具体来说，泛型类型不能是枚举类、匿名内部类、异常类型。 枚举">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://dracoyus.github.io/img/Java-Generics.png">
+<meta property="article:published_time" content="2026-01-22T11:32:47.000Z">
+<meta property="article:modified_time" content="2026-02-12T03:00:54.340Z">
+<meta property="article:author" content="DracoYu">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="Generics">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://dracoyus.github.io/img/Java-Generics.png">
+  
+  
+  
+  <title>Java-Generics-PartIII - DracoYu&#39;s MindCache</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"dracoyus.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":null,"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null},"gtag":null,"woyaola":null,"cnzz":null},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 7.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>DracoYu&#39;s MindCache</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/default.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Java-Generics-PartIII"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-01-22 19:32" pubdate>
+          2026年1月22日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          26 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Java-Generics-PartIII</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p><img src="/img/Java-Generics.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="泛型类型定义的限制"><a href="#泛型类型定义的限制" class="headerlink" title="泛型类型定义的限制"></a>泛型类型定义的限制</h2><p>在上一篇中，我们提到参数化类型的使用存在一些限制：无法创建参数化类型的数组、无法作为异常类型、无法作为类型字面量（如<code>List&lt;String&gt;.class</code>）、无法用于<code>instanceof</code>关键字的类型判断。</p>
+<p>这里需要注意区分一个易混淆的概念：泛型类型定义时的限制，即定义泛型类型时，不可以将哪些特殊类作为泛型类。具体来说，<strong>泛型类型不能是枚举类、匿名内部类、异常类型</strong>。</p>
+<p>枚举类中的所有枚举值都是<code>public static final</code>修饰的静态实例，这些静态实例会在枚举类加载阶段完成初始化。我们既无法为枚举实例绑定具体的泛型类型，也无法在枚举类中引用泛型类型参数。因此，使用泛型枚举类毫无实际意义，<code>Java</code>语法直接禁止了这种用法。</p>
+<p>泛型类型的实例化需要通过<code>类名&lt;&gt;</code>的方式指定类型实参，若不知道类名，则无法完成实例化。由于匿名内部类无法通过类名引用，因此泛型匿名内部类也失去了存在的意义，同样被禁止。</p>
+<p>异常类型的限制在上一篇中已详细说明，此处不再赘述。</p>
+<p>泛型类使用和定义时的限制，这种相似概念的歧义，极易混淆读者。</p>
+<p>还比如上一篇提到“无法创建参数化类型数组”。纠正这个不严谨的表述，实际并非所有参数化类型数组都非法——<strong>创建无界通配符参数化类型数组是合法的；同时，声明参数化类型数组的引用也是合法的</strong>。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">new</span> <span class="hljs-title class_">List</span>&lt;String&gt;[<span class="hljs-number">5</span>]; <span class="hljs-comment">// 非法</span><br><span class="hljs-keyword">new</span> <span class="hljs-title class_">List</span>&lt;?&gt;[<span class="hljs-number">5</span>]; <span class="hljs-comment">// 合法</span><br>List&lt;String&gt;[] strListArr; <span class="hljs-comment">// 合法</span><br></code></pre></td></tr></table></figure>
+
+<p>关于泛型数组的具体用法及适用场景，相关内容较为繁杂。尽管无界通配符参数化类型数组在语法上合法，但实际开发中仍不推荐使用，因此本文不再展开介绍。若对<a target="_blank" rel="noopener" href="https://angelikalanger.com/GenericsFAQ/FAQSections/ParameterizedTypes.html#FAQ105"><strong>原始类型数组、无界通配符参数化类型数组、具体参数化类型集合</strong></a>的区别与用法感兴趣，可参考该链接资料。</p>
+<h2 id="通配符实例化"><a href="#通配符实例化" class="headerlink" title="通配符实例化"></a>通配符实例化</h2><p>参数化类型可细分为两类，分别是具体参数化类型（<code>concrete parameterized type</code>）和通配符参数化类型（<code>wildcard parameterized type</code>），对应的实例化过程也称为具体实例化（<code>concrete Instantiation</code>）和通配符实例化（<code>wildcard Instantiation</code>）。</p>
+<p>若对通配符参数化类型进一步细分，可分为无界通配符参数化类型（<code>unbounded wildcard parameterized types</code>）和有界通配符参数化类型（<code>bounded wildcard parameterized types</code>）。前文讨论参数化类型时，存在一些表述不严谨，所提及的参数化类型，大多指具体参数化类型。</p>
+<pre><code class=" mermaid">graph TD
+    A[参数化类型] --&gt; B[具体参数化类型] 
+    A[参数化类型] --&gt; C[通配符参数化类型]
+    C[通配符参数化类型] --&gt; D[无界通配符参数化类型] 
+    C[通配符参数化类型] --&gt; E[有界通配符参数化类型] 
+</code></pre>
+
+<p>通配符参数化类型，指泛型类实例化时，其类型实参中至少包含一个<code>?</code>（通配符）。通配符用于表示未知类型，因此通配符参数化类型整体用于表示一组具体参数化类型的集合。例如<code>Collection&lt;?&gt;</code>，它代表任意类型实参的<code>Collection</code>具体参数化类型，包括<code>Collection&lt;String&gt;</code>、<code>Collection&lt;Integer&gt;</code>等所有<code>Collection</code>的实例化类型。</p>
+<p>其中，无界通配符指对通配符所代表的类型无任何限制；有界通配符则是在通配符后通过<code>extends</code>或<code>super</code>关键字绑定某个类或接口，用于限定该通配符参数化类型所代表的具体参数化类型中，其类型实参必须满足与绑定类&#x2F;接口的父子关系。例如<code>Collection&lt;? extends Animal&gt;</code>，假设<code>Animal</code>不是<code>final</code>类，那么该有界通配符参数化类型可表示所有<code>Animal</code>及其子类作为类型实参的<code>Collection</code>集合。</p>
+<p>需要注意的是，通配符参数化类型无法作为<code>new</code>关键字后的实例化类型——这一点与接口类似，它仅能作为变量的引用类型，无法直接实例化对象。当使用通配符参数化类型引用一个变量时，意味着该变量的实际类型属于该通配符参数化类型所代表的那一组具体参数化类型中的某一种。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">Collection&lt;?&gt; coll = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;String&gt;();<br></code></pre></td></tr></table></figure>
+
+<p>如上代码所示，<code>Collection&lt;?&gt;</code>类型的变量<code>coll</code>引用了一个<code>ArrayList&lt;String&gt;</code>类型的对象，该赋值是完全合法的——因为<code>ArrayList&lt;String&gt;</code>本身就属于<code>Collection&lt;?&gt;</code>所代表的具体参数化类型集合中的一员。</p>
+<h2 id="通配符参数化类型的作用"><a href="#通配符参数化类型的作用" class="headerlink" title="通配符参数化类型的作用"></a>通配符参数化类型的作用</h2><p><code>Java</code>引入通配符参数化类型的核心目的，是弥补泛型无法协变的缺陷。上一篇文章中提到，泛型容器内元素的继承关系，不会传递给容器本身，即容器之间不具备协变性。这种特性会导致我们无法编写通用的处理代码。</p>
+<p>假设需要定义一个方法，该方法接受一个容器参数，要求容器内的元素是<code>Animal</code>类或其任意子类，方法内部仅调用<code>Animal</code>类中定义的通用方法。直觉上，我们会将<code>Collection&lt;Animal&gt;</code>作为方法参数，但实际上，该参数仅能接收<code>Collection&lt;Animal&gt;</code>这一种具体参数化类型的实例——由于泛型不支持协变，<code>Collection&lt;Dog&gt;</code>、<code>Collection&lt;Cat&gt;</code>（假设二者均为<code>Animal</code>的子类）均无法传入该方法。</p>
+<p>一种直观但错误的解决方案是，针对<code>Animal</code>的每一个子类，都定义一个同名方法，仅将参数类型替换为对应的<code>Collection&lt;子类&gt;</code>。这种方式不仅需要随着<code>Animal</code>子类数量的增加而重复定义大量方法。更关键的是，在泛型类型擦除后，这些方法的签名会完全一致，无法在同一个类中定义多个签名相同的方法，因此该方案不可行。</p>
+<p>另一种方案是使用原始类型（如<code>Collection</code>）作为方法参数，这种<strong>写法在语法上是合法的，但不推荐使用</strong>——相较于通配符参数化类型，原始类型会丢失泛型的类型安全校验，更容易引发类型转换异常等问题。另一方面，也无法在方法参数层面校验容器内元素是否与<code>Animal</code>类存在父子继承关系，完全失去了泛型对类型的约束价值。</p>
+<p>而通配符参数化类型的引入，恰好解决了这一问题：我们可以将方法参数定义为通配符参数化类型，使一个方法能够接受同一个泛型类的所有相关实例化类型，从而弥补泛型无法协变的缺陷。但与此同时，由于通配符代表未知类型，无法确保容器内元素的具体类型，因此在方法中引用该容器的元素时，会受到一些限制。</p>
+<h2 id="通配符参数化类型的限制"><a href="#通配符参数化类型的限制" class="headerlink" title="通配符参数化类型的限制"></a>通配符参数化类型的限制</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Box</span>&lt;T&gt; &#123;<br>    <span class="hljs-keyword">private</span> T t;<br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">Box</span><span class="hljs-params">(T t)</span> &#123; <span class="hljs-built_in">this</span>.t = t; &#125;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">put</span><span class="hljs-params">(T t)</span> &#123; <span class="hljs-built_in">this</span>.t = t;&#125;<br>    <span class="hljs-keyword">public</span> T <span class="hljs-title function_">take</span><span class="hljs-params">()</span> &#123; <span class="hljs-keyword">return</span> t; &#125;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">equalTo</span><span class="hljs-params">(Box&lt;T&gt; other)</span> &#123; <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.t.equals(other.t); &#125;<br>    <span class="hljs-keyword">public</span> Box&lt;T&gt; <span class="hljs-title function_">copy</span><span class="hljs-params">()</span> &#123; <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Box</span>&lt;T&gt;(t); &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>假设我们通过<code>Box&lt;?&gt;</code>引用一个变量，并尝试调用其<code>put</code>方法——根据该方法的签名，它需要接收一个与类型参数<code>T</code>匹配的参数。此时，由于类型实参为<code>?</code>（未知类型），直觉上可能会认为该方法可以接受任意类型的参数，但实际情况恰好相反：该方法仅能接收<code>null</code>作为参数，无法传入其他任何类型的值。</p>
+<p>核心问题在于对<code>?</code>的理解：当<code>?</code>作为类型实参、实例化为通配符参数化类型时，它代表的是“任意类型实参对应的具体参数化类型的集合”。而实际使用时，<code>Box&lt;?&gt;</code>引用的变量，其实际类型是该集合中的某一种具体类型，可能是<code>Box&lt;String&gt;</code>，也可能是<code>Box&lt;Integer&gt;</code>，对应的<code>put</code>方法分别只能接收<code>String</code>、<code>Integer</code>类型的参数。</p>
+<p><strong><code>Java </code>编译器会先梳理所有潜在的参数类型情况，取其交集作为最终允许传入的参数类型范围</strong>。由于我们无法确定<code>Box&lt;?&gt;</code>对应的具体类型，且不存在一个能作为所有类子类的“万能类型”，因此为了保证类型安全，Java编译器仅允许将<code>null</code>作为<code>put</code>方法的入参——因为<code>null</code>是所有引用类型都允许的常量值，不会引发类型不匹配问题。</p>
+<p>但对于返回值为类型参数<code>T</code>的方法（如上例中的<code>take</code>方法），调用方可以使用<code>Object</code>类作为接收返回值的类型。其逻辑与上述一致：通配符参数化类型的类型实参是未知的，<code>take</code>方法的返回值类型也随之未知。而<code>Object</code>类是所有Java类的父类，因此将返回值赋值给<code>Object</code>类型变量，属于多态的隐式向上转型，是完全合法的。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java">Box&lt;?&gt; box = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Box</span>&lt;String&gt;(<span class="hljs-string">&quot;abc&quot;</span>);<br><br>box.put(<span class="hljs-string">&quot;xyz&quot;</span>);     <span class="hljs-comment">// error</span><br>box.put(<span class="hljs-literal">null</span>);     <span class="hljs-comment">// ok</span><br><br><span class="hljs-type">String</span> <span class="hljs-variable">s</span> <span class="hljs-operator">=</span> box.take();  <span class="hljs-comment">// error</span><br><span class="hljs-type">Object</span> <span class="hljs-variable">o</span> <span class="hljs-operator">=</span> box.take();  <span class="hljs-comment">// ok</span><br><br><span class="hljs-type">boolean</span> <span class="hljs-variable">equal</span> <span class="hljs-operator">=</span> box.equalTo(box);  <span class="hljs-comment">// error</span><br>equal = box.equalTo(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Box</span>&lt;String&gt;(<span class="hljs-string">&quot;abc&quot;</span>)); <span class="hljs-comment">// error</span><br><br>Box&lt;?&gt; box1 = box.copy();   <span class="hljs-comment">// ok</span><br>Box&lt;String&gt; box2 = box.copy();  <span class="hljs-comment">// error</span><br></code></pre></td></tr></table></figure>
+
+<p>此处有一个很反直觉的点：调用<code>equalTo</code>方法时，即使将变量自身作为参数传入，也是非法的。从表面上看，<code>box</code>的类型是<code>Box&lt;?&gt;</code>，而<code>equalTo</code>方法的参数类型是<code>Box&lt;T&gt;</code>，若用<code>?</code>替换<code>T</code>，似乎参数类型应为<code>Box&lt;?&gt;</code>，与<code>box</code>的类型一致，但实际并非如此。</p>
+<p>其根本原因是，<code>?</code>（通配符）不能直接替换泛型类中的类型参数<code>T</code>。当使用<code>?</code>作为类型实参实例化泛型类时，编译器会为<code>?</code>生成一个临时的捕获类型（例如<code>capture#1-of ?</code>），该捕获类型可视为一个具体的未知类型。此时，<code>equalTo</code>方法的参数类型实际上是<code>Box&lt;capture#1-of ?&gt;</code>（一个具体参数化类型），而传入的<code>box</code>变量类型是<code>Box&lt;?&gt;</code>（通配符参数化类型），二者并非同一类型，因此调用非法。</p>
+<p>简单来说，<code>box</code>变量的实际类型是某一种具体参数化类型，而<code>equalTo</code>方法仅接受与自身类型完全匹配的<code>Box</code>实例；若方法参数类型不明确，传入的参数可能与实际类型不匹配，从而引发类型安全问题。若将<code>equalTo</code>方法的参数类型调整为<code>Box&lt;?&gt;</code>，则该调用即可合法执行。这也是极易混淆的地方。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
+<li><p>讨论泛型的限制时，需明确区分“泛型类型定义时的限制”与“泛型类型使用时的限制”，避免混淆</p>
+</li>
+<li><p>参数化类型可细分为具体参数化类型和通配符参数化类型，其中通配符参数化类型又可进一步分为无界通配符和有界通配符两类</p>
+</li>
+<li><p>通配符参数化类型的本质是一组具体参数化类型的集合，用于表示某一类泛型实例的统称</p>
+</li>
+<li><p>当使用通配符参数化类型引用变量时，对该变量的方法调用、返回值处理会存在特定限制，其核心目的是保证泛型的类型安全</p>
+</li>
+</ol>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Java/" class="category-chain-item">Java</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Java/" class="print-no-link">#Java</a>
+      
+        <a href="/tags/Generics/" class="print-no-link">#Generics</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Java-Generics-PartIII</div>
+      <div>http://dracoyus.github.io/2026/01/22/Java-Generics-PartIII/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>DracoYu</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年1月22日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/01/16/Java-Generics-PartII/" title="Java-Generics-PartII">
+                        <span class="hidden-mobile">Java-Generics-PartII</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+  <script>
+  Fluid.utils.createScript('https://lib.baomitu.com/mermaid/8.14.0/mermaid.min.js', function() {
+    mermaid.initialize({"theme":"default"});
+
+    Fluid.utils.listenDOMLoaded(function() {
+      Fluid.events.registerRefreshCallback(function() {
+        if ('mermaid' in window) {
+          mermaid.init();
+        }
+      });
+    });
+  });
+</script>
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.0/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.18.2/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  
+      <script>
+        if (!window.MathJax) {
+          window.MathJax = {
+            tex    : {
+              inlineMath: { '[+]': [['$', '$']] }
+            },
+            loader : {
+              load: ['ui/lazy']
+            },
+            options: {
+              renderActions: {
+                insertedScript: [200, () => {
+                  document.querySelectorAll('mjx-container').forEach(node => {
+                    let target = node.parentNode;
+                    if (target.nodeName.toLowerCase() === 'li') {
+                      target.parentNode.classList.add('has-jax');
+                    }
+                  });
+                }, '', false]
+              }
+            }
+          };
+        } else {
+          MathJax.startup.document.state(0);
+          MathJax.texReset();
+          MathJax.typeset();
+          MathJax.typesetPromise();
+        }
+
+        Fluid.events.registerRefreshCallback(function() {
+          if ('MathJax' in window && MathJax.startup.document && typeof MathJax.startup.document.state === 'function') {
+            MathJax.startup.document.state(0);
+            MathJax.texReset();
+            MathJax.typeset();
+            MathJax.typesetPromise();
+          }
+        });
+      </script>
+    
+
+  <script  src="https://lib.baomitu.com/mathjax/3.2.2/es5/tex-mml-chtml.js" ></script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>

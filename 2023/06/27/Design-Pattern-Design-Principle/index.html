@@ -19,12 +19,12 @@
   <meta name="author" content="DracoYu">
   <meta name="keywords" content="学习笔记,Java,JavaScript,后端,前端">
   
-    <meta name="description" content="设计模式是一系列优秀的代码构思实践。但从代码的功能性角度来说，很难定义什么是优秀的。“这不是也能跑吗”是对这个想法的准确体现。如果两份代码执行表现完全相同，凭什么说，其中一份比另外一份代码要好？设计原则回答了这个问题。 在日常开发中，看到一份代码变量名规范，注释规范，我们会说代码是好的。这是从可读性上对代码进行的评判。而设计原则从另一个角度进行评价：代码复用和拓展性。有时候设计原则和可读性是相违">
+    <meta name="description" content="设计模式是一系列优秀的代码构思实践。但从代码的功能性角度来说，很难定义什么是优秀的。**“这不是也能跑吗”**是对这个想法的准确体现。如果两份代码执行表现完全相同，凭什么说，其中一份比另外一份代码要好？设计原则回答了这个问题。 在日常开发中，看到一份代码变量名规范，注释规范，我们会说代码是好的。这是从可读性上对代码进行的评判。而设计原则从另一个角度进行评价：代码复用和拓展性。有时候设计原则和可读性">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Design-Pattern-Design-Principle">
 <meta property="og:url" content="http://dracoyus.github.io/2023/06/27/Design-Pattern-Design-Principle/index.html">
 <meta property="og:site_name" content="DracoYu&#39;s MindCache">
-<meta property="og:description" content="设计模式是一系列优秀的代码构思实践。但从代码的功能性角度来说，很难定义什么是优秀的。“这不是也能跑吗”是对这个想法的准确体现。如果两份代码执行表现完全相同，凭什么说，其中一份比另外一份代码要好？设计原则回答了这个问题。 在日常开发中，看到一份代码变量名规范，注释规范，我们会说代码是好的。这是从可读性上对代码进行的评判。而设计原则从另一个角度进行评价：代码复用和拓展性。有时候设计原则和可读性是相违">
+<meta property="og:description" content="设计模式是一系列优秀的代码构思实践。但从代码的功能性角度来说，很难定义什么是优秀的。**“这不是也能跑吗”**是对这个想法的准确体现。如果两份代码执行表现完全相同，凭什么说，其中一份比另外一份代码要好？设计原则回答了这个问题。 在日常开发中，看到一份代码变量名规范，注释规范，我们会说代码是好的。这是从可读性上对代码进行的评判。而设计原则从另一个角度进行评价：代码复用和拓展性。有时候设计原则和可读性">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-06-27T06:30:12.000Z">
 <meta property="article:modified_time" content="2025-08-07T02:10:02.170Z">
@@ -277,47 +277,43 @@
             
               <div class="markdown-body">
                 
-                <p>设计模式是一系列优秀的代码构思实践。但从代码的功能性角度来说，很难定义什么是优秀的。<strong>“这不是也能跑吗”</strong>是对这个想法的准确体现。如果两份代码执行表现完全相同，凭什么说，其中一份比另外一份代码要好？设计原则回答了这个问题。</p>
+                <p>设计模式是一系列优秀的代码构思实践。但从代码的功能性角度来说，很难定义什么是优秀的。**“这不是也能跑吗”**是对这个想法的准确体现。如果两份代码执行表现完全相同，凭什么说，其中一份比另外一份代码要好？设计原则回答了这个问题。</p>
 <p>在日常开发中，看到一份代码变量名规范，注释规范，我们会说代码是好的。这是从可读性上对代码进行的评判。而设计原则从另一个角度进行评价：<strong>代码复用</strong>和<strong>拓展性</strong>。有时候设计原则和可读性是相违背的，一些设计模式为了增加复用性和可扩展性，反而会把类的结构变得更复杂，影响可读性。</p>
-<h2 id="代码优秀特征">代码优秀特征</h2>
-<h3 id="代码复用">代码复用</h3>
-<p>可以通过观察代码中重复或相似的片段的多少，来体现代码复用执行的程度。</p>
+<h2 id="代码优秀特征"><a href="#代码优秀特征" class="headerlink" title="代码优秀特征"></a>代码优秀特征</h2><h3 id="代码复用"><a href="#代码复用" class="headerlink" title="代码复用"></a>代码复用</h3><p>可以通过观察代码中重复或相似的片段的多少，来体现代码复用执行的程度。</p>
 <p>如果一份代码在多处被使用，那么可以抽取成一个方法，并在使用处改写为对方法的调用。方法中可能发生变化的地方，可以抽取成方法的参数。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">void</span> <span class="hljs-title function_">methodA</span><span class="hljs-params">()</span> &#123;<br>    ...<br>    methodC();<br>    ...<br>&#125;<br><span class="hljs-keyword">void</span> <span class="hljs-title function_">methodB</span><span class="hljs-params">()</span> &#123;<br>    ...<br>    methodC();<br>    ...<br>&#125;<br><span class="hljs-keyword">void</span> <span class="hljs-title function_">sharedMethodC</span><span class="hljs-params">()</span> &#123;<br>    some shared code<br>&#125;<br></code></pre></td></tr></table></figure>
+
 <p>这样做的好处是，如果这些反复使用的代码要进行改动，那么只需要改动抽取后的方法就可以了。不采取复用的话，需要找到所有使用这些代码的地方进行修改。而且代码复用本身也可以减少开发量，缩短开发周期。</p>
 <p>从小的层面讲，将多处使用到的代码，抽取成一个方法，或者把相关的方法再次打包成一个类，就是代码复用。开发中经常会有一些工具类，提供一些静态方法，可以在多个地方被使用。工具类就是代码复用的一个体现。</p>
 <p>往大了说，框架本身也是代码复用的体现。不同的项目可以根据业务特殊需求，自定义子类，而使用共同的<code>SpringBoot</code>框架。</p>
 <p>而在这两个层次之间，就是设计模式。设计模式通常用来组织少数对象之间的关系和其间的互动行为。在设计模式中，可以将描述的角色替换成不同的具体类，来实现代码复用。</p>
-<h3 id="拓展性">拓展性</h3>
-<p><strong>变化</strong>是程序员生命中唯一不变的事情。</p>
+<h3 id="拓展性"><a href="#拓展性" class="headerlink" title="拓展性"></a>拓展性</h3><p><strong>变化</strong>是程序员生命中唯一不变的事情。</p>
 <p>程序员经常会面对新出现的需求，进行新功能的开发。这些新功能可能和已有的功能有些相似，但也不完全相同。考虑之前提到的代码复用，可能需要对相似的部分进行抽取，或者所有代码都得重写。但这样不可避免就会破坏已有的代码，没有人能保证代码重构后，原功能仍然能正常运行。如果每次添加新功能，都需要将已有的功能重新测试，这无疑增加了工作量。因此在首次开发功能时，就需要对未来可能会出现的新需求进行预测和假设。</p>
 <p>一份代码，在增加新功能时非常方便，并且不会破坏原有代码时，则称其有良好扩展性。</p>
-<h2 id="设计原则">设计原则</h2>
-<p>为了使代码更优秀，也就是使代码拥有更好的复用性和可拓展性，程序员总结出了一系列设计原则。在开发中遵守这些原则，就可以提高代码质量。设计模式中或多或少都体现了对这些原则的遵守。值得一提的是，原则不是必须遵守的，程序员需要根据实际情况，衡量遵守原则的收益和代价。代价通常是前文提到的代码复杂性和可读性。</p>
-<h3 id="封装变化的原则">封装变化的原则</h3>
-<p>找到程序中的变化内容并将其与不变的内容区分开。</p>
+<h2 id="设计原则"><a href="#设计原则" class="headerlink" title="设计原则"></a>设计原则</h2><p>为了使代码更优秀，也就是使代码拥有更好的复用性和可拓展性，程序员总结出了一系列设计原则。在开发中遵守这些原则，就可以提高代码质量。设计模式中或多或少都体现了对这些原则的遵守。值得一提的是，原则不是必须遵守的，程序员需要根据实际情况，衡量遵守原则的收益和代价。代价通常是前文提到的代码复杂性和可读性。</p>
+<h3 id="封装变化的原则"><a href="#封装变化的原则" class="headerlink" title="封装变化的原则"></a>封装变化的原则</h3><p>找到程序中的变化内容并将其与不变的内容区分开。</p>
 <p>该原则的主要目的是将变更造成的影响最小化。根据未来是否可能会发生变化，将变化部分的代码抽取成一个方法。当进行修改时，只在抽取后的方法中进行修改。这样不会对调用处的原方法造成更多影响。要说影响的话，也就具体返回值可能会发生变化，从而将影响控制到了最小程度。</p>
 <p>在代码中，通常会有根据字符串或者某些标识符，进行<code>switch case</code>判断，来决定执行的逻辑。通常可以认为，未来会有更多的<code>case</code>情况，也就是会发生变化。从而将<code>switch case</code>部分进行方法抽取，将变量或标识符通过参数传递到抽取的方法中。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">void</span> <span class="hljs-title function_">method</span><span class="hljs-params">()</span> &#123;<br>    ...<br>    switchCase(<span class="hljs-keyword">case</span>);<br>    ...<br>&#125;<br><span class="hljs-keyword">void</span> <span class="hljs-title function_">switchCase</span><span class="hljs-params">(String <span class="hljs-keyword">case</span>)</span> &#123;<br>    <span class="hljs-keyword">switch</span>(<span class="hljs-keyword">case</span>) &#123;<br>        <span class="hljs-keyword">case</span> case1:<br>            ...<br>            <span class="hljs-keyword">break</span>;<br>        ...        <br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
 <p>将变化部分的代码抽取成方法，这是方法层面的封装。如果将类中常发生变动的成员变量和方法进行抽取成一个新的类，这是类层面的封装。多个变化的类，甚至可以以成员变量的形式共享同一个不变的类，这也是<code>享元</code>设计模式的核心思想。</p>
-<h3 id="面向接口而不是面向实现的原则">面向接口而不是面向实现的原则</h3>
-<p>之前提到，接口可以视为一些具体类的集合。</p>
-<p>在代码中，如果将变量定义为某个具体类（相对于抽象类/接口），那么需要使用新扩展的具体类时，就需要改动使用处的变量类型。这也违反了上一条<code>封装变化</code>的原则。说明原则之间不全是相互独立的，其间也可能存在交叉的关系。</p>
+<h3 id="面向接口而不是面向实现的原则"><a href="#面向接口而不是面向实现的原则" class="headerlink" title="面向接口而不是面向实现的原则"></a>面向接口而不是面向实现的原则</h3><p>之前提到，接口可以视为一些具体类的集合。</p>
+<p>在代码中，如果将变量定义为某个具体类（相对于抽象类&#x2F;接口），那么需要使用新扩展的具体类时，就需要改动使用处的变量类型。这也违反了上一条<code>封装变化</code>的原则。说明原则之间不全是相互独立的，其间也可能存在交叉的关系。</p>
 <p>符合原则的做法是，将可能会扩展的类，和已有的具体类中方法相似的部分，抽取成一个接口，将新扩展和已有的具体类都实现这个接口，并将所有用到这些类的地方的变量类型设置为接口类型，通过多态性调用具体类的实现。接口中定义了允许调用的方法，规范了类和类之间交互的行为。新定义的类只要符合规范（实现接口），就可以无缝扩展到已有代码中。程序员通过查看接口代码，就基本能了解其具体实现类能做的行为。</p>
 <p>在一些<code>SpringBoot</code>项目中，会采用分层模型：<code>Controller</code>、<code>Service</code>、<code>DAO</code>。在<code>Service</code>层中，可以定义一系列的<code>Service接口</code>，并使用<code>ServiceImpl</code>去实现具体类。然后在<code>Controller</code>中使用<code>Service</code>时，通过接口进行调用。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">SomeController</span> &#123;<br>    <span class="hljs-comment">// 通过@Resource自动注入或构造器传参</span><br>    Service service;<br>&#125;<br><span class="hljs-keyword">interface</span> <span class="hljs-title class_">SomeService</span> &#123;<br>    some method declear<br>&#125;<br><span class="hljs-keyword">class</span> <span class="hljs-title class_">SomeServiceImpl</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">SomeService</span> &#123;<br>    concrete method implementation<br>&#125;<br></code></pre></td></tr></table></figure>
+
 <p>但接口也会使代码更复杂。本来只有两个具体类，现在还多了一个接口。如果项目代码中<code>ServiceImpl</code>和<code>Service</code>是一一对应关系，也就是没有进行扩展，可能也不需要将其拆成一个接口和一个类。具体是否拆成两个的代码习惯得参照公司规范。</p>
-<h3 id="组合优于继承">组合优于继承</h3>
-<p>如果几个类都具有共同的属性和方法，那么可以通过继承，来实现代码复用。这些类通常在概念上是互相相关的，例如丘丘人和史莱姆都属于怪物，体现出<code>is-a</code>关系。</p>
+<h3 id="组合优于继承"><a href="#组合优于继承" class="headerlink" title="组合优于继承"></a>组合优于继承</h3><p>如果几个类都具有共同的属性和方法，那么可以通过继承，来实现代码复用。这些类通常在概念上是互相相关的，例如丘丘人和史莱姆都属于怪物，体现出<code>is-a</code>关系。</p>
 <p>具体做法是将共同的属性和方法都抽取到一个怪物类中，然后将丘丘人和史莱姆都继承于怪物类。为了使子类必须实现怪物类中定义的方法，通常会将怪物类设置为抽象类。而且怪物本身也是个抽象概念，不应该被实例化。</p>
 <p>但问题在于，无法选择性继承，这意味着对于某些怪物，基类中的某些方法可能不是必须的。例如有些丘丘人萨满无法攻击，那么攻击力属性和攻击方法，可能就是不需要的。风史莱姆会飞，但对于土史莱姆来说，飞行方法可能是不需要的。当然可以从怪物抽象类中，继承出会攻击怪物和不会攻击怪物抽象类，再将会攻击怪物分成会攻击会飞行怪物，和会攻击不会飞行怪物。到这里已经能体会到继承可能存在的问题了。</p>
 <p>因为无法选择性继承，而某些具体类又不需要完全用到被继承类的所有属性和方法时，就需要多加一层继承关系。当在多个独立的维度上同时发生这些问题时，会造成类的组合爆炸。</p>
-<p>更加好的做法是，定义两个接口，<code>Flyable</code>和<code>Attackable</code>。并根据具体类的情况，实现其中对应的接口。而如果多个会飞的怪物，他们的飞行属性和飞行方法中，代码相似度非常高，为了实现代码复用，可以将飞行相关的属性和方法抽取成<code>FlyAbility</code>类，并实现<code>Flyable</code>接口。然后以成员变量的形式将<code>FlyAbility</code>组合/聚合到具体怪物类中。调用具体怪物类的飞行方法时，将调用<code>FlyAbility</code>成员变量的飞行方法。</p>
+<p>更加好的做法是，定义两个接口，<code>Flyable</code>和<code>Attackable</code>。并根据具体类的情况，实现其中对应的接口。而如果多个会飞的怪物，他们的飞行属性和飞行方法中，代码相似度非常高，为了实现代码复用，可以将飞行相关的属性和方法抽取成<code>FlyAbility</code>类，并实现<code>Flyable</code>接口。然后以成员变量的形式将<code>FlyAbility</code>组合&#x2F;聚合到具体怪物类中。调用具体怪物类的飞行方法时，将调用<code>FlyAbility</code>成员变量的飞行方法。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">abstract</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Monster</span> &#123;<br>    Double hitPoint;<br>    ...<br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">death</span><span class="hljs-params">()</span>;<br>&#125;<br><span class="hljs-keyword">interface</span> <span class="hljs-title class_">Flyable</span> &#123;<br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">fly</span><span class="hljs-params">()</span>;<br>&#125;<br><span class="hljs-keyword">class</span> <span class="hljs-title class_">FlyAbility</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Flyable</span> &#123;<br>    Double flySpeed;<br>    Double flyHeight;<br>    ...<br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">fly</span><span class="hljs-params">()</span> &#123;<br>        concrete method implementation<br>    &#125;<br>&#125;<br><span class="hljs-keyword">class</span> <span class="hljs-title class_">AnemoSlime</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Monster</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">Flyable</span> &#123;<br>    <span class="hljs-keyword">private</span> FlyAbility flyAbility;<br>    ...<br>    AnemoSlime()&#123;<br>        <span class="hljs-built_in">this</span>.flyAbility = <span class="hljs-keyword">new</span> <span class="hljs-title class_">FlyAbility</span>(<span class="hljs-number">10</span>, <span class="hljs-number">20</span>);<br>    &#125;<br>    <span class="hljs-keyword">void</span> <span class="hljs-title function_">fly</span><span class="hljs-params">()</span> &#123;<br>        flyAbility.fly();<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
 <p>代码中，风史莱姆是通过组合了<code>FlyAbility</code>变量，而不是继承的形式，来获得了飞行相关的属性，实现了代码复用。这就是组合优于继承。</p>
 <p>但原则不是绝对的。从代码可以观察到类的结构确实因为组合而变得复杂了许多。一般来说，如果一些对象，其属性和方法没有在多个维度有区分，继承关系比较简单，那么使用继承也是可以的。当需要对对象进行细粒度拆分，可能组合是更好的选择。</p>
-<h2 id="总结">总结</h2>
-<p>限于篇幅，<code>SOLID原则</code>放到下篇讲。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>限于篇幅，<code>SOLID原则</code>放到下篇讲。</p>
 <p>在代码能按照设计功能正常运行时，我们通常通过可读性、复用性、可拓展性来衡量一份代码的好坏。</p>
 <p>为了提高代码的复用性和可拓展性，程序员总结了一系列的设计原则，遵守这些原则可以写出更优秀的代码。设计模式是这些原则的优秀实践。</p>
 

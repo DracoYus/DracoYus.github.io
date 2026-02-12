@@ -19,15 +19,15 @@
   <meta name="author" content="DracoYu">
   <meta name="keywords" content="学习笔记,Java,JavaScript,后端,前端">
   
-    <meta name="description" content="备忘录模式（Memento Pattern）是一种行为型设计模式，用于在不破坏封装的前提下，​捕获并外部化一个对象的内部状态，以便在需要时将对象恢复到此前保存的状态。它常被称为快照模式，典型用于实现撤销&#x2F;重做（Undo&#x2F;Redo）​、历史记录与回滚等能力。 在Design-Pattern-Command中提到过，命令模式常和撤销操作一起实现。而撤销的一种实现方式，就是使用状态快照，也就是将需要恢">
+    <meta name="description" content="备忘录模式（Memento Pattern）是一种行为型设计模式，用于在不破坏封装的前提下，​捕获并外部化一个对象的内部状态，以便在需要时将对象恢复到此前保存的状态。它常被称为快照模式，典型用于实现撤销&#x2F;重做（Undo&#x2F;Redo）​、历史记录与回滚等能力。 在Design-Pattern-Command中提到过，命令模式常和撤销操作一起实现。而撤销的一种实现方式，就是使用状态快照，也就是">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Design-Pattern-Memento">
 <meta property="og:url" content="http://dracoyus.github.io/2025/09/09/Design-Pattern-Memento/index.html">
 <meta property="og:site_name" content="DracoYu&#39;s MindCache">
-<meta property="og:description" content="备忘录模式（Memento Pattern）是一种行为型设计模式，用于在不破坏封装的前提下，​捕获并外部化一个对象的内部状态，以便在需要时将对象恢复到此前保存的状态。它常被称为快照模式，典型用于实现撤销&#x2F;重做（Undo&#x2F;Redo）​、历史记录与回滚等能力。 在Design-Pattern-Command中提到过，命令模式常和撤销操作一起实现。而撤销的一种实现方式，就是使用状态快照，也就是将需要恢">
+<meta property="og:description" content="备忘录模式（Memento Pattern）是一种行为型设计模式，用于在不破坏封装的前提下，​捕获并外部化一个对象的内部状态，以便在需要时将对象恢复到此前保存的状态。它常被称为快照模式，典型用于实现撤销&#x2F;重做（Undo&#x2F;Redo）​、历史记录与回滚等能力。 在Design-Pattern-Command中提到过，命令模式常和撤销操作一起实现。而撤销的一种实现方式，就是使用状态快照，也就是">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-09-09T11:03:58.000Z">
-<meta property="article:modified_time" content="2025-10-29T02:31:08.088Z">
+<meta property="article:modified_time" content="2026-02-05T09:18:46.999Z">
 <meta property="article:author" content="DracoYu">
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="DesignPattern">
@@ -277,25 +277,26 @@
             
               <div class="markdown-body">
                 
-                <p><strong>备忘录模式<code>（Memento Pattern）</code></strong>是一种行为型设计模式，用于在不破坏封装的前提下，​捕获并外部化一个对象的内部状态，以便在需要时将对象恢复到此前保存的状态。它常被称为快照模式，典型用于实现撤销/重做<code>（Undo/Redo）</code>​、历史记录与回滚等能力。</p>
+                <p><strong>备忘录模式</strong>（<code>Memento Pattern</code>）是一种行为型设计模式，用于在不破坏封装的前提下，​捕获并外部化一个对象的内部状态，以便在需要时将对象恢复到此前保存的状态。它常被称为快照模式，典型用于实现撤销&#x2F;重做<code>（Undo/Redo）</code>​、历史记录与回滚等能力。</p>
 <p>在<a href="/2025/06/10/Design-Pattern-Command/" title="Design-Pattern-Command">Design-Pattern-Command</a>中提到过，命令模式常和撤销操作一起实现。而撤销的一种实现方式，就是使用<strong>状态快照</strong>，也就是将需要恢复的状态，储存起来。本文详细讨论此<strong>状态快照对象如何获取、储存</strong>等。</p>
-<h2 id="场景">场景</h2>
-<p>首先需要定义什么是状态。在日常应用中，<strong>状态通常指程序运行时对象的瞬时数据集合，这些数据共同定义了对象在某一时刻的具体表现</strong>。以常见的<code>Word</code>为例，状态体现为文本内容、段落格式（如字体、字号、颜色）、光标所在位置等信息；而在游戏中，状态则可能涵盖角色的坐标位置、生命值与攻击力等属性、背包中的道具清单等。尽管不同应用的场景差异显著，但从程序设计的角度看，状态本质上都是<strong>一组描述对象当前情况的数据</strong>，这些数据通常集中或分散存储在一个或多个对象（如文本缓冲区、角色实体类等）的属性中，共同构成了对象在特定时刻的完整快照。</p>
+<h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><p>首先需要定义什么是状态。在日常应用中，<strong>状态通常指程序运行时对象的瞬时数据集合，这些数据共同定义了对象在某一时刻的具体表现</strong>。以常见的<code>Word</code>为例，状态体现为文本内容、段落格式（如字体、字号、颜色）、光标所在位置等信息；而在游戏中，状态则可能涵盖角色的坐标位置、生命值与攻击力等属性、背包中的道具清单等。尽管不同应用的场景差异显著，但从程序设计的角度看，状态本质上都是<strong>一组描述对象当前情况的数据</strong>，这些数据通常集中或分散存储在一个或多个对象（如文本缓冲区、角色实体类等）的属性中，共同构成了对象在特定时刻的完整快照。</p>
 <p>要储存这些状态，最直接的想法，就是新建一个同类对象，把原对象中的属性复制到新对象中。在需要恢复的时候，再将新对象的值一一赋值给旧对象。如果这个备份和恢复的方法定义在其它类中，那么就需要此类对被备份类的所有属性有访问权限，例如将属性设为<code>public</code>，或者是提供所有字段的<code>get、set</code>方法。这显然不合适，<strong>破坏了原类的封装性</strong>。不仅如此，如果把所有字段都设置为<code>public</code>，还会引起额外的问题。一旦被备份类中新增了某个字段，所有负责复制的类都需要同步变动，也就是<strong>增加了其他类对原类的依赖</strong>。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Status</span> &#123;<br>    <span class="hljs-keyword">public</span> String name;<br>    <span class="hljs-keyword">public</span> String age;<br>&#125;<br><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Backup</span> &#123;<br>    <span class="hljs-keyword">public</span> Status <span class="hljs-title function_">backup</span><span class="hljs-params">(Status exist)</span> &#123;<br>        <span class="hljs-type">Status</span> <span class="hljs-variable">backup</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Status</span>();<br>        backup.name = exist.name;<br>        backup.age = exist.age;<br>        <span class="hljs-keyword">return</span> backup;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
 <p>所以更合适的做法是将备份和恢复的方法定义在原类中。我们可以通过<strong>原型模式</strong>轻松地获取某个对象的复制。根据类的访问权限，<strong>同一个类的对象可以互相访问私有属性</strong>，因此也能轻松地恢复属性。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Status</span> &#123;<br>    <span class="hljs-keyword">private</span> String name;<br>    <span class="hljs-keyword">private</span> String age;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">recover</span><span class="hljs-params">(Status backup)</span> &#123;<br>        <span class="hljs-comment">// 直接访问备份对象的成员变量</span><br>        <span class="hljs-built_in">this</span>.name = backup.name;<br>        <span class="hljs-built_in">this</span>.age = backup.age;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
 <p>但还是有不合适的地方。快照对象和原对象一样包含所有的方法，这些方法对于快照对象是完全不需要的。从单一职责原则考虑，<strong>快照不该有这些方法的执行权限</strong>。所以需要新建一个快照类，这个类拥有原类的所有需要备份的属性，但不包含原对象的方法，就像生成器模式中的生成器类。但新建的快照类和原对象类，又会产生属性访问权限的问题。快照对象需要被用来恢复原对象，这意味着原类有快照类的属性访问权限，或快照有原类的属性访问权限。</p>
-<h2 id="备忘录模式">备忘录模式</h2>
-<p>总的来说，上述描述讨论了为了实现状态储存、恢复的几个问题：</p>
+<h2 id="备忘录模式"><a href="#备忘录模式" class="headerlink" title="备忘录模式"></a>备忘录模式</h2><p>总的来说，上述描述讨论了为了实现状态储存、恢复的几个问题：</p>
 <p>1.状态存哪里？</p>
 <p>2.产生备份、从备份中恢复的方法定义在哪里？</p>
 <p>3.快照类、原类、其他类之间的互相访问权限如何？</p>
 <p>对于第1点，从单一职责原则考虑，肯定需要<strong>新建一个快照类</strong>。</p>
-<p>第2和第3点是互相关联的，需要一起考虑。从上述例子中，可以看出定义在其它类中不太合适，因为其他类不该有快照类、原类的状态访问权限和依赖。而对于原类和快照类，二者通常为一对多关系。原对象生成多个快照，并由原对象主动选择快照恢复。从语义上看，备份/恢复操作的发起方应为原类，故<strong>建议将相关方法定义在原类中</strong>。</p>
-<p>备份/恢复方法体中需要完成原对象和快照对象的状态赋值。当方法定义在原类中，那么原类需要有对快照类状态的访问权限，同时不希望快照类的状态暴露给除原类外的其他类。这种访问权限的限制，在不同语言中有不同处理方法。</p>
+<p>第2和第3点是互相关联的，需要一起考虑。从上述例子中，可以看出定义在其它类中不太合适，因为其他类不该有快照类、原类的状态访问权限和依赖。而对于原类和快照类，二者通常为一对多关系。原对象生成多个快照，并由原对象主动选择快照恢复。从语义上看，备份&#x2F;恢复操作的发起方应为原类，故<strong>建议将相关方法定义在原类中</strong>。</p>
+<p>备份&#x2F;恢复方法体中需要完成原对象和快照对象的状态赋值。当方法定义在原类中，那么原类需要有对快照类状态的访问权限，同时不希望快照类的状态暴露给除原类外的其他类。这种访问权限的限制，在不同语言中有不同处理方法。</p>
 <p>在<code>java</code>中可以使用<strong>嵌套类</strong>的特性来实现上述要求，具体来说是将快照类定义为<code>public static</code>的嵌套类。<code>public</code>意味着其他类可以引用、储存快照类，<code>static</code>意味着快照对象不是必须引用原类对象。同时将快照类的状态设置为<code>private</code>，此时只有其外部类拥有其状态的访问权限，其他类不能访问。如果其他类不需要引用快照对象，而是由原类自行存储，那可以进一步把类的访问修饰改为<code>private</code>，实现更好的封装性。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// Originator.java</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Originator</span> &#123;<br>    <span class="hljs-keyword">private</span> String state;<br>    <br>    <span class="hljs-keyword">public</span> Memento <span class="hljs-title function_">save</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Memento</span>(state);<br>    &#125;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">restore</span><span class="hljs-params">(Memento m)</span> &#123;<br>        <span class="hljs-built_in">this</span>.state = m.savedState;<br>    &#125;<br>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Memento</span> &#123;<br>        <span class="hljs-keyword">private</span> <span class="hljs-keyword">final</span> String savedState;<br><br>        <span class="hljs-keyword">private</span> <span class="hljs-title function_">Memento</span><span class="hljs-params">(String state)</span> &#123;<br>            <span class="hljs-built_in">this</span>.savedState = state;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
 <p>在一些不支持嵌套类的语言中，无法使用上面这个方案。备选的方案使用接口，其他类引用的是备忘录接口，来避免其他类对具体备忘录类的依赖。整体来说，这些使用接口的方案有点过度设计的感觉，不推荐也不过多介绍。</p>
 <p>至此，整个备忘录模式已经介绍完毕了，规范下此模式中的角色术语：</p>
 <ul>
@@ -305,8 +306,7 @@
 </ul>
 <p>撤销操作通常针对最近一次变更，也就是说，最后保存的状态快照往往是最先被使用的。这种后进先出的特性，与栈的数据结构天然契合。因此，在备忘录模式中，负责人通常会采用栈来管理历史快照：当进行状态备份时，将新的快照压入栈顶；当需要恢复状态时，则从栈顶弹出最近保存的快照。这种设计不仅逻辑直观，也符合用户对于撤销操作的普遍预期。</p>
 <p>在一些场景下，原发器和负责人可以是同一个角色。例如在一个简单的文本编辑器工具中，该工具类既负责管理当前编辑的内容（即作为原发器，创建和恢复文本状态的快照），又负责维护编辑过程中的历史版本（即作为负责人，保存和管理这些快照）。由于功能相对单一、状态管理逻辑不复杂，将这两个角色合并到同一个类中，一定程度违背了单一职责原则，但能避免为少量状态管理单独拆分类所带来的额外复杂度。</p>
-<h2 id="总结">总结</h2>
-<p>备忘录模式的动机，是在复制、恢复原发器的状态的同时，不破坏封装性。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>备忘录模式的动机，是在复制、恢复原发器的状态的同时，不破坏封装性。</p>
 <p>备忘录模式使用备忘录类，储存原发器的状态。通过将其设置嵌套类，调整访问修饰符，来避免破坏封装性。</p>
 <p>负责人通常使用栈保存备忘录对象。</p>
 

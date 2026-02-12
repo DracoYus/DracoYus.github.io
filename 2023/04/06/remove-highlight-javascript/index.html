@@ -19,12 +19,12 @@
   <meta name="author" content="DracoYu">
   <meta name="keywords" content="学习笔记,Java,JavaScript,后端,前端">
   
-    <meta name="description" content="最近开发了一个基于TamperMonkey的JS脚本，其主要功能为去除特定页面中的广告、Header等无效信息元素，并根据逻辑高亮其中重要信息元素。 Github 从解决需求角度出发，常见的去除页面中的广告可以通过CSS植入，并利用样式选择器将广告元素的display属性设置为none。但需要根据逻辑高亮元素（如经过元素内文本排序后，对前n位进行高亮），简单的CSS植入无法满足这个需求。因此最">
+    <meta name="description" content="最近开发了一个基于TamperMonkey的JS脚本，其主要功能为去除特定页面中的广告、Header等无效信息元素，并根据逻辑高亮其中重要信息元素。 Github 从解决需求角度出发，常见的去除页面中的广告可以通过CSS植入，并利用样式选择器将广告元素的display属性设置为none。但需要根据逻辑高亮元素（如经过元素内文本排序后，对前n位进行高亮），简单的CSS植入无法满足这个需求。因此最后采">
 <meta property="og:type" content="article">
 <meta property="og:title" content="去除&#x2F;高亮页面元素的JS脚本">
 <meta property="og:url" content="http://dracoyus.github.io/2023/04/06/remove-highlight-javascript/index.html">
 <meta property="og:site_name" content="DracoYu&#39;s MindCache">
-<meta property="og:description" content="最近开发了一个基于TamperMonkey的JS脚本，其主要功能为去除特定页面中的广告、Header等无效信息元素，并根据逻辑高亮其中重要信息元素。 Github 从解决需求角度出发，常见的去除页面中的广告可以通过CSS植入，并利用样式选择器将广告元素的display属性设置为none。但需要根据逻辑高亮元素（如经过元素内文本排序后，对前n位进行高亮），简单的CSS植入无法满足这个需求。因此最">
+<meta property="og:description" content="最近开发了一个基于TamperMonkey的JS脚本，其主要功能为去除特定页面中的广告、Header等无效信息元素，并根据逻辑高亮其中重要信息元素。 Github 从解决需求角度出发，常见的去除页面中的广告可以通过CSS植入，并利用样式选择器将广告元素的display属性设置为none。但需要根据逻辑高亮元素（如经过元素内文本排序后，对前n位进行高亮），简单的CSS植入无法满足这个需求。因此最后采">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-04-06T07:31:25.000Z">
 <meta property="article:modified_time" content="2023-04-07T06:51:44.067Z">
@@ -282,67 +282,63 @@
                 
                 <p>最近开发了一个基于TamperMonkey的JS脚本，其主要功能为去除特定页面中的广告、Header等无效信息元素，并根据逻辑高亮其中重要信息元素。</p>
 <p><a target="_blank" rel="noopener" href="https://github.com/DracoYus/lolalytics-light">Github</a></p>
-<p>从解决需求角度出发，常见的去除页面中的广告可以通过CSS植入，并利用样式选择器将广告元素的display属性设置为none。但需要根据逻辑高亮元素（如经过元素内文本排序后，对前n位进行高亮），简单的CSS植入无法满足这个需求。因此最后采用了TamperMonkey执行JS脚本的方案，利用JS操纵DOM元素来达到去除/高亮元素的目的。</p>
+<p>从解决需求角度出发，常见的去除页面中的广告可以通过CSS植入，并利用样式选择器将广告元素的display属性设置为none。但需要根据逻辑高亮元素（如经过元素内文本排序后，对前n位进行高亮），简单的CSS植入无法满足这个需求。因此最后采用了TamperMonkey执行JS脚本的方案，利用JS操纵DOM元素来达到去除&#x2F;高亮元素的目的。</p>
 <p>目标页面采用了懒加载处理，可见范围外的元素不会提前加载。而TamperMonkey的内置执行时机，只能在页面开始加载或加载完成后执行一次。对于页面加载完成后，动态新加载的元素，无法完成功能。</p>
 <table>
-
 <thead>
-<tr class="header">
-<th><span class="citation" data-cites="run-at">@run-at</span></th>
+<tr>
+<th>@run-at</th>
 <th>Timing</th>
 </tr>
 </thead>
-<tbody>
-<tr class="odd">
+<tbody><tr>
 <td>document-start</td>
 <td>as fast as possible</td>
 </tr>
-<tr class="even">
+<tr>
 <td>document-body</td>
 <td>body element exists</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>document-end</td>
 <td>when or after the DOMContentLoaded event was dispatched</td>
 </tr>
-<tr class="even">
+<tr>
 <td>document-idle</td>
 <td>after the DOMContentLoaded event was dispatched</td>
 </tr>
-<tr class="odd">
+<tr>
 <td>context-menu</td>
 <td>it is clicked at the browser context menu</td>
 </tr>
-</tbody>
-</table>
+</tbody></table>
 <p>由于页面的动态加载，需要多次执行目标函数。一种做法是，通过<code>setInterval</code>函数来指定目标函数每隔一段时间执行。这样的优点是编码简单，缺点是消耗系统资源，不太优雅。页面动态加载会导致DOM元素的增加或减少，因此更为优雅的做法是注册事件，当页面元素发生变化时，重新执行目标函数，这就用到了<code>MutationObserver</code>。</p>
-<h2 id="mutationobserver">MutationObserver</h2>
-<p><code>MutationObserver</code>可以检测页面元素属性变化、子节点的添加或删除、文本内容的变化等。</p>
+<h2 id="MutationObserver"><a href="#MutationObserver" class="headerlink" title="MutationObserver"></a>MutationObserver</h2><p><code>MutationObserver</code>可以检测页面元素属性变化、子节点的添加或删除、文本内容的变化等。</p>
 <p><code>MutationObserver</code> 的使用步骤如下：</p>
-<ol type="1">
-<li><p>创建一个 MutationObserver
-对象，传入一个回调函数作为参数，该回调函数将在 DOM
-树变化时被调用。在此问题中，callback就是去除/高亮页面元素的函数。</p>
-<p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> observer = <span class="hljs-keyword">new</span> <span class="hljs-title class_">MutationObserver</span>(callback);<br></code></pre></td></tr></table></figure></p></li>
-<li><p>使用 <code>observe</code> 方法开始监视 DOM
-元素的变化，传入要观察的 DOM 元素以及要观察的变化类型的配置对象。</p>
-<p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs javascript">observer.<span class="hljs-title function_">observe</span>(target, options);<br></code></pre></td></tr></table></figure></p>
-<p><code>target</code> 是要观察的 DOM
-元素，一般为<code>document.documentElement</code>，表示监视整个页面文档的元素变化。<code>options</code>
-是一个配置对象，用于指定要观察的变化类型。此处为<code>&#123;childList: true, subtree: true&#125;</code>，表示检测target以及其子节点的元素变化。如果不设置，默认只监测<code>target</code>本身，子节点的添加和减少不会被监测到。</p></li>
+<ol>
+<li><p>创建一个 MutationObserver 对象，传入一个回调函数作为参数，该回调函数将在 DOM 树变化时被调用。在此问题中，callback就是去除&#x2F;高亮页面元素的函数。</p>
+ <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">const</span> observer = <span class="hljs-keyword">new</span> <span class="hljs-title class_">MutationObserver</span>(callback);<br></code></pre></td></tr></table></figure>
+</li>
+<li><p>使用 <code>observe</code> 方法开始监视 DOM 元素的变化，传入要观察的 DOM 元素以及要观察的变化类型的配置对象。</p>
+ <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs javascript">observer.<span class="hljs-title function_">observe</span>(target, options);<br></code></pre></td></tr></table></figure>
+
+<p> <code>target</code> 是要观察的 DOM 元素，一般为<code>document.documentElement</code>，表示监视整个页面文档的元素变化。<code>options</code> 是一个配置对象，用于指定要观察的变化类型。此处为<code>&#123;childList: true, subtree: true&#125;</code>，表示检测target以及其子节点的元素变化。如果不设置，默认只监测<code>target</code>本身，子节点的添加和减少不会被监测到。</p>
+</li>
 <li><p>在回调函数中处理 DOM 变化的情况。</p>
-<p><figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">callback</span>(<span class="hljs-params">mutationsList, observer</span>) &#123;<br>  <span class="hljs-comment">// mutationsList 是一个 MutationRecord 对象的数组，包含了发生的 DOM 变化</span><br>  <span class="hljs-comment">// observer 是当前的 MutationObserver 对象</span><br><br>  <span class="hljs-comment">// 在这里处理 DOM 变化的情况</span><br>&#125;<br></code></pre></td></tr></table></figure></p>
-<p>回调函数可以接收到发生变化的元素的信息。可以通过判断改变的是哪个元素，来具体执行去除/高亮的动作。在本项目中，为了偷懒并没有在此进行判断。</p></li>
+ <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">callback</span>(<span class="hljs-params">mutationsList, observer</span>) &#123;<br>  <span class="hljs-comment">// mutationsList 是一个 MutationRecord 对象的数组，包含了发生的 DOM 变化</span><br>  <span class="hljs-comment">// observer 是当前的 MutationObserver 对象</span><br><br>  <span class="hljs-comment">// 在这里处理 DOM 变化的情况</span><br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p> 回调函数可以接收到发生变化的元素的信息。可以通过判断改变的是哪个元素，来具体执行去除&#x2F;高亮的动作。在本项目中，为了偷懒并没有在此进行判断。</p>
+</li>
 </ol>
-<h2 id="引发的问题">引发的问题</h2>
-<p>在采用<code>MutationObserver</code>之后，页面出现了无法加载的情况。通过调试器查看到，目标函数被反复调用，整个页面陷入卡死的状态。猜测是页面元素发生变动，调用了目标函数后，目标函数也改变了页面元素（但是我的代码里没有啊？），反复触发了<code>MutationObserver</code>的目标函数，形成了递归死循环。为了解决这个问题，了解了函数防抖和函数节流。</p>
-<h2 id="函数防抖和函数节流">函数防抖和函数节流</h2>
-<p>函数防抖和函数节流都是用于限制某个函数的执行频率。如果函数调用的频率小于设定的阈值，那么是否采用函数防抖和函数节流对程序执行没有任何区别。</p>
+<h2 id="引发的问题"><a href="#引发的问题" class="headerlink" title="引发的问题"></a>引发的问题</h2><p>在采用<code>MutationObserver</code>之后，页面出现了无法加载的情况。通过调试器查看到，目标函数被反复调用，整个页面陷入卡死的状态。猜测是页面元素发生变动，调用了目标函数后，目标函数也改变了页面元素（但是我的代码里没有啊？），反复触发了<code>MutationObserver</code>的目标函数，形成了递归死循环。为了解决这个问题，了解了函数防抖和函数节流。</p>
+<h2 id="函数防抖和函数节流"><a href="#函数防抖和函数节流" class="headerlink" title="函数防抖和函数节流"></a>函数防抖和函数节流</h2><p>函数防抖和函数节流都是用于限制某个函数的执行频率。如果函数调用的频率小于设定的阈值，那么是否采用函数防抖和函数节流对程序执行没有任何区别。</p>
 <p>防抖的基本思想是在一定的时间间隔内，只执行最后一次触发事件的处理函数，忽略在此时间间隔内的其他触发事件。与函数防抖不同，函数节流是在一定的时间间隔内，定期执行事件处理函数。</p>
 <p>函数防抖就像拍卖，拍卖成功（目标函数执行）会在敲三锤（一定间隔后）执行，一旦在敲三锤前进行了竞拍（再次调用用防抖包裹的目标函数），那么间隔会被重置。</p>
 <p>函数节流就像大学抢浴室。一个人进了浴室（调用用节流包裹的目标函数），其他人再想进去（再次调用用节流包裹的目标函数）就不行，必须等这个人洗完（一定间隔），一旦他洗完（目标函数执行），所有人都可以再次抢浴室（调用用节流包裹的目标函数）。从某种角度，这和锁机制很像，被上锁的对象为计时器。只有获得计时器的调用才会被真正执行。</p>
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">debounce</span>(<span class="hljs-params">func, delay</span>) &#123;<br>  <span class="hljs-keyword">let</span> timerId; <span class="hljs-comment">// 记录定时器的ID</span><br><br>  <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span>(<span class="hljs-params">...args</span>) &#123;<br>    <span class="hljs-comment">// 如果已存在定时器，则先清除之前的定时器</span><br>    <span class="hljs-keyword">if</span> (timerId) &#123;<br>      <span class="hljs-built_in">clearTimeout</span>(timerId);<br>    &#125;<br>    <span class="hljs-comment">// 创建新的定时器，延迟执行 func 函数</span><br>    timerId = <span class="hljs-built_in">setTimeout</span>(<span class="hljs-function">() =&gt;</span> &#123;<br>      func.<span class="hljs-title function_">apply</span>(<span class="hljs-variable language_">this</span>, args); <span class="hljs-comment">// 执行 func 函数</span><br>      timerId = <span class="hljs-literal">null</span>; <span class="hljs-comment">// 清空定时器ID</span><br>    &#125;, delay);<br>  &#125;;<br>&#125;<br></code></pre></td></tr></table></figure>
+
 <figure class="highlight javascript"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs javascript"><span class="hljs-keyword">function</span> <span class="hljs-title function_">throttle</span>(<span class="hljs-params">func, delay</span>) &#123;<br>  <span class="hljs-keyword">let</span> lastTime = <span class="hljs-number">0</span>; <span class="hljs-comment">// 上次执行的时间戳</span><br>    <br>  <span class="hljs-keyword">return</span> <span class="hljs-keyword">function</span> (<span class="hljs-params">...args</span>) &#123;<br>    <span class="hljs-keyword">const</span> now = <span class="hljs-title class_">Date</span>.<span class="hljs-title function_">now</span>(); <span class="hljs-comment">// 当前时间戳</span><br>    <span class="hljs-keyword">if</span> (now - lastTime &gt;= delay) &#123; <span class="hljs-comment">// 判断当前时间与上次执行的时间间隔是否超过指定的等待时间</span><br>      func.<span class="hljs-title function_">apply</span>(<span class="hljs-variable language_">this</span>, args); <span class="hljs-comment">// 执行函数</span><br>      lastTime = now; <span class="hljs-comment">// 更新上次执行的时间戳</span><br>    &#125;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
 <p>函数防抖和节流都能限制函数被调用的频率，区别是什么时候能再次被调用，防抖是从多次小于设定间隔的连续调用的最后一次开始计算，而节流是从第一次调用开始计算，因此相同条件下，节流可以更快地进行第二次有效调用。</p>
 <p>总的来说，函数防抖适合在需要等待一段时间后再执行函数的场景。如果目标函数不需要等待可以立即执行，则使用节流即可。</p>
 

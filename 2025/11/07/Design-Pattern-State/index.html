@@ -19,15 +19,15 @@
   <meta name="author" content="DracoYu">
   <meta name="keywords" content="学习笔记,Java,JavaScript,后端,前端">
   
-    <meta name="description" content="状态模式是一种行为设计模式，它允许对象在其内部状态改变时改变它的行为，对象看起来好像修改了它的类。 场景 笔者曾基于按键精灵开发过一些自动化软件，用于在PC端及移动设备上模拟用户点击与输入操作，从而自动完成游戏内的日常任务。其底层实现逻辑为：程序通过一个持续运行的死循环，定时截取当前屏幕画面，基于图像特征判断当前所处的游戏界面状态（如主菜单、战斗中、战斗结束等），随后依据预先配置的操作策略，执">
+    <meta name="description" content="状态模式是一种行为设计模式，它允许对象在其内部状态改变时改变它的行为，对象看起来好像修改了它的类。 场景笔者曾基于按键精灵开发过一些自动化软件，用于在PC端及移动设备上模拟用户点击与输入操作，从而自动完成游戏内的日常任务。其底层实现逻辑为：程序通过一个持续运行的死循环，定时截取当前屏幕画面，基于图像特征判断当前所处的游戏界面状态（如主菜单、战斗中、战斗结束等），随后依据预先配置的操作策略，执行对应">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Design-Pattern-State">
 <meta property="og:url" content="http://dracoyus.github.io/2025/11/07/Design-Pattern-State/index.html">
 <meta property="og:site_name" content="DracoYu&#39;s MindCache">
-<meta property="og:description" content="状态模式是一种行为设计模式，它允许对象在其内部状态改变时改变它的行为，对象看起来好像修改了它的类。 场景 笔者曾基于按键精灵开发过一些自动化软件，用于在PC端及移动设备上模拟用户点击与输入操作，从而自动完成游戏内的日常任务。其底层实现逻辑为：程序通过一个持续运行的死循环，定时截取当前屏幕画面，基于图像特征判断当前所处的游戏界面状态（如主菜单、战斗中、战斗结束等），随后依据预先配置的操作策略，执">
+<meta property="og:description" content="状态模式是一种行为设计模式，它允许对象在其内部状态改变时改变它的行为，对象看起来好像修改了它的类。 场景笔者曾基于按键精灵开发过一些自动化软件，用于在PC端及移动设备上模拟用户点击与输入操作，从而自动完成游戏内的日常任务。其底层实现逻辑为：程序通过一个持续运行的死循环，定时截取当前屏幕画面，基于图像特征判断当前所处的游戏界面状态（如主菜单、战斗中、战斗结束等），随后依据预先配置的操作策略，执行对应">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-11-07T07:10:44.000Z">
-<meta property="article:modified_time" content="2025-11-18T09:26:27.987Z">
+<meta property="article:modified_time" content="2026-02-05T09:10:33.019Z">
 <meta property="article:author" content="DracoYu">
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="DesignPattern">
@@ -278,26 +278,25 @@
               <div class="markdown-body">
                 
                 <p><strong>状态模式</strong>是一种行为设计模式，它允许对象在其内部状态改变时改变它的行为，对象看起来好像修改了它的类。</p>
-<h2 id="场景">场景</h2>
-<p>笔者曾基于按键精灵开发过一些自动化软件，用于在<code>PC</code>端及移动设备上模拟用户点击与输入操作，从而自动完成游戏内的日常任务。其底层实现逻辑为：程序通过一个持续运行的死循环，定时截取当前屏幕画面，基于图像特征判断当前所处的游戏界面状态（如主菜单、战斗中、战斗结束等），随后依据预先配置的操作策略，执行对应的自动化动作——例如当识别到主菜单界面时，触发“开始战斗”按钮的点击操作；当检测到战斗结束界面时，则自动完成“结算”操作。在具体代码实现层面，这一系列界面状态判断与操作分发的逻辑，最初是通过传统的<code>if</code>条件分支或<code>switch</code>语句结构来完成的。</p>
-<p>对于上述过程，其核心设计思想在于：程序在运行过程中始终仅处于若干种<strong>预定义的有限状态</strong>之一。针对每一种特定的状态，程序会展现出<strong>差异化的行为逻辑</strong>，并且能够在<strong>无需中间过渡过程的情况下</strong>，直接从一个状态切换至另一个状态。然而，状态的变更并非必然发生——程序可能基于当前状态触发向其他状态的<strong>跳转</strong>，也可能保持当前状态<strong>持续运行</strong>。这些预先设定且数量有限的、定义了”在何种状态下应如何转换至其他状态（或维持原状态）“的规则，被统称为<strong>状态转移（<code>State Transition</code>）</strong>。这类程序可以抽象为<strong>有限状态机</strong>。显然，有限状态机由有限个状态、状态下的行为、状态转移规则所定义。</p>
+<h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><p>笔者曾基于按键精灵开发过一些自动化软件，用于在<code>PC</code>端及移动设备上模拟用户点击与输入操作，从而自动完成游戏内的日常任务。其底层实现逻辑为：程序通过一个持续运行的死循环，定时截取当前屏幕画面，基于图像特征判断当前所处的游戏界面状态（如主菜单、战斗中、战斗结束等），随后依据预先配置的操作策略，执行对应的自动化动作——例如当识别到主菜单界面时，触发“开始战斗”按钮的点击操作；当检测到战斗结束界面时，则自动完成“结算”操作。在具体代码实现层面，这一系列界面状态判断与操作分发的逻辑，最初是通过传统的<code>if</code>条件分支或<code>switch</code>语句结构来完成的。</p>
+<p>对于上述过程，其核心设计思想在于：程序在运行过程中始终仅处于若干种<strong>预定义的有限状态</strong>之一。针对每一种特定的状态，程序会展现出<strong>差异化的行为逻辑</strong>，并且能够在<strong>无需中间过渡过程的情况下</strong>，直接从一个状态切换至另一个状态。然而，状态的变更并非必然发生——程序可能基于当前状态触发向其他状态的<strong>跳转</strong>，也可能保持当前状态<strong>持续运行</strong>。这些预先设定且数量有限的、定义了”在何种状态下应如何转换至其他状态（或维持原状态）”的规则，被统称为<strong>状态转移</strong>（<code>State Transition</code>）。这类程序可以抽象为<strong>有限状态机</strong>。显然，有限状态机由有限个状态、状态下的行为、状态转移规则所定义。</p>
 <p>随着向自动化软件添加了更多状态和行为，整个程序变得<strong>难以维护</strong>，原本简洁的<code>if-else</code>或<code>switch-case</code>会膨胀为冗长的嵌套分支。例如：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">if</span> (currentScreen.equals(MAIN_MENU)) &#123;<br>    clickStartBattle();<br>&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (currentScreen.equals(BATTLE_FIELD)) &#123;<br>    <span class="hljs-keyword">if</span> (battlePhase.equals(BATTLE_ONGOING)) &#123;<br>        checkHpAndUseSkill();<br>    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (battlePhase.equals(BATTLE_ENDED)) &#123;<br>        clickSettlement();<br>    &#125;<br>&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (currentScreen.equals(INVENTORY)) &#123;<br>    <span class="hljs-comment">// 使用switch判断选中物品</span><br>    <span class="hljs-keyword">switch</span> (selectedItem) &#123;<br>        <span class="hljs-keyword">case</span> ITEM_POTION:<br>            usePotion();<br>            <span class="hljs-keyword">break</span>;<br>        <span class="hljs-keyword">case</span> ITEM_EQUIPMENT:<br>            equipItem();<br>            <span class="hljs-keyword">break</span>;<br>        <span class="hljs-keyword">default</span>:<br>            System.out.println(<span class="hljs-string">&quot;未识别的物品选择&quot;</span>);<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-<h2 id="状态模式">状态模式</h2>
-<p>状态模式的核心思想是将对象的行为与其状态解耦，通过以下方式实现：</p>
-<ol type="1">
+
+<h2 id="状态模式"><a href="#状态模式" class="headerlink" title="状态模式"></a>状态模式</h2><p>状态模式的核心思想是将对象的行为与其状态解耦，通过以下方式实现：</p>
+<ol>
 <li><strong>状态抽象化</strong>：为对象的每个可能状态创建一个独立的类，将原本分散在<code>if/switch</code>分支中的状态相关行为抽取到对应的状态类中。每个状态类负责封装该状态下对象应表现的行为逻辑。</li>
-<li><strong>上下文委托</strong>：原始对象（称为上下文<code>Context</code>）不再自行处理所有状态相关的行为，而是：
-<ul>
+<li><strong>上下文委托</strong>：原始对象（称为上下文<code>Context</code>）不再自行处理所有状态相关的行为，而是：<ul>
 <li>持有一个表示当前状态的状态对象引用</li>
 <li>将所有状态相关的操作委托给当前状态对象处理</li>
 <li>提供状态切换接口供状态对象修改当前状态</li>
-</ul></li>
-<li><strong>状态转换机制</strong>：状态对象在执行行为逻辑后，可以：
-<ul>
+</ul>
+</li>
+<li><strong>状态转换机制</strong>：状态对象在执行行为逻辑后，可以：<ul>
 <li>保持当前状态不变（当无需切换时）</li>
 <li>通过上下文切换到其他状态（当满足转换条件时）</li>
-</ul></li>
+</ul>
+</li>
 </ol>
 <p>显然需要定义一个状态接口，使得上下文可以方便的引用和切换不同状态。状态接口中需要声明哪些方法，<strong>通常取决于具体的业务场景以及上下文对象的行为变化</strong>。例如上文中的自动化软件的例子，程序仅根据所处状态决定执行逻辑，而不涉及复杂的业务操作。那可以仅简单声明一个<code>handle</code>方法。</p>
 <p>然而，在更复杂的业务系统中，比如订单系统。订单有几种状态：待支付、已支付、已发货、已完成等。每种状态下，对某些操作（如支付、取消、发货）的响应是不同的。此时仅通过状态无法确定执行逻辑，还需要额外根据<strong>每一种可能的业务操作</strong>。因此需要在状态接口中声明<code>pay()</code>、<code>cancel()</code>、<code>ship()</code>等方法。</p>
@@ -330,8 +329,8 @@
     Client --&gt; Context
     Client --&gt; ConcreteState
 </code></pre>
-<h2 id="总结">总结</h2>
-<p>当代码中出现复杂的<code>if/switch</code>语句，可以考虑使用状态模式。</p>
+
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>当代码中出现复杂的<code>if/switch</code>语句，可以考虑使用状态模式。</p>
 <p>状态模式中，代码中的不同<code>if/switch</code>分支被抽取为状态类。在原上下文对象中通过引用和切换状态对象，来表现出不同行为。</p>
 <p>每个状态类中，需要定义具体的执行逻辑，并根据执行结果决定下一个状态。</p>
 

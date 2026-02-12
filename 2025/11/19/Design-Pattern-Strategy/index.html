@@ -19,12 +19,12 @@
   <meta name="author" content="DracoYu">
   <meta name="keywords" content="学习笔记,Java,JavaScript,后端,前端">
   
-    <meta name="description" content="策略模式（Strategy Pattern）是一种行为型设计模式，它定义了一系列算法（策略），并将每个算法封装起来，使它们可以互相替换，且不影响客户端的使用。 场景 在日常生活中，做一件事通常有多种方式。例如点外卖时，可以选择距离优先，好评优先对商家进行排序。从代码开发角度，如果存在多种排序规则，则可以定义一个排序方法，接受排序规则作为入参，一段典型的代码如下： 12345678910pu">
+    <meta name="description" content="策略模式（Strategy Pattern）是一种行为型设计模式，它定义了一系列算法（策略），并将每个算法封装起来，使它们可以互相替换，且不影响客户端的使用。 场景在日常生活中，做一件事通常有多种方式。例如点外卖时，可以选择距离优先，好评优先对商家进行排序。从代码开发角度，如果存在多种排序规则，则可以定义一个排序方法，接受排序规则作为入参，一段典型的代码如下： 12345678910public">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Design-Pattern-Strategy">
 <meta property="og:url" content="http://dracoyus.github.io/2025/11/19/Design-Pattern-Strategy/index.html">
 <meta property="og:site_name" content="DracoYu&#39;s MindCache">
-<meta property="og:description" content="策略模式（Strategy Pattern）是一种行为型设计模式，它定义了一系列算法（策略），并将每个算法封装起来，使它们可以互相替换，且不影响客户端的使用。 场景 在日常生活中，做一件事通常有多种方式。例如点外卖时，可以选择距离优先，好评优先对商家进行排序。从代码开发角度，如果存在多种排序规则，则可以定义一个排序方法，接受排序规则作为入参，一段典型的代码如下： 12345678910pu">
+<meta property="og:description" content="策略模式（Strategy Pattern）是一种行为型设计模式，它定义了一系列算法（策略），并将每个算法封装起来，使它们可以互相替换，且不影响客户端的使用。 场景在日常生活中，做一件事通常有多种方式。例如点外卖时，可以选择距离优先，好评优先对商家进行排序。从代码开发角度，如果存在多种排序规则，则可以定义一个排序方法，接受排序规则作为入参，一段典型的代码如下： 12345678910public">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-11-19T03:21:11.000Z">
 <meta property="article:modified_time" content="2025-11-21T07:37:43.572Z">
@@ -277,14 +277,12 @@
             
               <div class="markdown-body">
                 
-                <p><strong>策略模式（Strategy
-Pattern）</strong>是一种<strong>行为型设计模式</strong>，它定义了一系列<strong>算法（策略）</strong>，并将每个算法封装起来，使它们可以<strong>互相替换</strong>，且<strong>不影响客户端的使用</strong>。</p>
-<h2 id="场景">场景</h2>
-<p>在日常生活中，做一件事通常有多种方式。例如点外卖时，可以选择距离优先，好评优先对商家进行排序。从代码开发角度，如果存在多种排序规则，则可以定义一个排序方法，接受排序规则作为入参，一段典型的代码如下：</p>
+                <p><strong>策略模式（Strategy Pattern）<strong>是一种</strong>行为型设计模式</strong>，它定义了一系列<strong>算法（策略）</strong>，并将每个算法封装起来，使它们可以<strong>互相替换</strong>，且<strong>不影响客户端的使用</strong>。</p>
+<h2 id="场景"><a href="#场景" class="headerlink" title="场景"></a>场景</h2><p>在日常生活中，做一件事通常有多种方式。例如点外卖时，可以选择距离优先，好评优先对商家进行排序。从代码开发角度，如果存在多种排序规则，则可以定义一个排序方法，接受排序规则作为入参，一段典型的代码如下：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> List&lt;Merchant&gt; <span class="hljs-title function_">merchant_sort</span><span class="hljs-params">(List&lt;Merchant&gt; merchants, String strategy)</span> &#123;<br>    <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;FASTEST&quot;</span>.equals(strategy)) &#123;<br>        <span class="hljs-comment">// 最快配送排序</span><br>    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;RATING&quot;</span>.equals(strategy)) &#123;<br>        <span class="hljs-comment">// 商家评分排序</span><br>    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (<span class="hljs-string">&quot;RANKING&quot;</span>.equals(strategy)) &#123;<br>        <span class="hljs-comment">// 销量排序</span><br>    &#125;<br>    ....<br>&#125;<br></code></pre></td></tr></table></figure>
+
 <p>但后续需要新增或修改排序规则时，就需要修改上述方法，这不符合开闭原则。并且难以维护，所有逻辑混在一起，逻辑复杂时难以阅读。</p>
-<h2 id="策略模式">策略模式</h2>
-<p>既然已经想到可以将排序规则字符串作为入参传入，那么很容易进一步联想到：也可以直接把算法本身作为入参传入。在<code>C</code>语言中，这种将方法作为参数传入的特性被称为<strong>可变方法</strong>，其本质是通过<strong>函数指针</strong>来实现<strong>动态调用不同的函数</strong>。而在<code>Java</code>中，由于<strong>万事万物皆对象</strong>的特性，方法无法单独存在，必须依托对象作为载体进行传入。为了让调用方能够灵活切换不同的方法，自然需要先定义一个策略接口，每当新增一个算法时，就对应新增一个实现该接口的具体类。</p>
+<h2 id="策略模式"><a href="#策略模式" class="headerlink" title="策略模式"></a>策略模式</h2><p>既然已经想到可以将排序规则字符串作为入参传入，那么很容易进一步联想到：也可以直接把算法本身作为入参传入。在<code>C</code>语言中，这种将方法作为参数传入的特性被称为<strong>可变方法</strong>，其本质是通过<strong>函数指针</strong>来实现<strong>动态调用不同的函数</strong>。而在<code>Java</code>中，由于<strong>万事万物皆对象</strong>的特性，方法无法单独存在，必须依托对象作为载体进行传入。为了让调用方能够灵活切换不同的方法，自然需要先定义一个策略接口，每当新增一个算法时，就对应新增一个实现该接口的具体类。</p>
 <p>至此已将策略模式中的角色介绍完毕，十分简洁的模式结构。规范下术语，定义不同算法签名的接口称为策略接口；其具体实现类称为具体策略；调用策略的类称为上下文；客户端通过将具体策略传递给上下文，来达到运行时切换上下类实现某功能的算法。各个角色的关系类图如下。</p>
 <pre><code class=" mermaid">classDiagram
     direction LR
@@ -311,11 +309,11 @@ Pattern）</strong>是一种<strong>行为型设计模式</strong>，它定义�
     Client --&gt; Context
     Client --&gt; ConcreteStrategy
 </code></pre>
+
 <p>上下文可以通过成员变量引用策略，也可以通过方法参数切换不同具体策略，均是可以的。类图中使用的是通过成员变量绑定了具体策略。</p>
 <p>若策略接口仅声明一个方法，它便成为<code>Java</code>中的函数式接口。对于那些以函数式接口作为参数的方法，若策略仅在局部使用、不会在多处被重复调用，甚至无需显式定义策略实现类——可直接在调用上下文方法时，通过匿名实现类快速实现策略逻辑。例如<code>JDK</code>中的<code>Comparator</code>函数式接口和<code>Collections</code>的<code>sort</code>方法。再进一步，可以用<code>lambda</code>表达式替换匿名实现类。</p>
 <p>从结构与使用方式上看，策略模式与状态模式高度相似。语义层面而言，不同状态下的行为逻辑，本质上可视作策略的具体表现。二者最核心的差异在于：状态模式中，状态对象需感知其他状态的存在，并可能在执行逻辑时主动切换至其他状态；而策略模式里的策略对象彼此独立、互不感知。</p>
-<h2 id="总结">总结</h2>
-<p>策略模式定义策略接口，使得上下文可以动态切换不同的具体策略。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>策略模式定义策略接口，使得上下文可以动态切换不同的具体策略。</p>
 <p>在<code>java</code>中，若策略仅在局部使用，可以通过函数式接口、<code>lambda</code>表达式替换简化。</p>
 
                 

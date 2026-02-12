@@ -19,12 +19,12 @@
   <meta name="author" content="DracoYu">
   <meta name="keywords" content="学习笔记,Java,JavaScript,后端,前端">
   
-    <meta name="description" content="Git是最常用的VCS(version control system，版本控制系统)工具。在Git中，多人协作开发涉及到多分支，而分支管理则必然会涉及新建分支和分支合并。相对于新建分支，分支合并复杂得多，是问题的高发地段。合并分支通常有两种方式，merge和rebase。其中merge是通过新建一个特殊的提交（本文不加区分地使用提交&#x2F;节点），这个提交指向了两个节点（常规的提交只有一个父节点），这">
+    <meta name="description" content="Git是最常用的VCS(version control system，版本控制系统)工具。在Git中，多人协作开发涉及到多分支，而分支管理则必然会涉及新建分支和分支合并。相对于新建分支，分支合并复杂得多，是问题的高发地段。合并分支通常有两种方式，merge和rebase。其中merge是通过新建一个特殊的提交（本文不加区分地使用提交&#x2F;节点），这个提交指向了两个节点（常规的提交只有一个父节">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Git-Rebase">
 <meta property="og:url" content="http://dracoyus.github.io/2023/06/19/Git-Rebase/index.html">
 <meta property="og:site_name" content="DracoYu&#39;s MindCache">
-<meta property="og:description" content="Git是最常用的VCS(version control system，版本控制系统)工具。在Git中，多人协作开发涉及到多分支，而分支管理则必然会涉及新建分支和分支合并。相对于新建分支，分支合并复杂得多，是问题的高发地段。合并分支通常有两种方式，merge和rebase。其中merge是通过新建一个特殊的提交（本文不加区分地使用提交&#x2F;节点），这个提交指向了两个节点（常规的提交只有一个父节点），这">
+<meta property="og:description" content="Git是最常用的VCS(version control system，版本控制系统)工具。在Git中，多人协作开发涉及到多分支，而分支管理则必然会涉及新建分支和分支合并。相对于新建分支，分支合并复杂得多，是问题的高发地段。合并分支通常有两种方式，merge和rebase。其中merge是通过新建一个特殊的提交（本文不加区分地使用提交&#x2F;节点），这个提交指向了两个节点（常规的提交只有一个父节">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://dracoyus.github.io/img/merge.png">
 <meta property="og:image" content="http://dracoyus.github.io/img/basic-rebase-1.png">
@@ -283,74 +283,42 @@
             
               <div class="markdown-body">
                 
-                <p><code>Git</code>是最常用的<code>VCS</code>(<em>version control</em>
-system，版本控制系统)工具。在<code>Git</code>中，多人协作开发涉及到多分支，而分支管理则必然会涉及<code>新建分支</code>和<code>分支合并</code>。相对于<code>新建分支</code>，<code>分支合并</code>复杂得多，是问题的高发地段。<code>合并分支</code>通常有两种方式，<code>merge</code>和<code>rebase</code>。其中<code>merge</code>是通过新建一个特殊的提交（本文不加区分地使用提交/节点），这个提交指向了两个节点（常规的提交只有一个父节点），这两个节点分别来自不同的分支。</p>
-<figure>
-<img src="/img/merge.png" srcset="/img/loading.gif" lazyload alt="merge" />
-<figcaption aria-hidden="true">merge</figcaption>
-</figure>
+                <p><code>Git</code>是最常用的<code>VCS</code>(<em>version control</em> system，版本控制系统)工具。在<code>Git</code>中，多人协作开发涉及到多分支，而分支管理则必然会涉及<code>新建分支</code>和<code>分支合并</code>。相对于<code>新建分支</code>，<code>分支合并</code>复杂得多，是问题的高发地段。<code>合并分支</code>通常有两种方式，<code>merge</code>和<code>rebase</code>。其中<code>merge</code>是通过新建一个特殊的提交（本文不加区分地使用提交&#x2F;节点），这个提交指向了两个节点（常规的提交只有一个父节点），这两个节点分别来自不同的分支。</p>
+<p><img src="/img/merge.png" srcset="/img/loading.gif" lazyload alt="merge"></p>
 <p>如果合并时发生冲突，那么<code>合并提交</code>还会包含了冲突解决的信息。在<code>IDEA</code>中查看提交的文件改动，会发现相较于常规的两个窗口（一个显示提交前的版本，一个显示提交后的版本），<code>合并提交</code>的改动有三个窗口，因为提交前的版本有两个，来自不同分支。</p>
-<h2 id="rebase">rebase</h2>
-<p>相对于<code>merge</code>，<code>rebase</code>就要复杂得多。一个可能的原因是<code>rebase</code>会改动提交历史，并且没有交换律。</p>
-<p>通俗来讲，<code>rebase</code>的工作是找到两个分支的共同的祖先节点，并统计自共同的祖先节点开始的所有提交，在另一条分支上执行一次。此处借用<a
-target="_blank" rel="noopener" href="https://git-scm.com/book/zh/v2/Git-%E5%88%86%E6%94%AF-%E5%8F%98%E5%9F%BA">《Git
-Pro》</a>中的图片。</p>
-<figure>
-<img src="/img/basic-rebase-1.png" srcset="/img/loading.gif" lazyload alt="初始状态" />
-<figcaption aria-hidden="true">初始状态</figcaption>
-</figure>
-<figure>
-<img src="/img/basic-rebase-3.png" srcset="/img/loading.gif" lazyload alt="rebase后" />
-<figcaption aria-hidden="true">rebase后</figcaption>
-</figure>
-<p>图中，找到<code>experiment</code>分支的<code>C4</code>节点，和<code>master</code>分支的<code>C3</code>节点的共同祖先，也就是<code>C2</code>节点，并将自<code>C2</code>开始的所有发生在一侧的提交，在另一侧重现（图中只有一个<code>C4</code>，如果有更多都会重现）。并将<code>experiment</code>的指针指向<code>C4'</code>。<strong>这里就涉及到谁<code>rebase</code>到谁上的问题</strong>。体现在图中就是到底是新的<code>C4'</code>在<code>C3</code>后，还是新的<code>C3'</code>在<code>C4</code>后。</p>
-<p>在<a
-target="_blank" rel="noopener" href="https://git-scm.com/docs/git-rebase">官方文档</a>中，<code>git rebase</code>指令可以有很多变体。例如<code>git rebase A</code>、<code>git rebase A B</code>
-、<code>git rebase --onto A C B</code>。其中A、B、C表示分支的索引或提交。指定A、B、C本质就是在解决谁<code>rebase</code>到谁上的问题。</p>
+<h2 id="rebase"><a href="#rebase" class="headerlink" title="rebase"></a>rebase</h2><p>相对于<code>merge</code>，<code>rebase</code>就要复杂得多。一个可能的原因是<code>rebase</code>会改动提交历史，并且没有交换律。</p>
+<p>通俗来讲，<code>rebase</code>的工作是找到两个分支的共同的祖先节点，并统计自共同的祖先节点开始的所有提交，在另一条分支上执行一次。此处借用<a target="_blank" rel="noopener" href="https://git-scm.com/book/zh/v2/Git-%E5%88%86%E6%94%AF-%E5%8F%98%E5%9F%BA">《Git Pro》</a>中的图片。</p>
+<p><img src="/img/basic-rebase-1.png" srcset="/img/loading.gif" lazyload alt="初始状态"></p>
+<p><img src="/img/basic-rebase-3.png" srcset="/img/loading.gif" lazyload alt="rebase后"></p>
+<p>图中，找到<code>experiment</code>分支的<code>C4</code>节点，和<code>master</code>分支的<code>C3</code>节点的共同祖先，也就是<code>C2</code>节点，并将自<code>C2</code>开始的所有发生在一侧的提交，在另一侧重现（图中只有一个<code>C4</code>，如果有更多都会重现）。并将<code>experiment</code>的指针指向<code>C4&#39;</code>。<strong>这里就涉及到谁<code>rebase</code>到谁上的问题</strong>。体现在图中就是到底是新的<code>C4&#39;</code>在<code>C3</code>后，还是新的<code>C3&#39;</code>在<code>C4</code>后。</p>
+<p>在<a target="_blank" rel="noopener" href="https://git-scm.com/docs/git-rebase">官方文档</a>中，<code>git rebase</code>指令可以有很多变体。例如<code>git rebase A</code>、<code>git rebase A B</code> 、<code>git rebase --onto A C B</code>。其中A、B、C表示分支的索引或提交。指定A、B、C本质就是在解决谁<code>rebase</code>到谁上的问题。</p>
 <p>在<code>merge</code>时，合并时两个分支的地位是均等的。在<code>A</code>分支输入<code>git merge B</code>和在<code>B</code>分支输入<code>git merge A</code>，最后的结果几乎是一致的。细微的区别是合并后指向<code>合并提交</code>的分支是<code>A</code>或<code>B</code>，但在切换到另一个分支再<code>merge</code>一次后(<code>fast-forward</code>)，状态就完全一致。<code>merge</code>的这种两分支互换对合并后结果几乎没影响，我称之为<strong>交换律</strong>。</p>
 <p>相较于<code>merge</code>，<code>rebase</code>不遵循<strong>交换律</strong>。把<code>A</code>放在<code>B</code>上和把<code>B</code>放在<code>A</code>上，这显然是两个不同的状态。由于指令的复杂，以及A、B、C互相不可交换，地位不均等，导致<code>rebase</code>比<code>merge</code>更容易犯错。</p>
-<p>回到上面提到的三个指令<code>git rebase A</code>、<code>git rebase A B</code>
-、<code>git rebase --onto A C B</code>。其中<code>A</code>表示<code>新基</code>，<code>B</code>表示被<code>rebase</code>的分支，<code>C</code>表示从<code>C</code>开始计算到<code>B</code>的改动。上述指令的含义表示：<strong>从<code>C</code>开始统计，统计到<code>B</code>分支指向的节点做的所有改动，将这些改动在<code>A</code>上重现一次，并将<code>B</code>的引用指向重现完后的状态</strong>。如果<code>B</code>省略，则<code>B</code>默认为当前所在分支。如果<code>C</code>省略，则默认为<code>A</code>和<code>B</code>的最近的祖先节点。</p>
-<h3 id="常规实践">常规实践</h3>
-<p>在实际开发中，通常有一个共享的主分支，例如<code>master</code>分支。开发人员从<code>master</code>分支上某个节点建立新分支<code>feature</code>，并在此上开发。相对于共享的<code>master</code>分支，<code>feature</code>通常是不共享的。<code>master</code>被多人共同使用，改动会造成较大影响，因此主分支上的提交历史通常不会修改。而<code>feature</code>分支历史的修改只影响个人。因此在涉及谁<code>rebase</code>到谁上的问题时，<strong>通常会将<code>feature</code>分支<code>rebase</code>到<code>master</code>上</strong>。因为<code>rebase</code>操作会修改被<code>rebase</code>的分支的提交历史，对应上图中原本的<code>C4</code>节点将无法通过新指针找到，提交历史从<code>C2</code>-&gt;<code>C4</code>，变成了<code>C2</code>-&gt;<code>C3</code>-&gt;<code>C4'</code>。</p>
+<p>回到上面提到的三个指令<code>git rebase A</code>、<code>git rebase A B</code> 、<code>git rebase --onto A C B</code>。其中<code>A</code>表示<code>新基</code>，<code>B</code>表示被<code>rebase</code>的分支，<code>C</code>表示从<code>C</code>开始计算到<code>B</code>的改动。上述指令的含义表示：<strong>从<code>C</code>开始统计，统计到<code>B</code>分支指向的节点做的所有改动，将这些改动在<code>A</code>上重现一次，并将<code>B</code>的引用指向重现完后的状态</strong>。如果<code>B</code>省略，则<code>B</code>默认为当前所在分支。如果<code>C</code>省略，则默认为<code>A</code>和<code>B</code>的最近的祖先节点。</p>
+<h3 id="常规实践"><a href="#常规实践" class="headerlink" title="常规实践"></a>常规实践</h3><p>在实际开发中，通常有一个共享的主分支，例如<code>master</code>分支。开发人员从<code>master</code>分支上某个节点建立新分支<code>feature</code>，并在此上开发。相对于共享的<code>master</code>分支，<code>feature</code>通常是不共享的。<code>master</code>被多人共同使用，改动会造成较大影响，因此主分支上的提交历史通常不会修改。而<code>feature</code>分支历史的修改只影响个人。因此在涉及谁<code>rebase</code>到谁上的问题时，<strong>通常会将<code>feature</code>分支<code>rebase</code>到<code>master</code>上</strong>。因为<code>rebase</code>操作会修改被<code>rebase</code>的分支的提交历史，对应上图中原本的<code>C4</code>节点将无法通过新指针找到，提交历史从<code>C2</code>-&gt;<code>C4</code>，变成了<code>C2</code>-&gt;<code>C3</code>-&gt;<code>C4&#39;</code>。</p>
 <p>为了将<code>feature</code>分支<code>rebase</code>到<code>master</code>上，当然可以使用<code>git rebase A B</code>指令。但通常在GUI操作中，会先切换到<code>feature</code>，在进行<code>rebase</code>操作，相当于执行了<code>git rebase A</code>，把<code>B</code>和<code>C</code>都省略了。这里有一个助记的方法，做的所有操作，都是在当前所在分支进行修改。根据这个助记，就能分辨<code>签出并变基到A(Checkout and Rebase onto Current)</code>，和<code>将A变基到B(Rebase Current onto Selected)</code>这两个操作的实际行为了。</p>
-<figure>
-<img src="/img/IDEA-rebase2.png" srcset="/img/loading.gif" lazyload alt="IDEA-rebase-本地分支" />
-<figcaption aria-hidden="true">IDEA-rebase-本地分支</figcaption>
-</figure>
+<p><img src="/img/IDEA-rebase2.png" srcset="/img/loading.gif" lazyload alt="IDEA-rebase-本地分支"></p>
 <p>在集中式的<code>VCS</code>中，例如<code>SVN</code>，开发人员在提交代码前，需要先拉取，这个行为就像是<code>rebase</code>。因为开发是基于主分支某个历史状态，而主分支会在开发过程中产生新的提交。在开发完成后，就需要把从开发基于的节点（共同的祖先节点），到主分支的最新状态中的修改，重新包括进来。结果就好像是在最新状态进行的开发，而不是某个历史状态。如果将修改引入的过程中遇到了冲突，那还涉及冲突解决。在<code>Git</code>中使用<code>rebase</code>而不是<code>merge</code>，会产生像集中式<code>VCS</code>简单的线性历史记录，使得整个开发历史更直观。</p>
-<h3 id="rebase的撤销">rebase的撤销</h3>
-<p>如果在<code>rebase</code>时发生了冲突，则会在新的提交中包含冲突解决的信息。如上图中的<code>C4</code>和<code>C3</code>发生了冲突，那么需要在新的<code>C4'</code>中解决冲突。冲突解决的结果是<code>C4</code>相对于<code>C2</code>做的修改，将不同于<code>C4'</code>相对于<code>C3</code>做的修改。</p>
-<p>由于提交历史的改动，导致<code>rebase</code>的撤销要麻烦一些。<code>rebase</code>前<code>experiment</code>处于<code>C4</code>节点，<code>rebase</code>后处于<code>C4'</code>节点。撤销<code>rebase</code>应该将<code>experiment</code>指针重新指向<code>C4</code>，通常可以使用<code>git reset --hard</code>指令。但此时<code>C4</code>已不被任何分支跟踪，所以在<code>IDEA</code>的分支可视化界面中，找不到指向<code>C4</code>的指针，也找不到<code>C4</code>的哈希码。此处提供两个解决方案：</p>
-<ol type="1">
+<h3 id="rebase的撤销"><a href="#rebase的撤销" class="headerlink" title="rebase的撤销"></a>rebase的撤销</h3><p>如果在<code>rebase</code>时发生了冲突，则会在新的提交中包含冲突解决的信息。如上图中的<code>C4</code>和<code>C3</code>发生了冲突，那么需要在新的<code>C4&#39;</code>中解决冲突。冲突解决的结果是<code>C4</code>相对于<code>C2</code>做的修改，将不同于<code>C4&#39;</code>相对于<code>C3</code>做的修改。</p>
+<p>由于提交历史的改动，导致<code>rebase</code>的撤销要麻烦一些。<code>rebase</code>前<code>experiment</code>处于<code>C4</code>节点，<code>rebase</code>后处于<code>C4&#39;</code>节点。撤销<code>rebase</code>应该将<code>experiment</code>指针重新指向<code>C4</code>，通常可以使用<code>git reset --hard</code>指令。但此时<code>C4</code>已不被任何分支跟踪，所以在<code>IDEA</code>的分支可视化界面中，找不到指向<code>C4</code>的指针，也找不到<code>C4</code>的哈希码。此处提供两个解决方案：</p>
+<ol>
 <li><code>rebase</code>前，在<code>C4</code>状态建立新分支<code>backup</code></li>
 <li>使用<code>git reflog</code>指令，查看指针的历史信息，在其中寻找<code>C4</code>的哈希码</li>
 </ol>
 <p>而在<code>merge</code>中，撤销就简单的多。因为<code>合并提交</code>指向被合并前的状态，可以在GUI中选取。</p>
-<h3 id="idea中的rebase使用">IDEA中的rebase使用</h3>
-<p>在开发完后，需要将代码rebase到主分支中。此时需要位于开发的<code>feature</code>分支，在分支界面中选取<strong>远程</strong>的<code>maseter</code>分支，选<strong>本地</strong>的可能会缺少最新的提交。当然也可以<code>pull</code>一下本地的<code>maseter</code>分支，再<code>rebase</code>到其上，但这样不优雅。选取后出现菜单如下。</p>
-<figure>
-<img src="/img/IDEA-rebase.png" srcset="/img/loading.gif" lazyload alt="IDEA-rebase-远程分支" />
-<figcaption aria-hidden="true">IDEA-rebase-远程分支</figcaption>
-</figure>
-<p>其中有两个<code>rebase</code>相关的选项,<code>将A变基到B(Rebase Current onto Selected)</code>和<code>使用变基拉入A(Pull into Current Using Rebase)</code>。那么这两个选项有什么区别，<a
-target="_blank" rel="noopener" href="https://www.jetbrains.com/help/idea/apply-changes-from-one-branch-to-another.html#rebase-branch-onto-another-branch">官方文档</a>。</p>
+<h3 id="IDEA中的rebase使用"><a href="#IDEA中的rebase使用" class="headerlink" title="IDEA中的rebase使用"></a>IDEA中的rebase使用</h3><p>在开发完后，需要将代码rebase到主分支中。此时需要位于开发的<code>feature</code>分支，在分支界面中选取<strong>远程</strong>的<code>maseter</code>分支，选<strong>本地</strong>的可能会缺少最新的提交。当然也可以<code>pull</code>一下本地的<code>maseter</code>分支，再<code>rebase</code>到其上，但这样不优雅。选取后出现菜单如下。</p>
+<p><img src="/img/IDEA-rebase.png" srcset="/img/loading.gif" lazyload alt="IDEA-rebase-远程分支"></p>
+<p>其中有两个<code>rebase</code>相关的选项,<code>将A变基到B(Rebase Current onto Selected)</code>和<code>使用变基拉入A(Pull into Current Using Rebase)</code>。那么这两个选项有什么区别，<a target="_blank" rel="noopener" href="https://www.jetbrains.com/help/idea/apply-changes-from-one-branch-to-another.html#rebase-branch-onto-another-branch">官方文档</a>。</p>
 <blockquote>
 <ul>
-<li>Rebase Current onto Selected (for both remote and local branches) to
-rebase the branch that is currently checked out on top of the
-selected.</li>
-<li>Pull into Current Using Rebase (for remote branches) to fetch
-changes from the selected branch and rebase the current branch on top of
-these changes.</li>
+<li>Rebase Current onto Selected (for both remote and local branches) to rebase the branch that is currently checked out on top of the selected.</li>
+<li>Pull into Current Using Rebase (for remote branches) to fetch changes from the selected branch and rebase the current branch on top of these changes.</li>
 </ul>
 </blockquote>
 <p>仔细一看好像没有什么区别。执行每个选项后，可以在<code>Git</code>选项卡的控制台中观察到实际执行的<code>git</code>指令，这两选项唯一的区别就是后者在rebase前会执行一次fetch，确保rebase时远程分支是最新状态。因此在实际开发中更建议使用后者。</p>
-<h3 id="与cherry-pick对比">与cherry-pick对比</h3>
-<p>如果使用了<code>git rebase --onto A C B</code>形式的指令，则其行为与<code>cherry-pick</code>很像。<code>cherry-pick</code>可以把某个或某些提交，在其他分支上进行重现。如果指定<code>rebase</code>指令中<code>C</code>和<code>B</code>是同一个，那行为就等同于选了一个提交的<code>cherry-pick</code>。</p>
+<h3 id="与cherry-pick对比"><a href="#与cherry-pick对比" class="headerlink" title="与cherry-pick对比"></a>与cherry-pick对比</h3><p>如果使用了<code>git rebase --onto A C B</code>形式的指令，则其行为与<code>cherry-pick</code>很像。<code>cherry-pick</code>可以把某个或某些提交，在其他分支上进行重现。如果指定<code>rebase</code>指令中<code>C</code>和<code>B</code>是同一个，那行为就等同于选了一个提交的<code>cherry-pick</code>。</p>
 <p>当然还是存在许多区别。简单的区别是<code>git rebase</code>指令中的<code>B</code>必须是<code>分支</code>，而<code>cherry-pick</code>的参数是<code>提交</code>。<code>rebase</code>会选取<code>B</code>和<code>C</code>之间连续的所有提交，而<code>cherry-pick</code>可以只选择其中一部分，且不要求连续。</p>
-<h2 id="总结">总结</h2>
-<p>合并分支常用两种方式<code>merge</code>和<code>rebase</code>。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>合并分支常用两种方式<code>merge</code>和<code>rebase</code>。</p>
 <p>相较于<code>merge</code>，<code>rebase</code>的优势在于不会新增<code>合并提交</code>，并且会使得整个<code>提交历史</code>更加简洁。但缺点是会修改<code>提交历史</code>导致撤销麻烦，并且指令相对merge更为复杂，不符合交换律。</p>
 <p>想要撤销rebase恢复到之前的状态，由于修改了提交历史，需要通过<code>git reflog</code>指令找到修改前状态的哈希值，再通过<code>git reset</code>恢复。</p>
 

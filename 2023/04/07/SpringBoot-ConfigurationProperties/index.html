@@ -19,12 +19,12 @@
   <meta name="author" content="DracoYu">
   <meta name="keywords" content="学习笔记,Java,JavaScript,后端,前端">
   
-    <meta name="description" content="写代码时，常会在代码中使用配置相关的常量。 对于这些配置常量，最佳实践是配置文件分离，即将这些配置常量写入一个配置文件中。常见的配置文件包括如properties、XML文件、JSON文件、YAML文件。这样每次修改配置时，不需要改动源文件并重新编译，也不需要通过命令行传参，只需改动配置文件中对应属性即可。而且把配置信息放在一起会使代码可读性，可维护性更好。 Java中的配置文件 Java的">
+    <meta name="description" content="写代码时，常会在代码中使用配置相关的常量。 对于这些配置常量，最佳实践是配置文件分离，即将这些配置常量写入一个配置文件中。常见的配置文件包括如properties、XML文件、JSON文件、YAML文件。这样每次修改配置时，不需要改动源文件并重新编译，也不需要通过命令行传参，只需改动配置文件中对应属性即可。而且把配置信息放在一起会使代码可读性，可维护性更好。 Java中的配置文件Java的常用配置">
 <meta property="og:type" content="article">
 <meta property="og:title" content="SpringBoot-ConfigurationProperties">
 <meta property="og:url" content="http://dracoyus.github.io/2023/04/07/SpringBoot-ConfigurationProperties/index.html">
 <meta property="og:site_name" content="DracoYu&#39;s MindCache">
-<meta property="og:description" content="写代码时，常会在代码中使用配置相关的常量。 对于这些配置常量，最佳实践是配置文件分离，即将这些配置常量写入一个配置文件中。常见的配置文件包括如properties、XML文件、JSON文件、YAML文件。这样每次修改配置时，不需要改动源文件并重新编译，也不需要通过命令行传参，只需改动配置文件中对应属性即可。而且把配置信息放在一起会使代码可读性，可维护性更好。 Java中的配置文件 Java的">
+<meta property="og:description" content="写代码时，常会在代码中使用配置相关的常量。 对于这些配置常量，最佳实践是配置文件分离，即将这些配置常量写入一个配置文件中。常见的配置文件包括如properties、XML文件、JSON文件、YAML文件。这样每次修改配置时，不需要改动源文件并重新编译，也不需要通过命令行传参，只需改动配置文件中对应属性即可。而且把配置信息放在一起会使代码可读性，可维护性更好。 Java中的配置文件Java的常用配置">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://dracoyus.github.io/img/ConfigurationPropertiesBindingPostProcessor.png">
 <meta property="og:image" content="http://dracoyus.github.io/img/SetName.png">
@@ -283,58 +283,42 @@
                 
                 <p>写代码时，常会在代码中使用配置相关的常量。</p>
 <p>对于这些配置常量，最佳实践是配置文件分离，即将这些配置常量写入一个配置文件中。常见的配置文件包括如properties、XML文件、JSON文件、YAML文件。这样每次修改配置时，不需要改动源文件并重新编译，也不需要通过命令行传参，只需改动配置文件中对应属性即可。而且把配置信息放在一起会使代码可读性，可维护性更好。</p>
-<h2 id="java中的配置文件">Java中的配置文件</h2>
-<p>Java的常用配置文件为properties文件。可以通过<code>FileInputStream</code>或<code>ClassLoader</code>来读取配置文件。并通过包装成<code>Properties</code>对象，来解析文件中的属性。由于Java的配置文件通常位于类路径下，因此使用<code>ClassLoader</code>来读取有更好的可移植性。</p>
+<h2 id="Java中的配置文件"><a href="#Java中的配置文件" class="headerlink" title="Java中的配置文件"></a>Java中的配置文件</h2><p>Java的常用配置文件为properties文件。可以通过<code>FileInputStream</code>或<code>ClassLoader</code>来读取配置文件。并通过包装成<code>Properties</code>对象，来解析文件中的属性。由于Java的配置文件通常位于类路径下，因此使用<code>ClassLoader</code>来读取有更好的可移植性。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> Properties <span class="hljs-title function_">loadProperties</span><span class="hljs-params">(String fileName)</span> <span class="hljs-keyword">throws</span> IOException &#123;<br>    <span class="hljs-type">Properties</span> <span class="hljs-variable">properties</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Properties</span>();<br>    <span class="hljs-comment">// 使用ClassLoader获取配置文件的输入流</span><br>    <span class="hljs-type">InputStream</span> <span class="hljs-variable">inputStream</span> <span class="hljs-operator">=</span> getClass().getClassLoader().getResourceAsStream(fileName);<br>    <span class="hljs-keyword">if</span> (inputStream == <span class="hljs-literal">null</span>) &#123;<br>        <span class="hljs-keyword">throw</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">IOException</span>(<span class="hljs-string">&quot;Unable to find &quot;</span> + fileName + <span class="hljs-string">&quot; in classpath&quot;</span>);<br>    &#125;<br>    properties.load(inputStream);<br>    inputStream.close();<br>    <span class="hljs-keyword">return</span> properties;<br>&#125;<br></code></pre></td></tr></table></figure>
+
 <p>之后需要将配置文件中的属性赋值到Java类的字段上。这种配置文件和类字段映射的思想叫做<code>配置文件驱动开发</code>。</p>
 <p>但在实际开发中，一整个项目的配置信息是十分多的。如果对于每一个配置属性都显式地赋值给一个类字段，那整个赋值过程会十分繁琐。因此需要一种方式，能将配置文件自动映射到类字段上。</p>
-<h2 id="configurationproperties">ConfigurationProperties</h2>
-<p>谈到Java开发就离不开Spring（SpringBoot）。Spring提供了许多常见且通用的功能和工具来简化
-Java 应用程序的开发，例如上文提到的配置文件的自动映射。</p>
+<h2 id="ConfigurationProperties"><a href="#ConfigurationProperties" class="headerlink" title="ConfigurationProperties"></a>ConfigurationProperties</h2><p>谈到Java开发就离不开Spring（SpringBoot）。Spring提供了许多常见且通用的功能和工具来简化 Java 应用程序的开发，例如上文提到的配置文件的自动映射。</p>
 <p>在Spring当中，如果需要将配置文件映射到某个类上，那么只需要在这个类上添加<code>@ConfigurationProperties</code>注解，并将这个类在Spring容器中实例化，Spring就会自动完成配置属性注入的功能。</p>
 <p>具体实现时，通常有两种方式。</p>
-<ol type="1">
-<li><p><code>@ConfigurationProperties</code> +
-<code>@Component</code></p></li>
-<li><p><code>@ConfigurationProperties</code> +
-<code>@EnableConfigurationProperties</code></p></li>
+<ol>
+<li><p><code>@ConfigurationProperties</code> + <code>@Component</code></p>
+</li>
+<li><p><code>@ConfigurationProperties</code> + <code>@EnableConfigurationProperties</code></p>
+</li>
 </ol>
-<p>其中<code>@ConfigurationProperties</code>
-加在需要配置属性注入的类上，并在注解中指定配置属性的前缀。并通过<code>@Component</code>
-将类加入到容器中。需要注意的是，通过这种方式需要确保在主配置类中开启了<code>@ComponentScan</code>，并且能扫描到此类。</p>
+<p>其中<code>@ConfigurationProperties</code> 加在需要配置属性注入的类上，并在注解中指定配置属性的前缀。并通过<code>@Component</code> 将类加入到容器中。需要注意的是，通过这种方式需要确保在主配置类中开启了<code>@ComponentScan</code>，并且能扫描到此类。</p>
 <p>而Spring的默认配置文件名为<code>application.properties</code>，且位于类路径的根目录下。这是Spring的<code>默认大于配置</code>软件设计原则。也就是如果没特殊情况，大家都遵守这样的约定。</p>
 <figure class="highlight ini"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs ini"><span class="hljs-attr">abc.name</span>=Tom<br><span class="hljs-attr">abc.version</span>=V1.<span class="hljs-number">1</span><br><span class="hljs-attr">logging.level.root</span>=info<br></code></pre></td></tr></table></figure>
+
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@Component</span><br><span class="hljs-meta">@ConfigurationProperties(prefix = &quot;abc&quot;)</span><br><span class="hljs-meta">@Data</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyConfiguration</span> &#123;<br>    <span class="hljs-keyword">private</span> String name;<br>    <span class="hljs-keyword">private</span> String version;<br>&#125;<br></code></pre></td></tr></table></figure>
-<p>此处定义了<code>MyConfiguration</code>类，并且包含两个字段<code>name</code>，<code>version</code>，字段名与配置文件中的属性键去掉前缀对应。并通过<code>@ConfigurationProperties(prefix = "abc")</code>注解指定了配置文件中的前缀，这样就可以在配置文件中通过前缀组织不同配置的属性。</p>
+
+<p>此处定义了<code>MyConfiguration</code>类，并且包含两个字段<code>name</code>，<code>version</code>，字段名与配置文件中的属性键去掉前缀对应。并通过<code>@ConfigurationProperties(prefix = &quot;abc&quot;)</code>注解指定了配置文件中的前缀，这样就可以在配置文件中通过前缀组织不同配置的属性。</p>
 <p>或者，可以使用<code>@EnableConfigurationProperties</code>，添加在主配置类上，此时可以将属性注入的类上的<code>@Component</code>去掉，否则容器中会有两个<code>MyConfiguration</code>的Bean。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@ConfigurationProperties(prefix = &quot;abc&quot;)</span><br><span class="hljs-meta">@Data</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyConfiguration</span> &#123;<br>    <span class="hljs-keyword">private</span> String name;<br>    <span class="hljs-keyword">private</span> String version;<br>&#125;<br></code></pre></td></tr></table></figure>
+
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-meta">@ComponentScan</span><br><span class="hljs-meta">@Configuration</span><br><span class="hljs-meta">@EnableConfigurationProperties(MyConfiguration.class)</span><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">MyConfig</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>    SpringApplication.run(MyConfig.class, args);<br>&#125;<br></code></pre></td></tr></table></figure>
+
 <p>其中，<code>@EnableConfigurationProperties</code>中指定需要开启属性注入功能的类。</p>
 <p>但在实际过程中，出现了一些问题。</p>
-<h2 id="遇到的问题">遇到的问题</h2>
-<p>在实际学习过程中，属性注入一直失败。最后排查发现，对于属性注入的类，还需要配置Setter方法。这是因为配置属性注入，是通过Java反射，调用了对应的Setter方法。可以自行显示地定义Setter方法，或者使用<code>@Data</code>注解，自动生成类的Getter、Setter方法。</p>
-<p>但在定义完Setter方法后，使用<code>@ConfigurationProperties</code> +
-<code>@Component</code>的方式配置属性注入依旧无法完成。通过对类属性打上断点，并查看调用栈，发现要使用这种方式完成配置属性注入，容器内必须要有<code>ConfigurationPropertiesBindingPostProcessor</code>。这是一个<code>BeanPostProcessor</code>，本质也是一个Bean，但和普通Bean的不同在于它可以参与Bean的实例化过程，以对其他Bean进行属性修改或功能增强。而在不使用<code>@SpringBootApplication</code>或<code>@EnableAutoConfiguration</code>的最小配置启动下，默认没有向容器中导入这个<code>BeanPostProcessor</code>。</p>
-<figure>
-<img src="/img/ConfigurationPropertiesBindingPostProcessor.png" srcset="/img/loading.gif" lazyload
-alt="ConfigurationPropertiesBindingPostProcessor" />
-<figcaption
-aria-hidden="true">ConfigurationPropertiesBindingPostProcessor</figcaption>
-</figure>
+<h2 id="遇到的问题"><a href="#遇到的问题" class="headerlink" title="遇到的问题"></a>遇到的问题</h2><p>在实际学习过程中，属性注入一直失败。最后排查发现，对于属性注入的类，还需要配置Setter方法。这是因为配置属性注入，是通过Java反射，调用了对应的Setter方法。可以自行显示地定义Setter方法，或者使用<code>@Data</code>注解，自动生成类的Getter、Setter方法。</p>
+<p>但在定义完Setter方法后，使用<code>@ConfigurationProperties</code> + <code>@Component</code>的方式配置属性注入依旧无法完成。通过对类属性打上断点，并查看调用栈，发现要使用这种方式完成配置属性注入，容器内必须要有<code>ConfigurationPropertiesBindingPostProcessor</code>。这是一个<code>BeanPostProcessor</code>，本质也是一个Bean，但和普通Bean的不同在于它可以参与Bean的实例化过程，以对其他Bean进行属性修改或功能增强。而在不使用<code>@SpringBootApplication</code>或<code>@EnableAutoConfiguration</code>的最小配置启动下，默认没有向容器中导入这个<code>BeanPostProcessor</code>。</p>
+<p><img src="/img/ConfigurationPropertiesBindingPostProcessor.png" srcset="/img/loading.gif" lazyload alt="ConfigurationPropertiesBindingPostProcessor"></p>
 <p>并且在调用栈中，可以观察到最后是通过反射的方式，调用Setter方法来完成了配置属性注入。</p>
-<figure>
-<img src="/img/SetName.png" srcset="/img/loading.gif" lazyload alt="SetName" />
-<figcaption aria-hidden="true">SetName</figcaption>
-</figure>
-<p>而使用<code>@ConfigurationProperties</code> +
-<code>@EnableConfigurationProperties</code>
-的方式则不需要<code>@EnableAutoConfiguration</code>配置项。通过调试发现，<code>@EnableConfigurationProperties</code>
-带有<code>@Import(EnableConfigurationPropertiesRegistrar.class)</code>注解，而<code>EnableConfigurationPropertiesRegistrar</code>在方法<code>registerBeanDefinitions</code>中，向容器中注册了<code>ConfigurationPropertiesBindingPostProcessor</code>，而后被实例化以提供配置属性注入的功能。</p>
-<p>这一部分内容很涉及框架层面的内容，暂时不准备挖的更深。总之，<code>@EnableConfigurationProperties</code>
-本身就会向容器内导入<code>ConfigurationPropertiesBindingPostProcessor</code>，因此不需要<code>@EnableAutoConfiguration</code>也能完成配置属性注入工作。</p>
-<h2 id="总结">总结</h2>
-<p>配置文件分离是软件部署的最佳实践，熟悉其过程和原理也是每个程序员的必修课。在Spring框架中，使用<code>@ConfigurationProperties</code>
-来完成配置文件与类的绑定，在使用时需要指定每个类对应配置文件键的前缀。并把这个类放入容器中，以被<code>ConfigurationPropertiesBindingPostProcessor</code>完成属性注入的功能。而<code>ConfigurationPropertiesBindingPostProcessor</code>可以通过<code>@EnableAutoConfiguration</code>或<code>@EnableConfigurationProperties</code>导入。<code>ConfigurationPropertiesBindingPostProcessor</code>最终是通过Java反射完成属性注入，需要调用对应的Setter方法。</p>
+<p><img src="/img/SetName.png" srcset="/img/loading.gif" lazyload alt="SetName"></p>
+<p>而使用<code>@ConfigurationProperties</code> + <code>@EnableConfigurationProperties</code> 的方式则不需要<code>@EnableAutoConfiguration</code>配置项。通过调试发现，<code>@EnableConfigurationProperties</code> 带有<code>@Import(EnableConfigurationPropertiesRegistrar.class)</code>注解，而<code>EnableConfigurationPropertiesRegistrar</code>在方法<code>registerBeanDefinitions</code>中，向容器中注册了<code>ConfigurationPropertiesBindingPostProcessor</code>，而后被实例化以提供配置属性注入的功能。</p>
+<p>这一部分内容很涉及框架层面的内容，暂时不准备挖的更深。总之，<code>@EnableConfigurationProperties</code> 本身就会向容器内导入<code>ConfigurationPropertiesBindingPostProcessor</code>，因此不需要<code>@EnableAutoConfiguration</code>也能完成配置属性注入工作。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>配置文件分离是软件部署的最佳实践，熟悉其过程和原理也是每个程序员的必修课。在Spring框架中，使用<code>@ConfigurationProperties</code> 来完成配置文件与类的绑定，在使用时需要指定每个类对应配置文件键的前缀。并把这个类放入容器中，以被<code>ConfigurationPropertiesBindingPostProcessor</code>完成属性注入的功能。而<code>ConfigurationPropertiesBindingPostProcessor</code>可以通过<code>@EnableAutoConfiguration</code>或<code>@EnableConfigurationProperties</code>导入。<code>ConfigurationPropertiesBindingPostProcessor</code>最终是通过Java反射完成属性注入，需要调用对应的Setter方法。</p>
 
                 
               </div>

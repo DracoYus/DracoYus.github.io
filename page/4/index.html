@@ -230,6 +230,69 @@
     <article class="col-12 col-md-12 mx-auto index-info">
       <h2 class="index-header">
         
+        <a href="/2023/07/18/Maven-Single-Module-Compilation/" target="_self">
+          Maven-Single-Module-Compilation
+        </a>
+      </h2>
+
+      
+      <a class="index-excerpt index-excerpt__noimg" href="/2023/07/18/Maven-Single-Module-Compilation/" target="_self">
+        <div>
+          最近工作比较繁忙，没有太多时间学习和写笔记，忙里偷闲写下了这篇。 在大型Java项目中，通常会有多个主应用。主应用是指具有诸如public static void main程序入口，可以被java执行的模块。Maven概念中一个packing属性不为pom的pom文件对应一个模块，可以单独编译、测试和打包。与应用相对的概念是库，不包含程序入口，但可以提供特定功能和服务被其他应用调用。在一个项目中，
+        </div>
+      </a>
+
+      <div class="index-btm post-metas">
+        
+          <div class="post-meta mr-3">
+            <i class="iconfont icon-date"></i>
+            <time datetime="2023-07-18 17:03" pubdate>
+              2023-07-18
+            </time>
+          </div>
+        
+        
+          <div class="post-meta mr-3 d-flex align-items-center">
+            <i class="iconfont icon-category"></i>
+            
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/Maven/" class="category-chain-item">Maven</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+          </div>
+        
+        
+          <div class="post-meta">
+            <i class="iconfont icon-tags"></i>
+            
+              <a href="/tags/Maven/">#Maven</a>
+            
+              <a href="/tags/Single-Module-Compilation/">#Single Module Compilation</a>
+            
+          </div>
+        
+      </div>
+    </article>
+  </div>
+
+  <div class="row mx-auto index-card">
+    
+    
+    <article class="col-12 col-md-12 mx-auto index-info">
+      <h2 class="index-header">
+        
         <a href="/2023/07/04/JVM-String-Pool/" target="_self">
           JVM-String-Pool
         </a>
@@ -238,7 +301,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2023/07/04/JVM-String-Pool/" target="_self">
         <div>
-          最近在学习JVM的过程中，遇到了一个十分容易混淆的概念，字符串池。 有关字符串池的代码，运行结果始终没有和预期对应上。查询了大量资料无果后，在stackoverflow上发布了提问，提问链接。提问后的半天内（在此感叹下国际友人的钻研精神），有两位大佬和我就此问题进行了探讨。在交流中对这个概念的理解逐渐清晰。通过将这个事情记录下来，来理清自己的思路，并分享给更多人。 由于具体情况可能在不同JVM
+          最近在学习JVM的过程中，遇到了一个十分容易混淆的概念，字符串池。有关字符串池的代码，运行结果始终没有和预期对应上。查询了大量资料无果后，在stackoverflow上发布了提问，提问链接。提问后的半天内（在此感叹下国际友人的钻研精神），有两位大佬和我就此问题进行了探讨。在交流中对这个概念的理解逐渐清晰。通过将这个事情记录下来，来理清自己的思路，并分享给更多人。 由于具体情况可能在不同JVM上表现
         </div>
       </a>
 
@@ -303,7 +366,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2023/06/27/Design-Pattern-Design-Principle/" target="_self">
         <div>
-          设计模式是一系列优秀的代码构思实践。但从代码的功能性角度来说，很难定义什么是优秀的。“这不是也能跑吗”是对这个想法的准确体现。如果两份代码执行表现完全相同，凭什么说，其中一份比另外一份代码要好？设计原则回答了这个问题。 在日常开发中，看到一份代码变量名规范，注释规范，我们会说代码是好的。这是从可读性上对代码进行的评判。而设计原则从另一个角度进行评价：代码复用和拓展性。有时候设计原则和可读性是相违
+          设计模式是一系列优秀的代码构思实践。但从代码的功能性角度来说，很难定义什么是优秀的。**“这不是也能跑吗”**是对这个想法的准确体现。如果两份代码执行表现完全相同，凭什么说，其中一份比另外一份代码要好？设计原则回答了这个问题。 在日常开发中，看到一份代码变量名规范，注释规范，我们会说代码是好的。这是从可读性上对代码进行的评判。而设计原则从另一个角度进行评价：代码复用和拓展性。有时候设计原则和可读性
         </div>
       </a>
 
@@ -366,7 +429,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2023/06/19/Git-Rebase/" target="_self">
         <div>
-          Git是最常用的VCS(version control system，版本控制系统)工具。在Git中，多人协作开发涉及到多分支，而分支管理则必然会涉及新建分支和分支合并。相对于新建分支，分支合并复杂得多，是问题的高发地段。合并分支通常有两种方式，merge和rebase。其中merge是通过新建一个特殊的提交（本文不加区分地使用提交/节点），这个提交指向了两个节点（常规的提交只有一个父节点），这
+          Git是最常用的VCS(version control system，版本控制系统)工具。在Git中，多人协作开发涉及到多分支，而分支管理则必然会涉及新建分支和分支合并。相对于新建分支，分支合并复杂得多，是问题的高发地段。合并分支通常有两种方式，merge和rebase。其中merge是通过新建一个特殊的提交（本文不加区分地使用提交&#x2F;节点），这个提交指向了两个节点（常规的提交只有一个父节
         </div>
       </a>
 
@@ -429,7 +492,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2023/06/12/Design-Pattern-Relationships-Between-Objects/" target="_self">
         <div>
-          最近半个月，结合视频和书籍，把设计模式反反复复看了好几遍。 编写设计模式的笔记和分享，确实具有一定难度。首先，设计模式本身是抽象的，是对实践经验的总结。这意味着，对于每个设计模式，并没有完全确定的规范，不同的人有着不同的经验，也会有不同的实现。所以设计模式本质是一种思想，是不同实现中的相同部分，而思想本身很难用文字来完整表述。其次，笔记很容易变成网络上已有资料的复制。因为从头思考每个概念，琢磨其
+          最近半个月，结合视频和书籍，把设计模式反反复复看了好几遍。 编写设计模式的笔记和分享，确实具有一定难度。首先，设计模式本身是抽象的，是对实践经验的总结。这意味着，对于每个设计模式，并没有完全确定的规范，不同的人有着不同的经验，也会有不同的实现。所以设计模式本质是一种思想，是不同实现中的相同部分，而思想本身很难用文字来完整表述。其次，笔记很容易变成网络上已有资料的复制。因为从头思考每个概念，琢磨其间
         </div>
       </a>
 
@@ -492,7 +555,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2023/05/26/SpringBoot-Lazy-Initialization-PartII/" target="_self">
         <div>
-          在SpringBoot-Lazy-Initialization提到，懒加载可以延迟容器中单实例的创建时机，从容器启动时延迟到实例被使用时。 在实际设置懒加载时，遇到了一些问题，在此记录并分析。 静态方法访问 如果试图调用一个类的静态方法，而此方法依赖的静态变量需要通过实例去进行设置，启用全局懒加载就会导致NPE（NullPointerException）报错。 常见的场景是，编写一个Spr
+          在SpringBoot-Lazy-Initialization提到，懒加载可以延迟容器中单实例的创建时机，从容器启动时延迟到实例被使用时。 在实际设置懒加载时，遇到了一些问题，在此记录并分析。 静态方法访问如果试图调用一个类的静态方法，而此方法依赖的静态变量需要通过实例去进行设置，启用全局懒加载就会导致NPE（NullPointerException）报错。 常见的场景是，编写一个SpringCo
         </div>
       </a>
 
@@ -557,7 +620,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2023/05/17/Maven-compilation/" target="_self">
         <div>
-          由于公司Java项目代码量庞大，使用Maven作为构建工具进行编译时，往往会花费较长时间。 进行代码测试时，修改一行代码，可能会引起整个项目重新编译。这是Maven的默认行为，一旦检测到代码变更，便重新编译改变文件对应的模块。但其实那些没有改动的代码，复用以前的编译结果即可。为此，引入了增量编译。 增量编译 增量编译(Incremental Compilation)是指，只重新编译修改的代码
+          由于公司Java项目代码量庞大，使用Maven作为构建工具进行编译时，往往会花费较长时间。 进行代码测试时，修改一行代码，可能会引起整个项目重新编译。这是Maven的默认行为，一旦检测到代码变更，便重新编译改变文件对应的模块。但其实那些没有改动的代码，复用以前的编译结果即可。为此，引入了增量编译。 增量编译增量编译(Incremental Compilation)是指，只重新编译修改的代码文件。
         </div>
       </a>
 
@@ -620,7 +683,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2023/05/12/Git-Commit-Message/" target="_self">
         <div>
-          Git在commit时，必须输入commit message，来表示对提交内容的说明。没有则无法提交。 理论上，commit message可以输入任意内容。但如果参与多人协作开发和持续开发，就会有相应的规范，帮助程序员快速理解别人写的提交，或者回顾自己以前提交的作用。 目前应用最为广泛的规范是前端框架Angular提出的Angular提交信息规范（简称规范）。 Angular Commit
+          Git在commit时，必须输入commit message，来表示对提交内容的说明。没有则无法提交。 理论上，commit message可以输入任意内容。但如果参与多人协作开发和持续开发，就会有相应的规范，帮助程序员快速理解别人写的提交，或者回顾自己以前提交的作用。 目前应用最为广泛的规范是前端框架Angular提出的Angular提交信息规范（简称规范）。 Angular Commit Me
         </div>
       </a>
 
@@ -683,7 +746,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2023/05/04/SpringBoot-Lazy-Initialization/" target="_self">
         <div>
-          在SpringBoot-Testing提到，使用Junit测试SpringBoot项目时，需要使用@SpringBootTest来创建一个Spring容器。而当@SpringBootTest标注的测试类没有使用内嵌@Configuration注解时，会自动使用@SpringBootConfiguration上的配置。  Automatically searches for a @SpringB
+          在SpringBoot-Testing提到，使用Junit测试SpringBoot项目时，需要使用@SpringBootTest来创建一个Spring容器。而当@SpringBootTest标注的测试类没有使用内嵌@Configuration注解时，会自动使用@SpringBootConfiguration上的配置。  Automatically searches for a @SpringBoo
         </div>
       </a>
 
@@ -748,7 +811,7 @@
       
       <a class="index-excerpt index-excerpt__noimg" href="/2023/04/27/Git-Conflict/" target="_self">
         <div>
-          最近在工作中频繁使用到了Git。虽然之前基本把《Pro Git》读完了，但在实际使用中还是遇到不少问题。 究其原因，这可能因为国内的Git教程普遍基于命令行，并且只教最基础的使用。而大部分的开发人员往往使用集成在IDE中的Git，并且对于Git背后的原理和设计思路并不了解。 上一篇讲到当未commit的修改和将要进入的分支有conflict时，该怎么保存这些修改。这里将进入的分支可以是che
+          最近在工作中频繁使用到了Git。虽然之前基本把《Pro Git》读完了，但在实际使用中还是遇到不少问题。 究其原因，这可能因为国内的Git教程普遍基于命令行，并且只教最基础的使用。而大部分的开发人员往往使用集成在IDE中的Git，并且对于Git背后的原理和设计思路并不了解。 上一篇讲到当未commit的修改和将要进入的分支有conflict时，该怎么保存这些修改。这里将进入的分支可以是checko
         </div>
       </a>
 
@@ -790,71 +853,6 @@
               <a href="/tags/Git/">#Git</a>
             
               <a href="/tags/Conflict/">#Conflict</a>
-            
-          </div>
-        
-      </div>
-    </article>
-  </div>
-
-  <div class="row mx-auto index-card">
-    
-    
-    <article class="col-12 col-md-12 mx-auto index-info">
-      <h2 class="index-header">
-        
-        <a href="/2023/04/19/Git-Stash/" target="_self">
-          Git-Stash
-        </a>
-      </h2>
-
-      
-      <a class="index-excerpt index-excerpt__noimg" href="/2023/04/19/Git-Stash/" target="_self">
-        <div>
-          为了简化本地测试代码的过程，往往会对一些代码/配置进行修改。例如设置日志级别，开启Bean的懒加载，关闭一些不必要的服务。这些修改只发生在本地工作区(Working Directory)，不会commit到本地仓库(Repository)，更不会push到远程仓库(Remote repositories)。由于在IDEA中，默认没有启用暂存区(Staging Area/Index)，因此主要讨论的
-        </div>
-      </a>
-
-      <div class="index-btm post-metas">
-        
-          <div class="post-meta mr-3">
-            <i class="iconfont icon-date"></i>
-            <time datetime="2023-04-19 15:18" pubdate>
-              2023-04-19
-            </time>
-          </div>
-        
-        
-          <div class="post-meta mr-3 d-flex align-items-center">
-            <i class="iconfont icon-category"></i>
-            
-
-<span class="category-chains">
-  
-  
-    
-      <span class="category-chain">
-        
-  <a href="/categories/Git/" class="category-chain-item">Git</a>
-  
-  
-
-      </span>
-    
-  
-</span>
-
-          </div>
-        
-        
-          <div class="post-meta">
-            <i class="iconfont icon-tags"></i>
-            
-              <a href="/tags/Git/">#Git</a>
-            
-              <a href="/tags/Stash/">#Stash</a>
-            
-              <a href="/tags/Shelve/">#Shelve</a>
             
           </div>
         

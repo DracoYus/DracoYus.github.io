@@ -19,15 +19,15 @@
   <meta name="author" content="DracoYu">
   <meta name="keywords" content="学习笔记,Java,JavaScript,后端,前端">
   
-    <meta name="description" content="单例模式(Singleton)是一种创建型模式。目的是，确保类只有一个实例， 并提供一个访问该实例的全局节点。 会产生这样的需求，理由也十分自然：在全局范围内使用同一个对象或资源，方便统一配置与管理。典型的场景如：配置类、日志类、资源管理类（数据库连接池）等。 在SpringBoot常见的分层架构中，Controller层、Service层通常不需要多个实例，因其成员变量通常为对其他Serv">
+    <meta name="description" content="单例模式(Singleton)是一种创建型模式。目的是，确保类只有一个实例， 并提供一个访问该实例的全局节点。 会产生这样的需求，理由也十分自然：在全局范围内使用同一个对象或资源，方便统一配置与管理。典型的场景如：配置类、日志类、资源管理类（数据库连接池）等。 在SpringBoot常见的分层架构中，Controller层、Service层通常不需要多个实例，因其成员变量通常为对其他Service">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Design-Pattern-Singleton">
 <meta property="og:url" content="http://dracoyus.github.io/2024/05/15/Design-Pattern-Singleton/index.html">
 <meta property="og:site_name" content="DracoYu&#39;s MindCache">
-<meta property="og:description" content="单例模式(Singleton)是一种创建型模式。目的是，确保类只有一个实例， 并提供一个访问该实例的全局节点。 会产生这样的需求，理由也十分自然：在全局范围内使用同一个对象或资源，方便统一配置与管理。典型的场景如：配置类、日志类、资源管理类（数据库连接池）等。 在SpringBoot常见的分层架构中，Controller层、Service层通常不需要多个实例，因其成员变量通常为对其他Serv">
+<meta property="og:description" content="单例模式(Singleton)是一种创建型模式。目的是，确保类只有一个实例， 并提供一个访问该实例的全局节点。 会产生这样的需求，理由也十分自然：在全局范围内使用同一个对象或资源，方便统一配置与管理。典型的场景如：配置类、日志类、资源管理类（数据库连接池）等。 在SpringBoot常见的分层架构中，Controller层、Service层通常不需要多个实例，因其成员变量通常为对其他Service">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-05-15T03:00:24.000Z">
-<meta property="article:modified_time" content="2025-09-09T08:35:07.055Z">
+<meta property="article:modified_time" content="2026-02-05T09:20:19.424Z">
 <meta property="article:author" content="DracoYu">
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="DesignPattern">
@@ -277,32 +277,27 @@
             
               <div class="markdown-body">
                 
-                <p><strong>单例模式<code>(Singleton)</code></strong>是一种创建型模式。目的是，<strong>确保类只有一个实例</strong>，
-并提供一个<strong>访问该实例的全局节点</strong>。</p>
+                <p><strong>单例模式</strong>(<code>Singleton</code>)是一种创建型模式。目的是，<strong>确保类只有一个实例</strong>， 并提供一个<strong>访问该实例的全局节点</strong>。</p>
 <p>会产生这样的需求，理由也十分自然：在全局范围内使用同一个对象或资源，方便统一配置与管理。典型的场景如：配置类、日志类、资源管理类（数据库连接池）等。</p>
 <p>在<code>SpringBoot</code>常见的分层架构中，<code>Controller</code>层、<code>Service</code>层通常不需要多个实例，因其成员变量通常为对其他<code>Service</code>的引用，几乎不包含状态信息。如果有多个实例，实例间也无法体现差异。因此在<code>Spring</code>框架中，容器中的各种<code>bean</code>默认是单实例的。并通过<code>IoC</code>和<code>DI</code>，去组织不同单实例间的依赖关系。需要注意单实例不一定是单例模式，因为其并不是全局范围都能访问，而是通过<code>DI</code>组织了依赖关系。但如果是通过<code>BeanFactory.getBean()</code>来获取单实例，则和单例模式十分相似。</p>
 <p>不同实例间的差异体现在其成员变量上。如果创建的多个实例成员变量都相同，并且实例在全局范围内有比较多使用的地方，则可以考虑使用单例模式。</p>
-<h2 id="单例模式vs静态公共方法">单例模式VS静态公共方法</h2>
-<p>如果为了提供一些方法和变量的全局访问权限，在<code>java</code>中可以将这些方法和变量设置为<code>public static</code>，可以得到类似的效果。静态公共方法可以在任意位置通过<strong>类名.方法名</strong>调用。类的加载机制又保证了，在不同位置调用的方法，引用的都是相同的静态成员变量，模拟了只有一个实例的效果。</p>
+<h2 id="单例模式VS静态公共方法"><a href="#单例模式VS静态公共方法" class="headerlink" title="单例模式VS静态公共方法"></a>单例模式VS静态公共方法</h2><p>如果为了提供一些方法和变量的全局访问权限，在<code>java</code>中可以将这些方法和变量设置为<code>public static</code>，可以得到类似的效果。静态公共方法可以在任意位置通过<strong>类名.方法名</strong>调用。类的加载机制又保证了，在不同位置调用的方法，引用的都是相同的静态成员变量，模拟了只有一个实例的效果。</p>
 <p>但这么做也多了很多限制：静态方法中只能引用静态变量；静态变量属于类而不是实例，无法被继承，也无法实现接口；无法通过多态来进行动态调用；无法控制其生命周期；无法进行垃圾回收；无法实现延迟初始化等等。</p>
 <p>由于单例模式比静态公共方法灵活得多，因此更多使用单例模式来达成全局访问的效果。</p>
-<h2 id="单例模式vs全局变量">单例模式VS全局变量</h2>
-<p>在一些面向对象语言中，如<code>C++</code>、<code>Python</code>，可以通过全局变量的方式来建立全局访问的效果。通常我们认为全局变量是需要避免的。而单例模式，很多人认为其是对全局变量的一种包装，因此也反对使用单例模式。例如<code>C++ Core Guidelines</code>中就不建议使用<a
-target="_blank" rel="noopener" href="https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#Ri-singleton">单例模式</a>。</p>
+<h2 id="单例模式VS全局变量"><a href="#单例模式VS全局变量" class="headerlink" title="单例模式VS全局变量"></a>单例模式VS全局变量</h2><p>在一些面向对象语言中，如<code>C++</code>、<code>Python</code>，可以通过全局变量的方式来建立全局访问的效果。通常我们认为全局变量是需要避免的。而单例模式，很多人认为其是对全局变量的一种包装，因此也反对使用单例模式。例如<code>C++ Core Guidelines</code>中就不建议使用<a target="_blank" rel="noopener" href="https://isocpp.github.io/CppCoreGuidelines/CppCoreGuidelines#Ri-singleton">单例模式</a>。</p>
 <p>使用全局变量的缺点同样也是单例模式的缺点。例如全局范围内的访问和修改可能会导致全局变量的状态无法估计；需要考虑并发访问，线程安全性；使得模块之间的依赖关系变得隐匿（如两个模块共同与全局变量进行了交互），造成了模块间的耦合；使得单元测试变得更困难，无法<code>mock</code>替换；<code>C++</code>中无法保证全局变量初始化的顺序。</p>
 <p>可以看出，这些缺点很多都与全局的写权限有关。因此单例模式如果不提供写的权限，或者不包含状态类型的变量（状态通常会在程序运行中改变），或者本身就是不可变对象，那么可以很好地规避上述缺点。此时单例模式的使用通常是合适且优雅的。</p>
 <p>网上关于设计模式、反设计模式的讨论还有很多。程序员需要根据实际情况，来决定是否使用，而不是一昧支持或反对。</p>
-<h2 id="单例模式的通用实现">单例模式的通用实现</h2>
-<p>单例模式在不同语言中，根据每种语言的特性，有着不同的实现。在不同实现中，有一些共同之处。综合这些共同之处，便是一个通用实现。</p>
+<h2 id="单例模式的通用实现"><a href="#单例模式的通用实现" class="headerlink" title="单例模式的通用实现"></a>单例模式的通用实现</h2><p>单例模式在不同语言中，根据每种语言的特性，有着不同的实现。在不同实现中，有一些共同之处。综合这些共同之处，便是一个通用实现。</p>
 <p>为了符合单例模式<strong>确保类只有一个实例</strong>的特性，需要限制程序员在其他地方主动<code>new</code>实例的权限，把类的构造函数设置为<code>private</code>。而<strong>全局访问</strong>的特性，通常会在类内定义一个<code>public static</code>静态方法，返回一个类对象。</p>
 <p>这个单例对象需要被某个变量引用。基于其全局唯一的特性，通常会定义为类的静态变量。并在静态方法中作为方法返回值。</p>
 <p>基于上述描述，可以给出如下<code>java</code>代码：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Singleton</span> &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Singleton</span> <span class="hljs-variable">INSTANCE</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Singleton</span>();<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-title function_">Singleton</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-comment">// 私有构造方法防止外部实例化</span><br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> Singleton <span class="hljs-title function_">getInstance</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-keyword">return</span> INSTANCE;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
 <p>其中，静态变量<code>INSTANCE</code>通过直接赋值来进行初始化。对于静态变量，初始化会在类被加载时执行。而<strong>类的加载机制</strong>保证了线程安全性，<code>new Singleton()</code>只会被执行一次，确保全局只会存在一个实例。</p>
-<p>由于上述过程中，类被加载时就会完成实例的初始化，初始化的时机比较早，此方法被称作“<strong>饿汉式</strong>”。</p>
+<p>由于上述过程中，类被加载时就会完成实例的初始化，初始化的时机比较早，此方法被称作“<strong>饿汉式</strong>“。</p>
 <p>与之相对的是，在<code>getInstance()</code>被首次调用时才完成初始化，初始化时机更晚，被称作“<strong>懒汉式</strong>”。在懒汉式中。由于静态方法可能被多线程同时调用，多个线程只能有一个完成对象的创建和初始化，需要在方法中通过锁机制，来保证线程安全性。关于如何实现线程安全太过细节，为了避免掩盖单例模式的特点，在此不再赘述。</p>
-<h2 id="总结">总结</h2>
-<p>单例模式是一种创建型模式，旨在确保一个类只有一个实例，并提供一个全局访问点。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>单例模式是一种创建型模式，旨在确保一个类只有一个实例，并提供一个全局访问点。</p>
 <p>由于单例模式的全局性，通常会把其与全局变量比较。全局变量的缺点，可能在单例模式上也存在。通常可以通过在单例中不包含状态或提供改变状态的方法来避免这些缺点。程序员需要根据实际情况判断场景是否适合单例模式。</p>
 <p>单例模式的通用实现的特点是，把构造函数私有化，以及提供一个公开静态函数。前者支持<strong>唯一性</strong>，后者提供<strong>全局访问性</strong>。</p>
 

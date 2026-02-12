@@ -19,12 +19,12 @@
   <meta name="author" content="DracoYu">
   <meta name="keywords" content="学习笔记,Java,JavaScript,后端,前端">
   
-    <meta name="description" content="BeanFactory 12package org.springframework.beans.factorypublic interface BeanFactory  The root interface for accessing a Spring bean container.  今天讲到Spring中最关键的概念BeanFactory。从注释中可以得到，beanFactory就是">
+    <meta name="description" content="BeanFactory12package org.springframework.beans.factorypublic interface BeanFactory   The root interface for accessing a Spring bean container.  今天讲到Spring中最关键的概念BeanFactory。从注释中可以得到，beanFactory就是平常说的容">
 <meta property="og:type" content="article">
 <meta property="og:title" content="SpringBoot-Term-Definaition-BeanFactory">
 <meta property="og:url" content="http://dracoyus.github.io/2024/04/23/SpringBoot-Term-Definaition-BeanFactory/index.html">
 <meta property="og:site_name" content="DracoYu&#39;s MindCache">
-<meta property="og:description" content="BeanFactory 12package org.springframework.beans.factorypublic interface BeanFactory  The root interface for accessing a Spring bean container.  今天讲到Spring中最关键的概念BeanFactory。从注释中可以得到，beanFactory就是">
+<meta property="og:description" content="BeanFactory12package org.springframework.beans.factorypublic interface BeanFactory   The root interface for accessing a Spring bean container.  今天讲到Spring中最关键的概念BeanFactory。从注释中可以得到，beanFactory就是平常说的容">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2024-04-23T07:33:07.000Z">
 <meta property="article:modified_time" content="2025-08-07T02:18:23.700Z">
@@ -278,160 +278,89 @@
             
               <div class="markdown-body">
                 
-                <h2 id="beanfactory">BeanFactory</h2>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> org.springframework.beans.factory<br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">BeanFactory</span><br></code></pre></td></tr></table></figure>
+                <h2 id="BeanFactory"><a href="#BeanFactory" class="headerlink" title="BeanFactory"></a>BeanFactory</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> org.springframework.beans.factory<br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">BeanFactory</span><br></code></pre></td></tr></table></figure>
+
 <blockquote>
 <p>The root interface for accessing a Spring bean container.</p>
 </blockquote>
 <p>今天讲到Spring中最关键的概念<code>BeanFactory</code>。从注释中可以得到，<code>beanFactory</code>就是平常说的<strong>容器</strong>，后文会不加区分使用<code>beanFactory</code>和容器。</p>
 <blockquote>
-<p>This is the basic client view of a bean container; further interfaces
-such as ListableBeanFactory and
-org.springframework.beans.factory.config.ConfigurableBeanFactory are
-available for specific purposes.</p>
+<p>This is the basic client view of a bean container; further interfaces such as ListableBeanFactory and org.springframework.beans.factory.config.ConfigurableBeanFactory are available for specific purposes.</p>
 </blockquote>
 <p>其子接口<code>ListableBeanFactory</code>与<code>ConfigurableBeanFactory</code>，对功能进行了拓展，具体有哪些拓展等后续介绍完<code>BeanFactory</code>再说。</p>
 <blockquote>
-<p>This interface is implemented by objects that hold a number of bean
-definitions, each uniquely identified by a String name. Depending on the
-bean definition, the factory will return either an independent instance
-of a contained object (the Prototype design pattern), or a single shared
-instance (a superior alternative to the Singleton design pattern, in
-which the instance is a singleton in the scope of the factory). Which
-type of instance will be returned depends on the bean factory
-configuration: the API is the same. Since Spring 2.0, further scopes are
-available depending on the concrete application context (e.g. “request”
-and “session” scopes in a web environment).</p>
+<p>This interface is implemented by objects that hold a number of bean definitions, each uniquely identified by a String name. Depending on the bean definition, the factory will return either an independent instance of a contained object (the Prototype design pattern), or a single shared instance (a superior alternative to the Singleton design pattern, in which the instance is a singleton in the scope of the factory). Which type of instance will be returned depends on the bean factory configuration: the API is the same. Since Spring 2.0, further scopes are available depending on the concrete application context (e.g. “request” and “session” scopes in a web environment).</p>
 </blockquote>
 <p><code>BeanFactory</code>的最主要的功能，就是储存了一系列<code>BeanDefinition</code>，并且每个都使用了一个唯一的字符串来标识。我们可以通过这个唯一字符串，检索到<code>BeanDefinition</code>，并根据此来决定是使用已有的对象(<code>Singleton</code>)，还是新建一个对象(<code>Prototype</code>)。</p>
 <p>容器中大部分<code>BeanDefinition</code>，都是<code>Singleton</code>类型，因此<code>BeanDefinition</code>和大部分对象也是一一对应的关系，从而字符串到大部分对象也是一一对应的关系。所以常规中，我们会认为容器完成了字符串到对象的映射。</p>
 <blockquote>
-<p>The point of this approach is that the BeanFactory is a central
-registry of application components, and centralizes configuration of
-application components (no more do individual objects need to read
-properties files, for example). See chapters 4 and 11 of “Expert
-One-on-One J2EE Design and Development” for a discussion of the benefits
-of this approach.</p>
+<p>The point of this approach is that the BeanFactory is a central registry of application components, and centralizes configuration of application components (no more do individual objects need to read properties files, for example). See chapters 4 and 11 of “Expert One-on-One J2EE Design and Development” for a discussion of the benefits of this approach.</p>
 </blockquote>
 <p>容器是一种把应用中用到的所有组件，中心化配置的一种设计理念。并引用了一本书中的内容来说明这么做的好处。在此不多赘述。</p>
 <blockquote>
-<p>Note that it is generally better to rely on Dependency Injection
-(“push” configuration) to configure application objects through setters
-or constructors, rather than use any form of “pull” configuration like a
-BeanFactory lookup. Spring’s Dependency Injection functionality is
-implemented using this BeanFactory interface and its subinterfaces.</p>
+<p>Note that it is generally better to rely on Dependency Injection (“push” configuration) to configure application objects through setters or constructors, rather than use any form of “pull” configuration like a BeanFactory lookup. Spring’s Dependency Injection functionality is implemented using this BeanFactory interface and its subinterfaces.</p>
 </blockquote>
 <p>在<code>spring</code>应用中，可以在对象初始化时，或在对象创建完后，通过构造函数或<code>setter</code>方法完成依赖注入，把依赖注册为成员变量。这是更推荐的“推式”注入。与之对应的是在方法内需要用到时，通过<code>BeanFactory</code>的查询方法获取对象，此为不推荐的“拉式”注入。无论是“推式”还是“拉式”，都会使用到<code>BeanFactory</code>来完成功能，因此两者的最大区别是注入的时机。广泛使用的<code>@Resource</code>或<code>@Autowired</code>就是“推式”注入。</p>
 <blockquote>
-<p>Normally a BeanFactory will load bean definitions stored in a
-configuration source (such as an XML document), and use the
-org.springframework.beans package to configure the beans. However, an
-implementation could simply return Java objects it creates as necessary
-directly in Java code. There are no constraints on how the definitions
-could be stored: LDAP, RDBMS, XML, properties file, etc. Implementations
-are encouraged to support references amongst beans (Dependency
-Injection).</p>
+<p>Normally a BeanFactory will load bean definitions stored in a configuration source (such as an XML document), and use the org.springframework.beans package to configure the beans. However, an implementation could simply return Java objects it creates as necessary directly in Java code. There are no constraints on how the definitions could be stored: LDAP, RDBMS, XML, properties file, etc. Implementations are encouraged to support references amongst beans (Dependency Injection).</p>
 </blockquote>
 <p><code>BeanFactory</code>获取对象，先加载<code>BeanDefinition</code>，并使用<code>SpringBean</code>包来创建具体对象并返回，这不是绝对的。在某些情况<code>BeanDefinition</code>来源特殊，可以越过上述过程，直接获取对象。</p>
 <blockquote>
-<p>In contrast to the methods in ListableBeanFactory, all of the
-operations in this interface will also check parent factories if this is
-a HierarchicalBeanFactory. If a bean is not found in this factory
-instance, the immediate parent factory will be asked. Beans in this
-factory instance are supposed to override beans of the same name in any
-parent factory.</p>
+<p>In contrast to the methods in ListableBeanFactory, all of the operations in this interface will also check parent factories if this is a HierarchicalBeanFactory. If a bean is not found in this factory instance, the immediate parent factory will be asked. Beans in this factory instance are supposed to override beans of the same name in any parent factory.</p>
 </blockquote>
 <p><code>HierarchicalBeanFactory</code>会同时检查父容器，而<code>ListableBeanFactory</code>不会。当存在多级容器时，会遵循“就近原则”，子容器的同名<code>BeanDefination</code>会覆盖父容器。</p>
-<p>以上是<code>BeanFactory</code>的注释内容。查看<code>BeanFactory</code>中定义的方法，基本就是根据名称/类型获取对象，根据名称检查<code>BeanDefination</code>是否存在和其属性值。总的来说，容器的功能就是储存名称和<code>BeanDefination</code>，并可以通过名称获取<code>BeanDefination</code>对应的对象。</p>
-<h2 id="listablebeanfactory">ListableBeanFactory</h2>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java">org.springframework.beans.factory;<br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">ListableBeanFactory</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">BeanFactory</span><br></code></pre></td></tr></table></figure>
+<p>以上是<code>BeanFactory</code>的注释内容。查看<code>BeanFactory</code>中定义的方法，基本就是根据名称&#x2F;类型获取对象，根据名称检查<code>BeanDefination</code>是否存在和其属性值。总的来说，容器的功能就是储存名称和<code>BeanDefination</code>，并可以通过名称获取<code>BeanDefination</code>对应的对象。</p>
+<h2 id="ListableBeanFactory"><a href="#ListableBeanFactory" class="headerlink" title="ListableBeanFactory"></a>ListableBeanFactory</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java">org.springframework.beans.factory;<br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">ListableBeanFactory</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">BeanFactory</span><br></code></pre></td></tr></table></figure>
+
 <blockquote>
-<p>Extension of the BeanFactory interface to be implemented by bean
-factories that can enumerate all their bean instances, rather than
-attempting bean lookup by name one by one as requested by clients.
-BeanFactory implementations that preload all their bean definitions
-(such as XML-based factories) may implement this interface.</p>
+<p>Extension of the BeanFactory interface to be implemented by bean factories that can enumerate all their bean instances, rather than attempting bean lookup by name one by one as requested by clients. BeanFactory implementations that preload all their bean definitions (such as XML-based factories) may implement this interface.</p>
 </blockquote>
 <p><code>ListableBeanFactory</code>是<code>BeanFactory</code>的扩展。在原有基础上新增了获取枚举容器中<code>BeanDefinition</code>数量、名称的功能。</p>
 <blockquote>
-<p>If this is a HierarchicalBeanFactory, the return values will not take
-any BeanFactory hierarchy into account, but will relate only to the
-beans defined in the current factory. Use the BeanFactoryUtils helper
-class to consider beans in ancestor factories too.</p>
+<p>If this is a HierarchicalBeanFactory, the return values will not take any BeanFactory hierarchy into account, but will relate only to the beans defined in the current factory. Use the BeanFactoryUtils helper class to consider beans in ancestor factories too.</p>
 </blockquote>
 <p>与<code>BeanFactory</code>不同的是，<code>ListableBeanFactory</code>扩展的功能，不会考虑层级结构，也就是不会搜索父容器中定义的<code>BeanDefinition</code>。</p>
 <blockquote>
-<p>The methods in this interface will just respect bean definitions of
-this factory. They will ignore any singleton beans that have been
-registered by other means like
-org.springframework.beans.factory.config.ConfigurableBeanFactory’s
-registerSingleton method, with the exception of getBeanNamesForType and
-getBeansOfType which will check such manually registered singletons too.
-Of course, BeanFactory’s getBean does allow transparent access to such
-special beans as well. However, in typical scenarios, all beans will be
-defined by external bean definitions anyway, so most applications don’t
-need to worry about this differentiation.</p>
+<p>The methods in this interface will just respect bean definitions of this factory. They will ignore any singleton beans that have been registered by other means like org.springframework.beans.factory.config.ConfigurableBeanFactory’s registerSingleton method, with the exception of getBeanNamesForType and getBeansOfType which will check such manually registered singletons too. Of course, BeanFactory’s getBean does allow transparent access to such special beans as well. However, in typical scenarios, all beans will be defined by external bean definitions anyway, so most applications don’t need to worry about this differentiation.</p>
 </blockquote>
 <p><code>ListableBeanFactory</code>扩展的功能基本只考虑根据<code>BeanDefinition</code>创建的<code>bean</code>。通过其他方法例如<code>registerSingleton</code>注册进容器的<code>bean</code>，不予考虑。</p>
 <p>总的来说，<code>ListableBeanFactory</code>的扩展就在于<code>Listable</code>上，使得容器增加了枚举所有<code>BeanDefinition</code>的功能。</p>
-<h2 id="hierarchicalbeanfactory">HierarchicalBeanFactory</h2>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> org.springframework.beans.factory;<br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">HierarchicalBeanFactory</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">BeanFactory</span><br></code></pre></td></tr></table></figure>
+<h2 id="HierarchicalBeanFactory"><a href="#HierarchicalBeanFactory" class="headerlink" title="HierarchicalBeanFactory"></a>HierarchicalBeanFactory</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> org.springframework.beans.factory;<br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">HierarchicalBeanFactory</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">BeanFactory</span><br></code></pre></td></tr></table></figure>
+
 <blockquote>
-<p>Sub-interface implemented by bean factories that can be part of a
-hierarchy.</p>
-<p>The corresponding setParentBeanFactory method for bean factories that
-allow setting the parent in a configurable fashion can be found in the
-ConfigurableBeanFactory interface.</p>
+<p>Sub-interface implemented by bean factories that can be part of a hierarchy.</p>
+<p>The corresponding setParentBeanFactory method for bean factories that allow setting the parent in a configurable fashion can be found in the ConfigurableBeanFactory interface.</p>
 </blockquote>
 <p><code>HierarchicalBeanFactory</code>接口非常简单，在<code>BeanFactory</code>上扩展了层级功能。容器可以指定其父容器。为了区分是否搜索父容器的场景，新增了<code>containsLocalBean</code>方法。见名知意，这个方法不搜索父容器，而<code>BeanFactory</code>中声明的<code>containsBean</code>则会搜索父容器。</p>
-<h2 id="singletonbeanregistry">SingletonBeanRegistry</h2>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> org.springframework.beans.factory.config<br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">SingletonBeanRegistry</span><br></code></pre></td></tr></table></figure>
+<h2 id="SingletonBeanRegistry"><a href="#SingletonBeanRegistry" class="headerlink" title="SingletonBeanRegistry"></a>SingletonBeanRegistry</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> org.springframework.beans.factory.config<br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">SingletonBeanRegistry</span><br></code></pre></td></tr></table></figure>
+
 <blockquote>
-<p>Interface that defines a registry for shared bean instances. Can be
-implemented by org.springframework.beans.factory.BeanFactory
-implementations in order to expose their singleton management facility
-in a uniform manner.</p>
+<p>Interface that defines a registry for shared bean instances. Can be implemented by org.springframework.beans.factory.BeanFactory implementations in order to expose their singleton management facility in a uniform manner.</p>
 </blockquote>
 <p><code>SingletonBeanRegistry</code>看似和<code>BeanFactory</code>没有直接关系，但通常被<code>BeanFactory</code>的实现类同时实现，以提供把某个<code>bean</code>实例注册进容器中。</p>
 <p>注册<code>bean</code>实例和上文提到的大部分注册<code>beanDefinition</code>的主要区别是，注册的实例默认为单实例模式，并且默认已完成初始化。已完成初始化意味着，<code>BeanFactory</code>不会对其进行生命周期控制，不会执行初始化、销毁函数的回调。</p>
 <p><code>SingletonBeanRegistry</code>还提供了查看容器内已初始化的<code>Singleton</code>，由于不是很重要，在此不再赘述。</p>
-<h2 id="configurablebeanfactory">ConfigurableBeanFactory</h2>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> org.springframework.beans.factory.config<br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">ConfigurableBeanFactory</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">HierarchicalBeanFactory</span>, SingletonBeanRegistry<br></code></pre></td></tr></table></figure>
+<h2 id="ConfigurableBeanFactory"><a href="#ConfigurableBeanFactory" class="headerlink" title="ConfigurableBeanFactory"></a>ConfigurableBeanFactory</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> org.springframework.beans.factory.config<br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">ConfigurableBeanFactory</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">HierarchicalBeanFactory</span>, SingletonBeanRegistry<br></code></pre></td></tr></table></figure>
+
 <blockquote>
-<p>Configuration interface to be implemented by most bean factories.
-Provides facilities to configure a bean factory, in addition to the bean
-factory client methods in the BeanFactory interface.</p>
-<p>This bean factory interface is not meant to be used in normal
-application code: Stick to BeanFactory or
-org.springframework.beans.factory.ListableBeanFactory for typical needs.
-This extended interface is just meant to allow for framework-internal
-plug’n’play and for special access to bean factory configuration
-methods.</p>
+<p>Configuration interface to be implemented by most bean factories. Provides facilities to configure a bean factory, in addition to the bean factory client methods in the BeanFactory interface.</p>
+<p>This bean factory interface is not meant to be used in normal application code: Stick to BeanFactory or org.springframework.beans.factory.ListableBeanFactory for typical needs. This extended interface is just meant to allow for framework-internal plug’n’play and for special access to bean factory configuration methods.</p>
 </blockquote>
 <p><code>ConfigurableBeanFactory</code>是<code>HierarchicalBeanFactory</code>和<code>SingletonBeanRegistry</code>的扩展，额外拓展了对<code>BeanFactory</code>进行配置的功能。</p>
 <p>那么这个配置指什么，查看<code>ConfigurableBeanFactory</code>新增的方法声明，<code>parentBeanFactory</code>、<code>beanClassLoader</code>、<code>tempClassLoader</code>、<code>cacheBeanMetadata</code>…</p>
 <p>这里出现了很多新的细节与概念，暂且搁置。而且通常用户层面更多使用<code>BeanFactory</code>和<code>ListableBeanFactory</code>访问容器，很少会有对容器进行配置的需求，因此此部分内容只是简单描述。</p>
-<h2 id="autowirecapablebeanfactory">AutowireCapableBeanFactory</h2>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> org.springframework.beans.factory.config<br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">AutowireCapableBeanFactory</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">BeanFactory</span><br></code></pre></td></tr></table></figure>
+<h2 id="AutowireCapableBeanFactory"><a href="#AutowireCapableBeanFactory" class="headerlink" title="AutowireCapableBeanFactory"></a>AutowireCapableBeanFactory</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> org.springframework.beans.factory.config<br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">AutowireCapableBeanFactory</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">BeanFactory</span><br></code></pre></td></tr></table></figure>
+
 <blockquote>
-<p>Extension of the BeanFactory interface to be implemented by bean
-factories that are capable of autowiring, provided that they want to
-expose this functionality for existing bean instances.</p>
-<p>This subinterface of BeanFactory is not meant to be used in normal
-application code: stick to BeanFactory or
-org.springframework.beans.factory.ListableBeanFactory for typical use
-cases.</p>
+<p>Extension of the BeanFactory interface to be implemented by bean factories that are capable of autowiring, provided that they want to expose this functionality for existing bean instances.</p>
+<p>This subinterface of BeanFactory is not meant to be used in normal application code: stick to BeanFactory or org.springframework.beans.factory.ListableBeanFactory for typical use cases.</p>
 </blockquote>
 <p><code>AutowireCapableBeanFactory</code>关注自动装配相关的功能。通常是对那些在容器外部创建<code>bean</code>实例执行自动装配功能，内部的<code>bean</code>可以通过<code>@AutoWired</code>和<code>@Resource</code>来配置需要使用自动装配功能的地方。</p>
 <p>虽然名称叫<code>AutowireCapableBeanFactory</code>，接口还提供了自动装配以外的功能，例如执行容器的回调<code>setBeanName</code>、<code>setBeanFactory</code>，或者执行<code>BeanPostProcessors</code>。</p>
-<h2
-id="configurablelistablebeanfactory">ConfigurableListableBeanFactory</h2>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> org.springframework.beans.factory.config<br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">ConfigurableListableBeanFactory</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">ListableBeanFactory</span>, AutowireCapableBeanFactory, ConfigurableBeanFactory<br></code></pre></td></tr></table></figure>
+<h2 id="ConfigurableListableBeanFactory"><a href="#ConfigurableListableBeanFactory" class="headerlink" title="ConfigurableListableBeanFactory"></a>ConfigurableListableBeanFactory</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">package</span> org.springframework.beans.factory.config<br><span class="hljs-keyword">public</span> <span class="hljs-keyword">interface</span> <span class="hljs-title class_">ConfigurableListableBeanFactory</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">ListableBeanFactory</span>, AutowireCapableBeanFactory, ConfigurableBeanFactory<br></code></pre></td></tr></table></figure>
+
 <blockquote>
-<p>Configuration interface to be implemented by most listable bean
-factories. In addition to ConfigurableBeanFactory, it provides
-facilities to analyze and modify bean definitions, and to
-pre-instantiate singletons.</p>
+<p>Configuration interface to be implemented by most listable bean factories. In addition to ConfigurableBeanFactory, it provides facilities to analyze and modify bean definitions, and to pre-instantiate singletons.</p>
 </blockquote>
 <p>从继承关系来看，<code>ConfigurableListableBeanFactory</code>就是上文提到三个的合体版。此外，提供了分析修改<code>BeanDefinition</code>和预实例化单实例的功能。由于此接口提供的方法相对简单，不多赘述。</p>
 

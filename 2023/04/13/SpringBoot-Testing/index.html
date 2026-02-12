@@ -19,12 +19,12 @@
   <meta name="author" content="DracoYu">
   <meta name="keywords" content="学习笔记,Java,JavaScript,后端,前端">
   
-    <meta name="description" content="在写上一篇IoC和DI之前，本来想记录的是SpringBoot如何完成AutoConfiguration自动配置，但因为篇幅直接分离出来了一篇。这次又把Testing给分离了出来。 事情的起因是，写项目代码时，常常需要对自己写的部分进行测试和调试。根据自己以往的编程经验，个人习惯于写一点就运行一点，并通过断点调试来确认内存的运行状态，避免犯一些低级的逻辑错误。虽然公司有专门的测试岗位，但从代码提">
+    <meta name="description" content="在写上一篇IoC和DI之前，本来想记录的是SpringBoot如何完成AutoConfiguration自动配置，但因为篇幅直接分离出来了一篇。这次又把Testing给分离了出来。 事情的起因是，写项目代码时，常常需要对自己写的部分进行测试和调试。根据自己以往的编程经验，个人习惯于写一点就运行一点，并通过断点调试来确认内存的运行状态，避免犯一些低级的逻辑错误。虽然公司有专门的测试岗位，但从代码提交">
 <meta property="og:type" content="article">
 <meta property="og:title" content="SpringBoot-Testing">
 <meta property="og:url" content="http://dracoyus.github.io/2023/04/13/SpringBoot-Testing/index.html">
 <meta property="og:site_name" content="DracoYu&#39;s MindCache">
-<meta property="og:description" content="在写上一篇IoC和DI之前，本来想记录的是SpringBoot如何完成AutoConfiguration自动配置，但因为篇幅直接分离出来了一篇。这次又把Testing给分离了出来。 事情的起因是，写项目代码时，常常需要对自己写的部分进行测试和调试。根据自己以往的编程经验，个人习惯于写一点就运行一点，并通过断点调试来确认内存的运行状态，避免犯一些低级的逻辑错误。虽然公司有专门的测试岗位，但从代码提">
+<meta property="og:description" content="在写上一篇IoC和DI之前，本来想记录的是SpringBoot如何完成AutoConfiguration自动配置，但因为篇幅直接分离出来了一篇。这次又把Testing给分离了出来。 事情的起因是，写项目代码时，常常需要对自己写的部分进行测试和调试。根据自己以往的编程经验，个人习惯于写一点就运行一点，并通过断点调试来确认内存的运行状态，避免犯一些低级的逻辑错误。虽然公司有专门的测试岗位，但从代码提交">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2023-04-13T09:11:32.000Z">
 <meta property="article:modified_time" content="2025-08-07T02:18:26.100Z">
@@ -280,22 +280,18 @@
                 
                 <p>在写上一篇<code>IoC</code>和<code>DI</code>之前，本来想记录的是<code>SpringBoot</code>如何完成<code>AutoConfiguration</code>自动配置，但因为篇幅直接分离出来了一篇。这次又把<code>Testing</code>给分离了出来。</p>
 <p>事情的起因是，写项目代码时，常常需要对自己写的部分进行测试和调试。根据自己以往的编程经验，个人习惯于写一点就运行一点，并通过断点调试来确认内存的运行状态，避免犯一些低级的逻辑错误。虽然公司有专门的测试岗位，但从代码提交到GitLab请求合并，到部署到测试服务器，到测试人员设计用例并测试，到反馈到开发人员，整个过程涉及多个人员，太过漫长。而一些代码本身就需要反复调试，例如写了一些数据库操作，需要确认数据库实际执行结果是否符合预期。例如一个循环的跳出是否符合预期。执行结果符合预期本身是个很玄乎的事，很多时候代码看起来没啥问题，跑起来却又满脸问号。询问同事，都回答说让测试去测。而我觉得开发人员有义务确保代码没有低级的逻辑错误。</p>
-<h2 id="junit">JUnit</h2>
-<p>在<code>SpringBoot</code>框架中，常用的测试框架是<code>JUnit</code>。现在最新版本<code>SpringBoot3.0.5</code>对应的<code>Junit5</code>版本，<a
-target="_blank" rel="noopener" href="https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.testing">官方文档</a>。公司内部使用的是<code>Junit4</code>。</p>
-<p>对于<code>JUnit</code>框架内部原理暂时没深入了解。从使用角度，常常会对需要测试的类，新生成一个对应的测试类，命名规范通常为
-<code>新测试类命 = 旧类命 + "Test"</code>。例如有一个<code>Calculator</code>类，那会新定义一个<code>CalculatorTest</code>测试类，并在测试类中定义成员测试方法，对应于被测试类中的方法。在每个成员方法中添加注解<code>@Test</code>，通过IDE或者构建工具就可以自动执行测试方法。</p>
+<h2 id="JUnit"><a href="#JUnit" class="headerlink" title="JUnit"></a>JUnit</h2><p>在<code>SpringBoot</code>框架中，常用的测试框架是<code>JUnit</code>。现在最新版本<code>SpringBoot3.0.5</code>对应的<code>Junit5</code>版本，<a target="_blank" rel="noopener" href="https://docs.spring.io/spring-boot/docs/current/reference/html/features.html#features.testing">官方文档</a>。公司内部使用的是<code>Junit4</code>。</p>
+<p>对于<code>JUnit</code>框架内部原理暂时没深入了解。从使用角度，常常会对需要测试的类，新生成一个对应的测试类，命名规范通常为 <code>新测试类命 = 旧类命 + &quot;Test&quot;</code>。例如有一个<code>Calculator</code>类，那会新定义一个<code>CalculatorTest</code>测试类，并在测试类中定义成员测试方法，对应于被测试类中的方法。在每个成员方法中添加注解<code>@Test</code>，通过IDE或者构建工具就可以自动执行测试方法。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> org.junit.Test;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">CalculatorTest</span> &#123;<br><br>    <span class="hljs-meta">@Test</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">testAddition</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-comment">// 编写测试代码，测试Addition方法是否按照预期工作</span><br>    &#125;<br><br>    <span class="hljs-meta">@Test</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">testSubtraction</span><span class="hljs-params">()</span> &#123;<br>        <span class="hljs-comment">// 编写测试代码，测试Subtraction方法是否按照预期工作</span><br>    &#125;<br><br>    <span class="hljs-comment">// 还可以编写其他测试方法...</span><br>&#125;<br><br></code></pre></td></tr></table></figure>
+
 <p>在测试中，可以通过构建测试用例，并使用断言，将方法输出和预期输出进行对比。还可以使用代码覆盖率工具，来分析测试覆盖率。这些是<code>JUnit</code>核心功能，其他功能暂时还未深入了解。</p>
-<h2 id="testing-in-springboot">Testing in SpringBoot</h2>
-<p>在<code>SpringBoot</code>中，一个应用有什么功能，取决于在容器中有哪些<code>Bean</code>实例。例如我需要访问数据库，容器中必须要有<code>JDBC</code>相关的<code>Bean</code>，我需要处理<code>web</code>请求，容器中必须有<code>Tomcat</code>和<code>Sevlet</code>相关的<code>Bean</code>。</p>
+<h2 id="Testing-in-SpringBoot"><a href="#Testing-in-SpringBoot" class="headerlink" title="Testing in SpringBoot"></a>Testing in SpringBoot</h2><p>在<code>SpringBoot</code>中，一个应用有什么功能，取决于在容器中有哪些<code>Bean</code>实例。例如我需要访问数据库，容器中必须要有<code>JDBC</code>相关的<code>Bean</code>，我需要处理<code>web</code>请求，容器中必须有<code>Tomcat</code>和<code>Sevlet</code>相关的<code>Bean</code>。</p>
 <p>如果采用上文的方式去测试<code>Spring</code>项目中某个模块，那必然会报错。因为<code>JUnit</code>并不会像<code>Spring</code>一样启动，并将这些功能<code>Bean</code>添加到容器中。也就无法完成例如依赖注入等功能。</p>
 <p>为了让<code>JUnit</code>能启动容器环境，<code>Spring</code>提供了<code>@SpringBootTest</code>注解。只需要在测试类前添加<code>@SpringBootTest</code>，就可以在测试时启动<code>Spring</code>容器。如果不指定注解的<code>classes</code>属性，也就是启动的配置类，那么会将主应用程序类，也就带有<code>@SpringBootApplication</code>注解的类作为配置类。</p>
 <p>另外，如果使用的是<code>JUnit4</code>，还需要在测试类上额外添加<code>@RunWith(SpringRunner.class)</code>。需要这么做的原因涉及<code>JUnit</code>框架原理，在此不深究。</p>
 <p>但问题是，使用<code>@SpringBootTest</code>注解时，会创建一个真实的<code>SpringBoot</code>上下文，并加载所有的<code>Bean</code>，这会导致测试的运行速度较慢。测试可能往往只是想测一个刚写完的某个方法，但却需要将许多不相关的<code>Bean</code>都加载进来，这会造成严重性能浪费。较长的测试启动时间也会大大降低测试时的主观感受。</p>
 <p>要解决这个问题，就需要知道容器里的<code>Bean</code>是怎么样的方式被加载进去的，已经如何自定义加载需要的<code>Bean</code>，这也是下一篇要讨论的内容。</p>
-<h2 id="总结">总结</h2>
-<p><code>JUnit</code>是<code>Java</code>中最公认的测试框架。使用时只需要在测试类的测试方法上加<code>@Test</code>注解，即可对目标方法进行测试。在测试类中，可以使用许多功能并生成测试报告，来判断目标方法是否按照预期执行。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p><code>JUnit</code>是<code>Java</code>中最公认的测试框架。使用时只需要在测试类的测试方法上加<code>@Test</code>注解，即可对目标方法进行测试。在测试类中，可以使用许多功能并生成测试报告，来判断目标方法是否按照预期执行。</p>
 <p>由于<code>JUnit</code>框架默认不会启动<code>Spring</code>容器，而<code>Spring</code>应用的功能依赖于<code>Spring</code>容器。因此直接使用<code>JUnit</code>测试<code>Spring</code>项目中的类会发生错误。可以使用<code>@SpringBootTest</code>在测试类中启动<code>Spring</code>容器环境。</p>
 
                 
