@@ -19,15 +19,15 @@
   <meta name="author" content="DracoYu">
   <meta name="keywords" content="学习笔记,Java,JavaScript,后端,前端">
   
-    <meta name="description" content="Java泛型是众多开发者面临的难点，尤其是涉及通配符的场景。许多开发者往往看得懂却写不出，在选择合适通配符时更是困惑不已。 本文整理自Angelika Langer关于Java泛型的探讨。泛型本身属于复杂议题，本系列无法涵盖所有细节，仅聚焦于易混淆且实战中高频使用的核心特性。建议读者具备基础泛型知识后，再阅读本文以提升理解效率。 术语首先，需统一梳理泛型相关的核心术语。在阅读泛型代码时，明确各元素">
+    <meta name="description" content="可具体化类型前几篇已介绍了泛型擦除、参数化类型以及原始类型的相关概念，但对于部分结论的阐述仍存在一些模糊之处——例如，为什么具体参数化类型的数组无法创建，而原始类型或无界通配符参数化类型的数组却允许创建（尽管这种用法并不推荐）。 在此，对这一问题进行系统整理：所有能够创建数组的类型，本质上都是可具体化类型（reifiable type）。所谓可具体化类型，指的是一种在程序运行时能够被JVM完全识别">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java-Generics-PartI">
-<meta property="og:url" content="http://dracoyus.github.io/2025/12/31/Java-Generics-PartI/index.html">
+<meta property="og:title" content="Java-Generics-PartIV">
+<meta property="og:url" content="http://dracoyus.github.io/2026/02/12/Java-Generics-PartIV/index.html">
 <meta property="og:site_name" content="DracoYu&#39;s MindCache">
-<meta property="og:description" content="Java泛型是众多开发者面临的难点，尤其是涉及通配符的场景。许多开发者往往看得懂却写不出，在选择合适通配符时更是困惑不已。 本文整理自Angelika Langer关于Java泛型的探讨。泛型本身属于复杂议题，本系列无法涵盖所有细节，仅聚焦于易混淆且实战中高频使用的核心特性。建议读者具备基础泛型知识后，再阅读本文以提升理解效率。 术语首先，需统一梳理泛型相关的核心术语。在阅读泛型代码时，明确各元素">
+<meta property="og:description" content="可具体化类型前几篇已介绍了泛型擦除、参数化类型以及原始类型的相关概念，但对于部分结论的阐述仍存在一些模糊之处——例如，为什么具体参数化类型的数组无法创建，而原始类型或无界通配符参数化类型的数组却允许创建（尽管这种用法并不推荐）。 在此，对这一问题进行系统整理：所有能够创建数组的类型，本质上都是可具体化类型（reifiable type）。所谓可具体化类型，指的是一种在程序运行时能够被JVM完全识别">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2025-12-31T01:43:20.000Z">
-<meta property="article:modified_time" content="2026-04-27T07:42:45.439Z">
+<meta property="article:published_time" content="2026-02-12T09:55:03.000Z">
+<meta property="article:modified_time" content="2026-04-29T07:17:50.357Z">
 <meta property="article:author" content="DracoYu">
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="Generics">
@@ -35,7 +35,7 @@
   
   
   
-  <title>Java-Generics-PartI - DracoYu&#39;s MindCache</title>
+  <title>Java-Generics-PartIV - DracoYu&#39;s MindCache</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -201,7 +201,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Java-Generics-PartI"></span>
+            <span id="subtitle" data-typed-text="Java-Generics-PartIV"></span>
           
         </div>
 
@@ -212,8 +212,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2025-12-31 09:43" pubdate>
-          2025年12月31日 上午
+        <time datetime="2026-02-12 17:55" pubdate>
+          2026年2月12日 下午
         </time>
       </span>
     
@@ -224,7 +224,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          1.6k 字
+          2.4k 字
         
       </span>
     
@@ -235,7 +235,7 @@
         
         
         
-          14 分钟
+          21 分钟
         
       </span>
     
@@ -272,35 +272,75 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Java-Generics-PartI</h1>
+            <h1 id="seo-header">Java-Generics-PartIV</h1>
             
             
               <div class="markdown-body">
                 
-                <p><code>Java</code>泛型是众多开发者面临的难点，尤其是涉及通配符的场景。许多开发者往往看得懂却写不出，在选择合适通配符时更是困惑不已。</p>
-<p>本文整理自<code>Angelika Langer</code>关于<code>Java</code>泛型的<a target="_blank" rel="noopener" href="https://angelikalanger.com/GenericsFAQ/JavaGenericsFAQ.html">探讨</a>。泛型本身属于复杂议题，本系列无法涵盖所有细节，仅聚焦于易混淆且实战中高频使用的核心特性。建议读者具备基础泛型知识后，再阅读本文以提升理解效率。</p>
-<h2 id="术语"><a href="#术语" class="headerlink" title="术语"></a>术语</h2><p>首先，需统一梳理泛型相关的核心术语。在阅读泛型代码时，明确各元素对应的概念，可显著提升理解效率。本文中术语的单复数形式不做严格区分。</p>
-<p><strong>泛型类型</strong>（<code>generic type</code>）：本质上是带有<strong>类型参数</strong>的类或接口，其核心是一个<strong>类型模板</strong>——无法直接用于创建对象，需先指定具体类型后方可使用。例如<code>java.util.List&lt;T&gt;</code>、<code>java.util.HashMap&lt;K, V&gt;</code>均为典型泛型类型，无法直接通过<code>new List&lt;T&gt;()</code>实例化，需指定具体类型如<code>new List&lt;String&gt;()</code>。</p>
-<p><strong>泛型方法</strong>（<code>generic method</code>）：核心特征是方法具备独立的类型参数声明，与所在类是否为泛型类型无关。即该方法的类型参数为自身专属，不隶属于所在类或接口。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-comment">// &lt;T&gt; 是泛型方法的类型参数声明，标记这是一个泛型方法</span><br><span class="hljs-keyword">public</span> &lt;T&gt; T <span class="hljs-title function_">getFirstElement</span><span class="hljs-params">(List&lt;T&gt; list)</span> &#123;<br>    <span class="hljs-keyword">return</span> list.isEmpty() ? <span class="hljs-literal">null</span> : list.get(<span class="hljs-number">0</span>);<br>&#125;<br></code></pre></td></tr></table></figure>
+                <h2 id="可具体化类型"><a href="#可具体化类型" class="headerlink" title="可具体化类型"></a>可具体化类型</h2><p>前几篇已介绍了泛型擦除、参数化类型以及原始类型的相关概念，但对于部分结论的阐述仍存在一些模糊之处——例如，为什么具体参数化类型的数组无法创建，而原始类型或无界通配符参数化类型的数组却允许创建（尽管这种用法并不推荐）。</p>
+<p>在此，对这一问题进行系统整理：所有能够创建数组的类型，本质上都是可具体化类型（<code>reifiable type</code>）。所谓可具体化类型，指的是<strong>一种在程序运行时能够被JVM完全识别、保留完整类型信息的类型</strong>，换句话说，这类类型在<code>Java</code>的类型擦除机制执行过程中，<strong>不会丢失任何关键的类型信息</strong>，其运行时类型与编译时声明的类型能够保持一致。</p>
+<p>具体参数化类型（如<code>List&lt;String&gt;</code>）和有界通配符参数化类型（如<code>List&lt;? extends Number&gt;</code>），它们的类型实参都会被编译器捕获并用于静态类型检查，以此避免编译阶段出现类型不匹配的错误。但受<code>Java</code>类型擦除机制的影响，这些具体的类型实参信息会在编译完成后被擦除。到了运行时，<code>JVM</code>只能识别到它们对应的原始类型（如<code>List</code>），无法获取到编译时声明的具体类型限制。所以具体参数化类型不是可具体化类型。</p>
+<p>而无界通配符参数化类型（如<code>List&lt;?&gt;</code>），虽然它的类型实参（无界通配符<code>?</code>）在运行时同样会被擦除，但由于无界通配符本身并不携带任何具体的类型限制信息，这种擦除操作并不会导致任何类型信息的损失——也就是说，其编译时声明的<code>List&lt;?&gt;</code>类型，与运行时<code>JVM</code>识别到的类型完全一致。因此无界通配符参数化类型属于可具体化类型。</p>
+<p>可具体化类型所保留的完整类型信息，在<code>Java</code>的部分语法特性中起到了关键作用。例如，在使用<code>instanceof</code>关键字进行类型判断时，需要依赖运行时的类型信息来确定对象的实际类型；再比如数组的存储检查，也需要通过运行时的类型信息，确保存入数组的元素类型与数组声明的类型保持一致。正因为如此，只有可具体化类型，才能作为这些场景中的合法类型。</p>
+<p>可具体化类型包括：</p>
+<ul>
+<li>基本类型</li>
+<li>非泛型的引用类型</li>
+<li>无界通配符参数化类型</li>
+<li>原始类型</li>
+<li>上述类型的数组</li>
+</ul>
+<p>不可具体化类型包括：</p>
+<ul>
+<li>具体参数化类型</li>
+<li>有界通配符参数化类型</li>
+</ul>
+<p>基于这一分类，当涉及<strong>是否可以创建有界通配符参数化类型数组</strong>的问题时，可直接关联其不可具体化类型的属性——由于不可具体化类型无法保留完整的运行时类型信息，因此不能作为数组元素类型，即有界通配符参数化类型的数组无法创建。而无界通配符参数化类型属于可具体化类型，其数组在语法上是合法的。</p>
+<p>在<code>Java</code>中介绍可具体化类型这个概念，有点像是在说废话，似乎其与类型擦除所表达的核心含义一致。但这一概念的价值在不同编程语言中存在明显差异。例如在<code>C#</code>中，泛型参数信息会完整保留至运行时，无需经过类型擦除过程，因此可具体化类型在不同语言中的表现并不相同。</p>
+<p>容易混淆的是，尽管不可具体化类型的数组无法创建，但不可具体化类型的数组引用是合法的</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java">List&lt;String&gt;[] strListArr = <span class="hljs-literal">null</span>; <span class="hljs-comment">// 合法</span><br>List&lt;? <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Animal</span>&gt;[] AnimalListArr = <span class="hljs-literal">null</span>; <span class="hljs-comment">// 合法</span><br></code></pre></td></tr></table></figure>
 
-<p><strong>类型参数</strong>（<code>type parameters</code>）：定义泛型类型或泛型方法时使用的占位符，用于表示未知类型，其作用域仅限于当前泛型类型或泛型方法内部，相当于<strong>类型层面的形参</strong>。例如<code>List&lt;T&gt;</code>中的<code>T</code>、<code>HashMap&lt;K, V&gt;</code>中的<code>K</code>和<code>V</code>，以及上述泛型方法中的<code>&lt;T&gt;</code>，均为类型参数。</p>
-<p><strong>类型实参</strong>（<code>type arguments</code>）：使用泛型类型或泛型方法时传入的具体类型，用于替换此前定义的类型参数，相当于<strong>类型层面的实参</strong>。例如<code>List&lt;String&gt;</code>中的<code>String</code>、<code>HashMap&lt;Integer, User&gt;</code>中的<code>Integer</code>和<code>User</code>，均为类型实参。</p>
-<p><strong>参数化类型</strong>（<code>parameterized type</code>）：泛型类型绑定具体类型实参后形成的具体类型。可简化表述为：泛型类型 + 类型实参 &#x3D; 参数化类型。例如<code>List&lt;String&gt;</code>、<code>HashMap&lt;Integer, User&gt;</code>均为参数化类型，它们是泛型类型<code>List&lt;T&gt;</code>、<code>HashMap&lt;K, V&gt;</code>绑定具体实参后的结果。</p>
-<p>需注意的是，上述概念分属不同维度。在<code>Java</code>中，<strong>泛型</strong>主要指代泛型类型与泛型方法（同一维度），二者均为<strong>不可直接使用的模板</strong>，需指定具体类型后方可应用；类型参数与类型实参为另一维度的概念，分别对应<strong>占位符</strong>与<strong>实际传入的类型</strong>；而参数化类型仅与泛型类型相关，与泛型方法无关联。</p>
-<p>在泛型语境中，有时会将泛型类型接收类型实参、形成参数化类型的过程称为<strong>实例化</strong>。需明确的是，泛型类型的实例化仅产生参数化类型（属于类型层面的结果），而参数化类型的实例化才会生成具体对象（属于对象层面的结果）。以泛型类型<code>List&lt;T&gt;</code>为例，其绑定<code>String</code>类型实参后得到参数化类型<code>List&lt;String&gt;</code>，再通过<code>new ArrayList&lt;String&gt;()</code>可创建具体的<code>List</code>对象——前者是类型层面的模板填充过程，不涉及内存分配；后者是对象层面的创建过程，会完成内存分配。</p>
-<p>强调这些术语的原因在于，它们在代码中的书写形式极为相似，易产生混淆。例如以下两个类的代码语法均合法，但内部泛型逻辑存在本质差异，若不仔细区分易造成理解偏差。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ClassA</span>&lt;T&gt; &#123;<br>    <span class="hljs-keyword">public</span> &lt;T&gt; List&lt;T&gt; <span class="hljs-title function_">wrapElement</span><span class="hljs-params">(T element)</span> &#123;<br>        List&lt;T&gt; container = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br>        container.add(element);<br>        <span class="hljs-keyword">return</span> container;<br>    &#125;<br>&#125;<br>    <br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">ClassB</span>&lt;T&gt; &#123;<br>    <span class="hljs-keyword">public</span> List&lt;T&gt; <span class="hljs-title function_">wrapElement</span><span class="hljs-params">(T element)</span> &#123;<br>        List&lt;T&gt; container = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;&gt;();<br>        container.add(element);<br>        <span class="hljs-keyword">return</span> container;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>由于不可具体化类型的数组本身无法创建，这类数组引用永远无法指向其自身类型的数组实例，仅能指向<code>null</code>或其他兼容类型的数组。实际使用中并无实际意义，因此不建议使用这类数组引用。</p>
+<h2 id="通配符参数化类型的作用"><a href="#通配符参数化类型的作用" class="headerlink" title="通配符参数化类型的作用"></a>通配符参数化类型的作用</h2><p>前文已多次提及通配符参数化类型的作用，此处对其具体作用及适用、不适用场景进行系统整理。</p>
+<p>通配符参数化类型可用于以下类型标注场景（与非泛型类 &#x2F; 接口的使用方式一致）：</p>
+<ul>
+<li>作为方法的参数类型和返回类型</li>
+<li>作为字段或局部引用变量的类型</li>
+<li>作为数组的组件类型（数组元素类型）</li>
+<li>作为其他参数化类型的类型实参</li>
+<li>作为强制类型转换中的目标类型</li>
+</ul>
+<p>通配符参数化类型<strong>不可</strong>用于以下场景：</p>
+<ul>
+<li>创建对象</li>
+<li>创建数组（无界通配符除外）</li>
+<li>异常处理</li>
+<li><code>instanceof</code>表达式（无界通配符除外）</li>
+<li>作为超类型</li>
+<li>出现在类字面量中</li>
+</ul>
+<h2 id="泛型方法"><a href="#泛型方法" class="headerlink" title="泛型方法"></a>泛型方法</h2><p>在通过多个章节介绍泛型类型的相关知识后，泛型方法的理解便会显得十分简单——其诸多特性、格式与泛型类型保持一致。</p>
+<p>泛型方法指的是带有类型参数的方法，静态方法、非静态方法乃至构造器，都可以定义为泛型方法。泛型方法的定义有明确规范，需在方法返回值类型之前，用尖括号包裹泛型参数进行标识，以此明确该方法为泛型方法并声明其类型参数。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> &lt;T&gt; T <span class="hljs-title function_">getFirstElement</span><span class="hljs-params">(T[] array)</span> &#123;<br>    <span class="hljs-keyword">if</span> (array == <span class="hljs-literal">null</span> || array.length == <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>    &#125;<br>    <span class="hljs-keyword">return</span> array[<span class="hljs-number">0</span>];<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p>首先分析<code>ClassA</code>：该类为泛型类，同时定义了泛型方法<code>wrapElement</code>。需重点关注以下两点：</p>
+<p>泛型方法的实例化方式，与泛型类型存在明显区别：泛型类型通常需要通过<code>类名&lt;泛型实参&gt;</code>的方式显式指定类型参数；而泛型方法的使用更为简洁，大多可像非泛型方法一样直接调用，其泛型参数会由编译器根据调用上下文自动推断得出，无需显式声明。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java">Long[] longs = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Long</span>[<span class="hljs-number">5</span>];<br>longs[<span class="hljs-number">0</span>] = <span class="hljs-number">1L</span>;<br>GenericMethod.getFirstElement(longs)<br></code></pre></td></tr></table></figure>
+
+<p>在上例中，泛型方法<code>getFirstElement</code>的泛型实参被编译器自动推断为<code>Long</code>。原因在于，该方法声明的参数类型为<code>T[]</code>，而实际传入的参数是<code>Long[]</code>类型，编译器会基于这一调用上下文，自动匹配并推断出当前泛型实参为<code>Long</code>，进而确定方法的参数和返回值类型均为<code>Long</code>。</p>
+<p>这种由编译器根据调用上下文自动推断泛型方法类型参数的特性，称为类型推断（<code>Type Argument Inference</code>）。类型推断的顺序如下：</p>
 <ol>
-<li>类声明中的<code>&lt;T&gt;</code>（<code>public class ClassA&lt;T&gt;</code>）：为泛型类的类型参数，作用域覆盖<code>ClassA</code>的所有非静态成员（如成员变量、非泛型方法的参数及返回值）；</li>
-<li>方法声明中的<code>&lt;T&gt;</code>（<code>public &lt;T&gt; List&lt;T&gt;...</code>）：为泛型方法的专属类型参数，作用域仅限于该方法内部（包括方法参数、返回值及方法体中的局部变量）。</li>
+<li>基础推断：从方法实参直接推导。编译器首先会分析调用泛型方法时传入的实际参数类型，以此推导泛型类型参数的初步类型。若存在多个实际参数，泛型方法的类型参数 <code>T</code> 会被推断为所有传入实参对应形参位置的<strong>共同父类型</strong>（更严格地说是 “最小上界”）。</li>
+<li>上下界约束检查：验证推断出的类型是否符合泛型方法声明时的类型约束（若有）。若推断类型违反约束，编译器会直接抛出编译错误，确保类型安全性。</li>
 </ol>
-<p>由于二者采用相同的标识符<code>T</code>，会产生<strong>遮蔽</strong>现象——方法内的<code>T</code>会遮蔽类声明中的<code>T</code>，二者为完全独立的类型参数，不存在任何关联。这一机制与局部变量遮蔽成员变量类似，在<code>wrapElement</code>方法内部，所有<code>T</code>均指代方法自身的类型参数，类声明的<code>T</code>在此方法内无法被使用。</p>
-<p>再分析<code>ClassB</code>：该类与<code>ClassA</code>的唯一差异在于<code>wrapElement</code>方法前缺少<code>&lt;T&gt;</code>声明。这表明<code>wrapElement</code>并非泛型方法，而是一个<strong>使用泛型类类型参数的普通方法</strong>。此类中的所有<code>T</code>均指向<code>ClassB</code>类声明的类型参数，不存在独立的方法级类型参数。</p>
-<p>尽管<code>ClassA</code>的写法符合语法规范，但<strong>在实际开发中应严格避免</strong>。采用同名标识符会严重降低代码可读性，易对开发者自身及协作人员造成误导。建议将泛型方法的类型参数标识符修改为其他形式（如  <code>E</code>），以规避遮蔽现象，保证代码逻辑清晰可维护。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>本节核心在于厘清泛型的基础术语。这些术语书写形式相近、易混淆，却是理解泛型代码的前提——唯有明确泛型类型与泛型方法的差异，掌握类型参数与类型实参的区别，后续在应对更复杂的泛型逻辑（如通配符）时，才能降低理解难度、减少问题排查成本。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Utilities</span> &#123;<br>    ...<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> &lt;T&gt; <span class="hljs-keyword">void</span> <span class="hljs-title function_">fill</span><span class="hljs-params">( T [] array, T elem)</span> &#123;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i=<span class="hljs-number">0</span>; i&lt;array.length; ++i) &#123; array[i] = elem; &#125;<br>    &#125;<br>&#125;<br><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Test</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        Utilities.fill(<span class="hljs-keyword">new</span> <span class="hljs-title class_">String</span> [<span class="hljs-number">5</span>], <span class="hljs-keyword">new</span> <span class="hljs-title class_">String</span> (<span class="hljs-string">&quot;XYZ&quot;</span>));  <span class="hljs-comment">// T:=String</span><br>        Utilities.fill(<span class="hljs-keyword">new</span> <span class="hljs-title class_">String</span> [<span class="hljs-number">5</span>], <span class="hljs-keyword">new</span> <span class="hljs-title class_">Integer</span> (<span class="hljs-number">100</span>));   <span class="hljs-comment">// T:=Object&amp;Serializable&amp;Comparable</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>区别于通过类型推断隐式确定类型参数的方式，泛型方法也支持显式指定类型参数（<code>explicit type argument specification</code>），当编译器无法通过上下文准确推断类型，或需要明确指定特定类型时，可采用这种方式。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">GenericMethod.&lt;Long&gt;getFirstElement(longs)<br></code></pre></td></tr></table></figure>
+
+<p>需要注意的是，显式指定类型参数的格式与泛型类型存在明显区别：泛型类型的泛型实参需在类名（或接口名）后提供，而泛型方法的显式类型参数则需在方法名前、类名（或对象名）后提供，用尖括号包裹即可。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>归根结底，能够作为数组元素类型创建数组的数据类型，均属于可具体化类型。具体参数化类型和有界通配符参数化类型，由于<code>Java</code>类型擦除机制的影响，其类型实参相关的信息会在编译后被擦除，无法保留完整的运行时类型信息，因此均不属于可具体化类型，也无法作为数组元素类型创建数组。</p>
+<p>通配符参数化类型不同于具体参数化类型，无法通过<code>new</code>关键字创建对象实例，其核心用途通常是作为方法参数、局部引用变量等类型标注，以此提升代码的通用性和灵活性，适配更多类型场景。</p>
+<p>泛型方法的定义规范是在方法返回值类型之前，用尖括号包裹泛型参数进行声明；其类型实参通常由编译器根据调用上下文自动推断得出，无需显式声明，若编译器无法准确推断或需明确指定类型，也可手动显式指定类型参数。</p>
 
                 
               </div>
@@ -348,8 +388,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Java-Generics-PartI</div>
-      <div>http://dracoyus.github.io/2025/12/31/Java-Generics-PartI/</div>
+      <div>Java-Generics-PartIV</div>
+      <div>http://dracoyus.github.io/2026/02/12/Java-Generics-PartIV/</div>
     </div>
     <div class="license-meta">
       
@@ -361,7 +401,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2025年12月31日</div>
+          <div>2026年2月12日</div>
         </div>
       
       
@@ -393,18 +433,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2026/01/16/Java-Generics-PartII/" title="Java-Generics-PartII">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Java-Generics-PartII</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2025/12/17/Design-Pattern-Postscript/" title="Design-Pattern-Postscript">
-                        <span class="hidden-mobile">Design-Pattern-Postscript</span>
+                      <a href="/2026/01/22/Java-Generics-PartIII/" title="Java-Generics-PartIII">
+                        <span class="hidden-mobile">Java-Generics-PartIII</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>

@@ -28,7 +28,7 @@
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://dracoyus.github.io/img/Java-Generics.png">
 <meta property="article:published_time" content="2026-01-22T11:32:47.000Z">
-<meta property="article:modified_time" content="2026-02-12T03:00:54.340Z">
+<meta property="article:modified_time" content="2026-04-28T08:58:34.229Z">
 <meta property="article:author" content="DracoYu">
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="Generics">
@@ -279,7 +279,7 @@
             
               <div class="markdown-body">
                 
-                <p><img src="/img/Java-Generics.png" srcset="/img/loading.gif" lazyload></p>
+                <p><img src="/img/Java-Generics.png" srcset="/img/loading.gif" lazyload alt="Java泛型"></p>
 <h2 id="泛型类型定义的限制"><a href="#泛型类型定义的限制" class="headerlink" title="泛型类型定义的限制"></a>泛型类型定义的限制</h2><p>在上一篇中，我们提到参数化类型的使用存在一些限制：无法创建参数化类型的数组、无法作为异常类型、无法作为类型字面量（如<code>List&lt;String&gt;.class</code>）、无法用于<code>instanceof</code>关键字的类型判断。</p>
 <p>这里需要注意区分一个易混淆的概念：泛型类型定义时的限制，即定义泛型类型时，不可以将哪些特殊类作为泛型类。具体来说，<strong>泛型类型不能是枚举类、匿名内部类、异常类型</strong>。</p>
 <p>枚举类中的所有枚举值都是<code>public static final</code>修饰的静态实例，这些静态实例会在枚举类加载阶段完成初始化。我们既无法为枚举实例绑定具体的泛型类型，也无法在枚举类中引用泛型类型参数。因此，使用泛型枚举类毫无实际意义，<code>Java</code>语法直接禁止了这种用法。</p>
@@ -313,24 +313,18 @@
 <h2 id="通配符参数化类型的限制"><a href="#通配符参数化类型的限制" class="headerlink" title="通配符参数化类型的限制"></a>通配符参数化类型的限制</h2><figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Box</span>&lt;T&gt; &#123;<br>    <span class="hljs-keyword">private</span> T t;<br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">Box</span><span class="hljs-params">(T t)</span> &#123; <span class="hljs-built_in">this</span>.t = t; &#125;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">put</span><span class="hljs-params">(T t)</span> &#123; <span class="hljs-built_in">this</span>.t = t;&#125;<br>    <span class="hljs-keyword">public</span> T <span class="hljs-title function_">take</span><span class="hljs-params">()</span> &#123; <span class="hljs-keyword">return</span> t; &#125;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">equalTo</span><span class="hljs-params">(Box&lt;T&gt; other)</span> &#123; <span class="hljs-keyword">return</span> <span class="hljs-built_in">this</span>.t.equals(other.t); &#125;<br>    <span class="hljs-keyword">public</span> Box&lt;T&gt; <span class="hljs-title function_">copy</span><span class="hljs-params">()</span> &#123; <span class="hljs-keyword">return</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Box</span>&lt;T&gt;(t); &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>假设我们通过<code>Box&lt;?&gt;</code>引用一个变量，并尝试调用其<code>put</code>方法——根据该方法的签名，它需要接收一个与类型参数<code>T</code>匹配的参数。此时，由于类型实参为<code>?</code>（未知类型），直觉上可能会认为该方法可以接受任意类型的参数，但实际情况恰好相反：该方法仅能接收<code>null</code>作为参数，无法传入其他任何类型的值。</p>
-<p>核心问题在于对<code>?</code>的理解：当<code>?</code>作为类型实参、实例化为通配符参数化类型时，它代表的是“任意类型实参对应的具体参数化类型的集合”。而实际使用时，<code>Box&lt;?&gt;</code>引用的变量，其实际类型是该集合中的某一种具体类型，可能是<code>Box&lt;String&gt;</code>，也可能是<code>Box&lt;Integer&gt;</code>，对应的<code>put</code>方法分别只能接收<code>String</code>、<code>Integer</code>类型的参数。</p>
-<p><strong><code>Java </code>编译器会先梳理所有潜在的参数类型情况，取其交集作为最终允许传入的参数类型范围</strong>。由于我们无法确定<code>Box&lt;?&gt;</code>对应的具体类型，且不存在一个能作为所有类子类的“万能类型”，因此为了保证类型安全，Java编译器仅允许将<code>null</code>作为<code>put</code>方法的入参——因为<code>null</code>是所有引用类型都允许的常量值，不会引发类型不匹配问题。</p>
+<p>核心问题在于对<code>?</code>的理解：当<code>?</code>作为类型实参、实例化为通配符参数化类型时，它代表的是<strong>任意类型实参对应的具体参数化类型的集合</strong>。而实际使用时，<code>Box&lt;?&gt;</code>引用的变量，其实际类型是该集合中的某一种具体类型，可能是<code>Box&lt;String&gt;</code>，也可能是<code>Box&lt;Integer&gt;</code>，对应的<code>put</code>方法分别只能接收<code>String</code>、<code>Integer</code>类型的参数。</p>
+<p><strong><code>Java</code>编译器会先梳理所有潜在的参数类型情况，取其交集作为最终允许传入的参数类型范围</strong>。由于我们无法确定<code>Box&lt;?&gt;</code>对应的具体类型，且不存在一个能作为所有类子类的“万能类型”，因此为了保证类型安全，Java编译器仅允许将<code>null</code>作为<code>put</code>方法的入参——因为<code>null</code>是所有引用类型都允许的常量值，不会引发类型不匹配问题。</p>
 <p>但对于返回值为类型参数<code>T</code>的方法（如上例中的<code>take</code>方法），调用方可以使用<code>Object</code>类作为接收返回值的类型。其逻辑与上述一致：通配符参数化类型的类型实参是未知的，<code>take</code>方法的返回值类型也随之未知。而<code>Object</code>类是所有Java类的父类，因此将返回值赋值给<code>Object</code>类型变量，属于多态的隐式向上转型，是完全合法的。</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs java">Box&lt;?&gt; box = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Box</span>&lt;String&gt;(<span class="hljs-string">&quot;abc&quot;</span>);<br><br>box.put(<span class="hljs-string">&quot;xyz&quot;</span>);     <span class="hljs-comment">// error</span><br>box.put(<span class="hljs-literal">null</span>);     <span class="hljs-comment">// ok</span><br><br><span class="hljs-type">String</span> <span class="hljs-variable">s</span> <span class="hljs-operator">=</span> box.take();  <span class="hljs-comment">// error</span><br><span class="hljs-type">Object</span> <span class="hljs-variable">o</span> <span class="hljs-operator">=</span> box.take();  <span class="hljs-comment">// ok</span><br><br><span class="hljs-type">boolean</span> <span class="hljs-variable">equal</span> <span class="hljs-operator">=</span> box.equalTo(box);  <span class="hljs-comment">// error</span><br>equal = box.equalTo(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Box</span>&lt;String&gt;(<span class="hljs-string">&quot;abc&quot;</span>)); <span class="hljs-comment">// error</span><br><br>Box&lt;?&gt; box1 = box.copy();   <span class="hljs-comment">// ok</span><br>Box&lt;String&gt; box2 = box.copy();  <span class="hljs-comment">// error</span><br></code></pre></td></tr></table></figure>
 
 <p>此处有一个很反直觉的点：调用<code>equalTo</code>方法时，即使将变量自身作为参数传入，也是非法的。从表面上看，<code>box</code>的类型是<code>Box&lt;?&gt;</code>，而<code>equalTo</code>方法的参数类型是<code>Box&lt;T&gt;</code>，若用<code>?</code>替换<code>T</code>，似乎参数类型应为<code>Box&lt;?&gt;</code>，与<code>box</code>的类型一致，但实际并非如此。</p>
 <p>其根本原因是，<code>?</code>（通配符）不能直接替换泛型类中的类型参数<code>T</code>。当使用<code>?</code>作为类型实参实例化泛型类时，编译器会为<code>?</code>生成一个临时的捕获类型（例如<code>capture#1-of ?</code>），该捕获类型可视为一个具体的未知类型。此时，<code>equalTo</code>方法的参数类型实际上是<code>Box&lt;capture#1-of ?&gt;</code>（一个具体参数化类型），而传入的<code>box</code>变量类型是<code>Box&lt;?&gt;</code>（通配符参数化类型），二者并非同一类型，因此调用非法。</p>
 <p>简单来说，<code>box</code>变量的实际类型是某一种具体参数化类型，而<code>equalTo</code>方法仅接受与自身类型完全匹配的<code>Box</code>实例；若方法参数类型不明确，传入的参数可能与实际类型不匹配，从而引发类型安全问题。若将<code>equalTo</code>方法的参数类型调整为<code>Box&lt;?&gt;</code>，则该调用即可合法执行。这也是极易混淆的地方。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><ol>
-<li><p>讨论泛型的限制时，需明确区分“泛型类型定义时的限制”与“泛型类型使用时的限制”，避免混淆</p>
-</li>
-<li><p>参数化类型可细分为具体参数化类型和通配符参数化类型，其中通配符参数化类型又可进一步分为无界通配符和有界通配符两类</p>
-</li>
-<li><p>通配符参数化类型的本质是一组具体参数化类型的集合，用于表示某一类泛型实例的统称</p>
-</li>
-<li><p>当使用通配符参数化类型引用变量时，对该变量的方法调用、返回值处理会存在特定限制，其核心目的是保证泛型的类型安全</p>
-</li>
-</ol>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>讨论泛型的限制时，需明确区分“泛型类型定义时的限制”与“泛型类型使用时的限制”，避免混淆</p>
+<p>参数化类型可细分为具体参数化类型和通配符参数化类型，其中通配符参数化类型又可进一步分为无界通配符和有界通配符两类</p>
+<p>通配符参数化类型的本质是一组具体参数化类型的集合，用于表示某一类泛型实例的统称</p>
+<p>当使用通配符参数化类型引用变量时，对该变量的方法调用、返回值处理会存在特定限制，其核心目的是保证泛型的类型安全</p>
 
                 
               </div>
@@ -422,6 +416,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2026/02/12/Java-Generics-PartIV/" title="Java-Generics-PartIV">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Java-Generics-PartIV</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">
