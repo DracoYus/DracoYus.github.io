@@ -19,15 +19,15 @@
   <meta name="author" content="DracoYu">
   <meta name="keywords" content="学习笔记,Java,JavaScript,后端,前端">
   
-    <meta name="description" content="可具体化类型前几篇已介绍了泛型擦除、参数化类型以及原始类型的相关概念，但对于部分结论的阐述仍存在一些模糊之处——例如，为什么具体参数化类型的数组无法创建，而原始类型或无界通配符参数化类型的数组却允许创建（尽管这种用法并不推荐）。 在此，对这一问题进行系统整理：所有能够创建数组的类型，本质上都是可具体化类型（reifiable type）。所谓可具体化类型，指的是一种在程序运行时能够被JVM完全识别">
+    <meta name="description" content="类型参数边界在正式介绍类型参数边界之前，先回顾前文定义的核心概念：类型参数是定义泛型类 &#x2F; 泛型方法时声明的占位符，该占位符会在泛型实例化的过程中，被具体的类型实参替换。 若类型参数T未添加任何约束，则代表未知类型。在泛型类或泛型方法的定义内部，T类型的变量仅能调用Object类中定义的方法，无法调用其他自定义方法，这一限制无法满足实际开发中的多数场景需求。开发中通常需要对类型参数进行限">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Java-Generics-PartIV">
-<meta property="og:url" content="http://dracoyus.github.io/2026/02/12/Java-Generics-PartIV/index.html">
+<meta property="og:title" content="Java-Generics-PartV">
+<meta property="og:url" content="http://dracoyus.github.io/2026/04/29/Java-Generics-PartV/index.html">
 <meta property="og:site_name" content="DracoYu&#39;s MindCache">
-<meta property="og:description" content="可具体化类型前几篇已介绍了泛型擦除、参数化类型以及原始类型的相关概念，但对于部分结论的阐述仍存在一些模糊之处——例如，为什么具体参数化类型的数组无法创建，而原始类型或无界通配符参数化类型的数组却允许创建（尽管这种用法并不推荐）。 在此，对这一问题进行系统整理：所有能够创建数组的类型，本质上都是可具体化类型（reifiable type）。所谓可具体化类型，指的是一种在程序运行时能够被JVM完全识别">
+<meta property="og:description" content="类型参数边界在正式介绍类型参数边界之前，先回顾前文定义的核心概念：类型参数是定义泛型类 &#x2F; 泛型方法时声明的占位符，该占位符会在泛型实例化的过程中，被具体的类型实参替换。 若类型参数T未添加任何约束，则代表未知类型。在泛型类或泛型方法的定义内部，T类型的变量仅能调用Object类中定义的方法，无法调用其他自定义方法，这一限制无法满足实际开发中的多数场景需求。开发中通常需要对类型参数进行限">
 <meta property="og:locale" content="zh_CN">
-<meta property="article:published_time" content="2026-02-12T09:55:03.000Z">
-<meta property="article:modified_time" content="2026-04-29T07:17:50.357Z">
+<meta property="article:published_time" content="2026-04-29T08:17:22.000Z">
+<meta property="article:modified_time" content="2026-05-21T11:40:46.306Z">
 <meta property="article:author" content="DracoYu">
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="Generics">
@@ -35,7 +35,7 @@
   
   
   
-  <title>Java-Generics-PartIV - DracoYu&#39;s MindCache</title>
+  <title>Java-Generics-PartV - DracoYu&#39;s MindCache</title>
 
   <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
 
@@ -201,7 +201,7 @@
       <div class="banner-text text-center fade-in-up">
         <div class="h2">
           
-            <span id="subtitle" data-typed-text="Java-Generics-PartIV"></span>
+            <span id="subtitle" data-typed-text="Java-Generics-PartV"></span>
           
         </div>
 
@@ -212,8 +212,8 @@
     
       <span class="post-meta">
         <i class="iconfont icon-date-fill" aria-hidden="true"></i>
-        <time datetime="2026-02-12 17:55" pubdate>
-          2026年2月12日 下午
+        <time datetime="2026-04-29 16:17" pubdate>
+          2026年4月29日 下午
         </time>
       </span>
     
@@ -224,7 +224,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          2.4k 字
+          2k 字
         
       </span>
     
@@ -235,7 +235,7 @@
         
         
         
-          21 分钟
+          17 分钟
         
       </span>
     
@@ -272,75 +272,51 @@
       <div class="container nopadding-x-md" id="board-ctn">
         <div id="board">
           <article class="post-content mx-auto">
-            <h1 id="seo-header">Java-Generics-PartIV</h1>
+            <h1 id="seo-header">Java-Generics-PartV</h1>
             
             
               <div class="markdown-body">
                 
-                <h2 id="可具体化类型"><a href="#可具体化类型" class="headerlink" title="可具体化类型"></a>可具体化类型</h2><p>前几篇已介绍了泛型擦除、参数化类型以及原始类型的相关概念，但对于部分结论的阐述仍存在一些模糊之处——例如，为什么具体参数化类型的数组无法创建，而原始类型或无界通配符参数化类型的数组却允许创建（尽管这种用法并不推荐）。</p>
-<p>在此，对这一问题进行系统整理：所有能够创建数组的类型，本质上都是可具体化类型（<code>reifiable type</code>）。所谓可具体化类型，指的是<strong>一种在程序运行时能够被JVM完全识别、保留完整类型信息的类型</strong>，换句话说，这类类型在<code>Java</code>的类型擦除机制执行过程中，<strong>不会丢失任何关键的类型信息</strong>，其运行时类型与编译时声明的类型能够保持一致。</p>
-<p>具体参数化类型（如<code>List&lt;String&gt;</code>）和有界通配符参数化类型（如<code>List&lt;? extends Number&gt;</code>），它们的类型实参都会被编译器捕获并用于静态类型检查，以此避免编译阶段出现类型不匹配的错误。但受<code>Java</code>类型擦除机制的影响，这些具体的类型实参信息会在编译完成后被擦除。到了运行时，<code>JVM</code>只能识别到它们对应的原始类型（如<code>List</code>），无法获取到编译时声明的具体类型限制。所以具体参数化类型不是可具体化类型。</p>
-<p>而无界通配符参数化类型（如<code>List&lt;?&gt;</code>），虽然它的类型实参（无界通配符<code>?</code>）在运行时同样会被擦除，但由于无界通配符本身并不携带任何具体的类型限制信息，这种擦除操作并不会导致任何类型信息的损失——也就是说，其编译时声明的<code>List&lt;?&gt;</code>类型，与运行时<code>JVM</code>识别到的类型完全一致。因此无界通配符参数化类型属于可具体化类型。</p>
-<p>可具体化类型所保留的完整类型信息，在<code>Java</code>的部分语法特性中起到了关键作用。例如，在使用<code>instanceof</code>关键字进行类型判断时，需要依赖运行时的类型信息来确定对象的实际类型；再比如数组的存储检查，也需要通过运行时的类型信息，确保存入数组的元素类型与数组声明的类型保持一致。正因为如此，只有可具体化类型，才能作为这些场景中的合法类型。</p>
-<p>可具体化类型包括：</p>
-<ul>
-<li>基本类型</li>
-<li>非泛型的引用类型</li>
-<li>无界通配符参数化类型</li>
-<li>原始类型</li>
-<li>上述类型的数组</li>
-</ul>
-<p>不可具体化类型包括：</p>
-<ul>
-<li>具体参数化类型</li>
-<li>有界通配符参数化类型</li>
-</ul>
-<p>基于这一分类，当涉及<strong>是否可以创建有界通配符参数化类型数组</strong>的问题时，可直接关联其不可具体化类型的属性——由于不可具体化类型无法保留完整的运行时类型信息，因此不能作为数组元素类型，即有界通配符参数化类型的数组无法创建。而无界通配符参数化类型属于可具体化类型，其数组在语法上是合法的。</p>
-<p>在<code>Java</code>中介绍可具体化类型这个概念，有点像是在说废话，似乎其与类型擦除所表达的核心含义一致。但这一概念的价值在不同编程语言中存在明显差异。例如在<code>C#</code>中，泛型参数信息会完整保留至运行时，无需经过类型擦除过程，因此可具体化类型在不同语言中的表现并不相同。</p>
-<p>容易混淆的是，尽管不可具体化类型的数组无法创建，但不可具体化类型的数组引用是合法的</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java">List&lt;String&gt;[] strListArr = <span class="hljs-literal">null</span>; <span class="hljs-comment">// 合法</span><br>List&lt;? <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Animal</span>&gt;[] AnimalListArr = <span class="hljs-literal">null</span>; <span class="hljs-comment">// 合法</span><br></code></pre></td></tr></table></figure>
+                <h2 id="类型参数边界"><a href="#类型参数边界" class="headerlink" title="类型参数边界"></a>类型参数边界</h2><p>在正式介绍类型参数边界之前，先回顾前文定义的核心概念：<strong>类型参数</strong>是定义泛型类 &#x2F; 泛型方法时声明的占位符，该占位符会在泛型实例化的过程中，被具体的<strong>类型实参</strong>替换。</p>
+<p>若类型参数<code>T</code>未添加任何约束，则代表未知类型。在泛型类或泛型方法的定义内部，<code>T</code>类型的变量仅能调用<code>Object</code>类中定义的方法，无法调用其他自定义方法，这一限制无法满足实际开发中的多数场景需求。开发中通常需要对类型参数进行限定，要求<strong>类型参数必须为指定类的子类，或实现指定接口</strong>，而非支持任意类型传入。</p>
+<p>为类型参数<code>T</code>添加类型限制后，即可在泛型定义中直接调用限制类型所包含的方法；同时在泛型实例化时，仅满足约束条件的类型实参才符合语法规范。</p>
+<p>该特性即为<strong>类型参数边界（Type Parameter Bounds）</strong>。类型参数边界是<strong>一种引用类型约束，用于规范类型参数的取值范围：既限制了可作为类型实参的类型集合，又允许在泛型定义中访问边界类型的成员方法</strong>。每个类型参数支持声明多个边界，具体语法格式如下：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">&lt;TypeParameter <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Class</span> &amp; Interface <span class="hljs-number">1</span> &amp; ... &amp; Interface N &gt;<br></code></pre></td></tr></table></figure>
 
-<p>由于不可具体化类型的数组本身无法创建，这类数组引用永远无法指向其自身类型的数组实例，仅能指向<code>null</code>或其他兼容类型的数组。实际使用中并无实际意义，因此不建议使用这类数组引用。</p>
-<h2 id="通配符参数化类型的作用"><a href="#通配符参数化类型的作用" class="headerlink" title="通配符参数化类型的作用"></a>通配符参数化类型的作用</h2><p>前文已多次提及通配符参数化类型的作用，此处对其具体作用及适用、不适用场景进行系统整理。</p>
-<p>通配符参数化类型可用于以下类型标注场景（与非泛型类 &#x2F; 接口的使用方式一致）：</p>
-<ul>
-<li>作为方法的参数类型和返回类型</li>
-<li>作为字段或局部引用变量的类型</li>
-<li>作为数组的组件类型（数组元素类型）</li>
-<li>作为其他参数化类型的类型实参</li>
-<li>作为强制类型转换中的目标类型</li>
-</ul>
-<p>通配符参数化类型<strong>不可</strong>用于以下场景：</p>
-<ul>
-<li>创建对象</li>
-<li>创建数组（无界通配符除外）</li>
-<li>异常处理</li>
-<li><code>instanceof</code>表达式（无界通配符除外）</li>
-<li>作为超类型</li>
-<li>出现在类字面量中</li>
-</ul>
-<h2 id="泛型方法"><a href="#泛型方法" class="headerlink" title="泛型方法"></a>泛型方法</h2><p>在通过多个章节介绍泛型类型的相关知识后，泛型方法的理解便会显得十分简单——其诸多特性、格式与泛型类型保持一致。</p>
-<p>泛型方法指的是带有类型参数的方法，静态方法、非静态方法乃至构造器，都可以定义为泛型方法。泛型方法的定义有明确规范，需在方法返回值类型之前，用尖括号包裹泛型参数进行标识，以此明确该方法为泛型方法并声明其类型参数。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> &lt;T&gt; T <span class="hljs-title function_">getFirstElement</span><span class="hljs-params">(T[] array)</span> &#123;<br>    <span class="hljs-keyword">if</span> (array == <span class="hljs-literal">null</span> || array.length == <span class="hljs-number">0</span>) &#123;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;<br>    &#125;<br>    <span class="hljs-keyword">return</span> array[<span class="hljs-number">0</span>];<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>类型参数边界规定，泛型实例化时传入的类型实参，必须满足所有边界的约束条件。以上述语法为例，<code>TypeParameter</code>对应的类型实参，必须同时是指定类的子类、以及所有声明接口的实现类。</p>
+<p>关键字 <code>extends</code> 可应用于 <code>Java </code>的多个语法特性中，且语法结构高度相似，极易产生混淆，以下对常见场景进行区分：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">A</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">B</span> &#123;&#125; <span class="hljs-comment">// 类继承</span><br><span class="hljs-keyword">interface</span> <span class="hljs-title class_">A</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">B</span>, C &#123;&#125; <span class="hljs-comment">// 接口继承</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">A</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">B</span>, C <span class="hljs-comment">// 接口实现</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">A</span>&lt;T <span class="hljs-keyword">extends</span> <span class="hljs-title class_">B</span> &amp; C&gt; <span class="hljs-comment">// 参数类型边界</span><br>A&lt;? <span class="hljs-keyword">extends</span> <span class="hljs-title class_">B</span>&gt; <span class="hljs-comment">// 有界通配符参数化类型</span><br></code></pre></td></tr></table></figure>
 
-<p>泛型方法的实例化方式，与泛型类型存在明显区别：泛型类型通常需要通过<code>类名&lt;泛型实参&gt;</code>的方式显式指定类型参数；而泛型方法的使用更为简洁，大多可像非泛型方法一样直接调用，其泛型参数会由编译器根据调用上下文自动推断得出，无需显式声明。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs java">Long[] longs = <span class="hljs-keyword">new</span> <span class="hljs-title class_">Long</span>[<span class="hljs-number">5</span>];<br>longs[<span class="hljs-number">0</span>] = <span class="hljs-number">1L</span>;<br>GenericMethod.getFirstElement(longs)<br></code></pre></td></tr></table></figure>
+<p>在 <code>Java </code>语法规则中，类仅支持单类继承，有界通配符仅支持单个类边界；与之不同的是，接口支持多接口继承、类支持多接口实现、类型参数支持多边界声明。此外，由于参数类型边界与有界通配符参数化类型的语法结构高度相似，二者在实际使用中极易产生混淆，需要明确区分。</p>
+<p>绝大多数引用类型均可作为类型参数边界，包括类、接口、枚举类型、参数化类型；<strong>基本数据类型</strong>与<strong>数组类型</strong>不支持作为类型参数边界。前文已说明，为类型参数指定边界后，即可在泛型定义域内直接调用边界类型的方法。若类型边界为有界通配符参数化类型，则可调用的方法范围与该有界通配符参数化类型保持一致。例如下述类定义：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">X</span>&lt; T <span class="hljs-keyword">extends</span> <span class="hljs-title class_">List</span>&lt;? <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Number</span>&gt; &gt; &#123;<br>  <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">someMethod</span><span class="hljs-params">(T t)</span> &#123;<br>    t.add(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Long</span>(<span class="hljs-number">0L</span>));    <span class="hljs-comment">// error</span><br>    <span class="hljs-type">Number</span> <span class="hljs-variable">n</span> <span class="hljs-operator">=</span> t.remove(<span class="hljs-number">0</span>);<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
-<p>在上例中，泛型方法<code>getFirstElement</code>的泛型实参被编译器自动推断为<code>Long</code>。原因在于，该方法声明的参数类型为<code>T[]</code>，而实际传入的参数是<code>Long[]</code>类型，编译器会基于这一调用上下文，自动匹配并推断出当前泛型实参为<code>Long</code>，进而确定方法的参数和返回值类型均为<code>Long</code>。</p>
-<p>这种由编译器根据调用上下文自动推断泛型方法类型参数的特性，称为类型推断（<code>Type Argument Inference</code>）。类型推断的顺序如下：</p>
+<p><code>T</code> 类型的变量绑定了 <code>List&lt;? extends Number&gt;</code> 这一有界通配符参数化类型边界。因此，集合的 <code>add</code> 方法仅接受 <code>Number</code> 的未知子类类型参数，为保证类型安全，编译器仅允许传入 <code>null</code> 作为入参，直接传入 <code>Long</code> 实例会触发编译错误；而 <code>remove</code> 方法的返回值类型可确定为 <code>Number</code>，能够直接使用 <code>Number</code> 类型的引用接收。这和<a href="/2026/01/22/Java-Generics-PartIII/" title="Java-Generics-PartIII">Java-Generics-PartIII</a>中提到的<strong>通配符参数化类型的限制</strong>是一致的。</p>
+<h2 id="上下边界"><a href="#上下边界" class="headerlink" title="上下边界"></a>上下边界</h2><p>前文介绍的类型参数边界，所有示例均采用**上边界（upper bound）**声明。回顾有界通配符参数化类型的特性：该语法支持同时定义通配符的上边界与下边界。</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java">Collection&lt;? <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Animal</span>&gt; <span class="hljs-comment">// 通配符上边界</span><br>Collection&lt;? <span class="hljs-built_in">super</span> Animal&gt; <span class="hljs-comment">// 通配符下边界</span><br></code></pre></td></tr></table></figure>
+
+<p>但在<strong>类型参数边界</strong>的语法规则中，仅支持声明上边界，<strong>不支持下边界</strong>，非法语法会直接触发编译错误：</p>
+<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Box</span>&lt;T <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Number</span>&gt; <span class="hljs-comment">// 合法：类型参数上边界</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Box</span>&lt;T <span class="hljs-built_in">super</span> Number&gt; <span class="hljs-comment">// 语法错误：类型参数不支持下边界</span><br></code></pre></td></tr></table></figure>
+
+<p>想要理解 <code>Java </code>禁止类型参数使用下边界的原因，可先回顾上边界带来的三个核心作用：</p>
 <ol>
-<li>基础推断：从方法实参直接推导。编译器首先会分析调用泛型方法时传入的实际参数类型，以此推导泛型类型参数的初步类型。若存在多个实际参数，泛型方法的类型参数 <code>T</code> 会被推断为所有传入实参对应形参位置的<strong>共同父类型</strong>（更严格地说是 “最小上界”）。</li>
-<li>上下界约束检查：验证推断出的类型是否符合泛型方法声明时的类型约束（若有）。若推断类型违反约束，编译器会直接抛出编译错误，确保类型安全性。</li>
+<li>限制泛型实例化的类型实参范围</li>
+<li>允许在泛型定义域内访问边界类型的非静态方法、成员变量</li>
+<li>作为类型擦除后 JVM 使用的实际类型</li>
 </ol>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Utilities</span> &#123;<br>    ...<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> &lt;T&gt; <span class="hljs-keyword">void</span> <span class="hljs-title function_">fill</span><span class="hljs-params">( T [] array, T elem)</span> &#123;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> i=<span class="hljs-number">0</span>; i&lt;array.length; ++i) &#123; array[i] = elem; &#125;<br>    &#125;<br>&#125;<br><span class="hljs-keyword">public</span> <span class="hljs-keyword">final</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Test</span> &#123;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">main</span><span class="hljs-params">(String[] args)</span> &#123;<br>        Utilities.fill(<span class="hljs-keyword">new</span> <span class="hljs-title class_">String</span> [<span class="hljs-number">5</span>], <span class="hljs-keyword">new</span> <span class="hljs-title class_">String</span> (<span class="hljs-string">&quot;XYZ&quot;</span>));  <span class="hljs-comment">// T:=String</span><br>        Utilities.fill(<span class="hljs-keyword">new</span> <span class="hljs-title class_">String</span> [<span class="hljs-number">5</span>], <span class="hljs-keyword">new</span> <span class="hljs-title class_">Integer</span> (<span class="hljs-number">100</span>));   <span class="hljs-comment">// T:=Object&amp;Serializable&amp;Comparable</span><br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
-
-<p>区别于通过类型推断隐式确定类型参数的方式，泛型方法也支持显式指定类型参数（<code>explicit type argument specification</code>），当编译器无法通过上下文准确推断类型，或需要明确指定特定类型时，可采用这种方式。</p>
-<figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">GenericMethod.&lt;Long&gt;getFirstElement(longs)<br></code></pre></td></tr></table></figure>
-
-<p>需要注意的是，显式指定类型参数的格式与泛型类型存在明显区别：泛型类型的泛型实参需在类名（或接口名）后提供，而泛型方法的显式类型参数则需在方法名前、类名（或对象名）后提供，用尖括号包裹即可。</p>
-<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>归根结底，能够作为数组元素类型创建数组的数据类型，均属于可具体化类型。具体参数化类型和有界通配符参数化类型，由于<code>Java</code>类型擦除机制的影响，其类型实参相关的信息会在编译后被擦除，无法保留完整的运行时类型信息，因此均不属于可具体化类型，也无法作为数组元素类型创建数组。</p>
-<p>通配符参数化类型不同于具体参数化类型，无法通过<code>new</code>关键字创建对象实例，其核心用途通常是作为方法参数、局部引用变量等类型标注，以此提升代码的通用性和灵活性，适配更多类型场景。</p>
-<p>泛型方法的定义规范是在方法返回值类型之前，用尖括号包裹泛型参数进行声明；其类型实参通常由编译器根据调用上下文自动推断得出，无需显式声明，若编译器无法准确推断或需明确指定类型，也可手动显式指定类型参数。</p>
+<p>假设类型参数支持下边界语法，其特性分析如下：</p>
+<p>编译器可以实现对类型实参的限制。若定义<code>Box&lt;T super Number&gt;</code>，则<code>Box&lt;Object&gt;</code>符合约束，而<code>Box&lt;Long&gt;</code>不符合约束，这一规则与上边界保持一致。</p>
+<p>但该语法无法实现核心价值：<strong>无法访问边界类型的方法与成员变量</strong>。<code>T super Number</code>仅能确定类型实参是<code>Number</code>的超类，无法明确其具备的成员方法；唯一可确定的是所有类型实参均为引用类型，即<code>Object</code>的子类，而这一特性无需声明下边界即可生效。</p>
+<p>从类型擦除角度分析，下边界不会改变擦除结果：泛型定义中的类型参数占位符，最终仍会被替换为<code>Object</code>，与未声明边界的泛型类完全一致。</p>
+<p>综上，类型参数下边界既无法访问指定边界的成员，类型擦除后也无任何实际作用，仅会增加语法复杂度与理解成本。因此 Java 语法明确禁止了类型参数声明下边界的写法。</p>
+<h2 id="静态上下文"><a href="#静态上下文" class="headerlink" title="静态上下文"></a>静态上下文</h2><p>在前几篇内容中，已经简要提及泛型在<strong>静态上下文</strong>中失效的相关问题。泛型类虽然可以定义静态成员，但该类所有不同的参数化类型，会<strong>共享同一个静态成员实例</strong>。同时也提到，枚举类中的枚举常量均为静态实例，因此无法绑定具体的泛型实参类型，泛型枚举类不具备实际意义。</p>
+<p>可以通过一个核心问题理解这一机制：泛型类中定义的静态成员，最终会存在多少个实例？</p>
+<p>泛型类可以被无数个合法的类型实参实例化，如果每一个参数化类型都独立持有一个静态成员实例，那么实例数量将不可控，这与 Java 静态成员的设计原则相悖。</p>
+<p>根本原因在于<strong>类型擦除机制</strong>：编译完成后，所有参数化类型都会被擦除为原始类型，不同的参数化类型最终对应同一份字节码。静态上下文的内容不会随类型实参的变化而改变，在静态上下文中直接使用类型参数不具备实际意义。因此，泛型类的静态成员在内存中仅存在唯一实例，由所有参数化类型共享。</p>
+<h2 id="总结"><a href="#总结" class="headerlink" title="总结"></a>总结</h2><p>1.定义泛型类或泛型方法时，可对类型参数施加类型约束，该特性称为<strong>类型参数边界</strong>。</p>
+<p>2.声明类型参数边界后，泛型实例化仅允许传入符合边界约束的类型实参，同时可在泛型定义域内直接调用边界类型的非静态成员。</p>
+<p>3.类型参数边界仅支持<strong>上边界</strong>，不支持下边界声明。</p>
+<p>4.静态上下文无法使用类型参数。核心原因是类型擦除机制会使同一泛型类的所有参数化类型统一转为原始类型，所有实例共享同一份静态成员，类型参数在静态场景中不具备区分意义。</p>
 
                 
               </div>
@@ -388,8 +364,8 @@
 
   <div class="license-box my-3">
     <div class="license-title">
-      <div>Java-Generics-PartIV</div>
-      <div>http://dracoyus.github.io/2026/02/12/Java-Generics-PartIV/</div>
+      <div>Java-Generics-PartV</div>
+      <div>http://dracoyus.github.io/2026/04/29/Java-Generics-PartV/</div>
     </div>
     <div class="license-meta">
       
@@ -401,7 +377,7 @@
       
         <div class="license-meta-item license-meta-date">
           <div>发布于</div>
-          <div>2026年2月12日</div>
+          <div>2026年4月29日</div>
         </div>
       
       
@@ -433,18 +409,12 @@
                   <article class="post-prev col-6">
                     
                     
-                      <a href="/2026/04/29/Java-Generics-PartV/" title="Java-Generics-PartV">
-                        <i class="iconfont icon-arrowleft"></i>
-                        <span class="hidden-mobile">Java-Generics-PartV</span>
-                        <span class="visible-mobile">上一篇</span>
-                      </a>
-                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2026/01/22/Java-Generics-PartIII/" title="Java-Generics-PartIII">
-                        <span class="hidden-mobile">Java-Generics-PartIII</span>
+                      <a href="/2026/02/12/Java-Generics-PartIV/" title="Java-Generics-PartIV">
+                        <span class="hidden-mobile">Java-Generics-PartIV</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
