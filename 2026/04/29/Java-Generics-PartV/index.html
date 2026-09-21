@@ -27,7 +27,7 @@
 <meta property="og:description" content="类型参数边界在正式介绍类型参数边界之前，先回顾前文定义的核心概念：类型参数是定义泛型类 &#x2F; 泛型方法时声明的占位符，该占位符会在泛型实例化的过程中，被具体的类型实参替换。 若类型参数T未添加任何约束，则代表未知类型。在泛型类或泛型方法的定义内部，T类型的变量仅能调用Object类中定义的方法，无法调用其他自定义方法，这一限制无法满足实际开发中的多数场景需求。开发中通常需要对类型参数进行限">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-04-29T08:17:22.000Z">
-<meta property="article:modified_time" content="2026-05-21T11:40:46.306Z">
+<meta property="article:modified_time" content="2026-04-29T08:17:22.000Z">
 <meta property="article:author" content="DracoYu">
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="Generics">
@@ -284,10 +284,10 @@
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs java">&lt;TypeParameter <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Class</span> &amp; Interface <span class="hljs-number">1</span> &amp; ... &amp; Interface N &gt;<br></code></pre></td></tr></table></figure>
 
 <p>类型参数边界规定，泛型实例化时传入的类型实参，必须满足所有边界的约束条件。以上述语法为例，<code>TypeParameter</code>对应的类型实参，必须同时是指定类的子类、以及所有声明接口的实现类。</p>
-<p>关键字 <code>extends</code> 可应用于 <code>Java </code>的多个语法特性中，且语法结构高度相似，极易产生混淆，以下对常见场景进行区分：</p>
+<p>关键字 <code>extends</code> 可应用于 <code>Java</code>的多个语法特性中，且语法结构高度相似，极易产生混淆，以下对常见场景进行区分：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">A</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">B</span> &#123;&#125; <span class="hljs-comment">// 类继承</span><br><span class="hljs-keyword">interface</span> <span class="hljs-title class_">A</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">B</span>, C &#123;&#125; <span class="hljs-comment">// 接口继承</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">A</span> <span class="hljs-keyword">implements</span> <span class="hljs-title class_">B</span>, C <span class="hljs-comment">// 接口实现</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">A</span>&lt;T <span class="hljs-keyword">extends</span> <span class="hljs-title class_">B</span> &amp; C&gt; <span class="hljs-comment">// 参数类型边界</span><br>A&lt;? <span class="hljs-keyword">extends</span> <span class="hljs-title class_">B</span>&gt; <span class="hljs-comment">// 有界通配符参数化类型</span><br></code></pre></td></tr></table></figure>
 
-<p>在 <code>Java </code>语法规则中，类仅支持单类继承，有界通配符仅支持单个类边界；与之不同的是，接口支持多接口继承、类支持多接口实现、类型参数支持多边界声明。此外，由于参数类型边界与有界通配符参数化类型的语法结构高度相似，二者在实际使用中极易产生混淆，需要明确区分。</p>
+<p>在 <code>Java</code>语法规则中，类仅支持单类继承，有界通配符仅支持单个类边界；与之不同的是，接口支持多接口继承、类支持多接口实现、类型参数支持多边界声明。此外，由于参数类型边界与有界通配符参数化类型的语法结构高度相似，二者在实际使用中极易产生混淆，需要明确区分。</p>
 <p>绝大多数引用类型均可作为类型参数边界，包括类、接口、枚举类型、参数化类型；<strong>基本数据类型</strong>与<strong>数组类型</strong>不支持作为类型参数边界。前文已说明，为类型参数指定边界后，即可在泛型定义域内直接调用边界类型的方法。若类型边界为有界通配符参数化类型，则可调用的方法范围与该有界通配符参数化类型保持一致。例如下述类定义：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">X</span>&lt; T <span class="hljs-keyword">extends</span> <span class="hljs-title class_">List</span>&lt;? <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Number</span>&gt; &gt; &#123;<br>  <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">someMethod</span><span class="hljs-params">(T t)</span> &#123;<br>    t.add(<span class="hljs-keyword">new</span> <span class="hljs-title class_">Long</span>(<span class="hljs-number">0L</span>));    <span class="hljs-comment">// error</span><br>    <span class="hljs-type">Number</span> <span class="hljs-variable">n</span> <span class="hljs-operator">=</span> t.remove(<span class="hljs-number">0</span>);<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
 
@@ -298,7 +298,7 @@
 <p>但在<strong>类型参数边界</strong>的语法规则中，仅支持声明上边界，<strong>不支持下边界</strong>，非法语法会直接触发编译错误：</p>
 <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">class</span> <span class="hljs-title class_">Box</span>&lt;T <span class="hljs-keyword">extends</span> <span class="hljs-title class_">Number</span>&gt; <span class="hljs-comment">// 合法：类型参数上边界</span><br><span class="hljs-keyword">class</span> <span class="hljs-title class_">Box</span>&lt;T <span class="hljs-built_in">super</span> Number&gt; <span class="hljs-comment">// 语法错误：类型参数不支持下边界</span><br></code></pre></td></tr></table></figure>
 
-<p>想要理解 <code>Java </code>禁止类型参数使用下边界的原因，可先回顾上边界带来的三个核心作用：</p>
+<p>想要理解 <code>Java</code>禁止类型参数使用下边界的原因，可先回顾上边界带来的三个核心作用：</p>
 <ol>
 <li>限制泛型实例化的类型实参范围</li>
 <li>允许在泛型定义域内访问边界类型的非静态方法、成员变量</li>
@@ -408,6 +408,12 @@
                 <div class="post-prevnext my-3">
                   <article class="post-prev col-6">
                     
+                    
+                      <a href="/2026/05/26/Java-Generics-PartVI/" title="Java-Generics-PartVI">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">Java-Generics-PartVI</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
                     
                   </article>
                   <article class="post-next col-6">

@@ -27,7 +27,7 @@
 <meta property="og:description" content="泛型擦除Java泛型是编译时（compile time）行为，在运行时（runtime）所有与泛型相关的信息都会被彻底擦除。擦除后，所有参数化类型都会统一还原为同一个原始类型（raw type）。这里引入一个新术语——原始类型，指的是泛型类 &#x2F; 接口去掉所有泛型类型参数后的基础类型，也是泛型类型经过类型擦除后，JVM在运行时实际识别的类型。 12345System.out.println">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2026-01-16T02:24:27.000Z">
-<meta property="article:modified_time" content="2026-04-28T07:27:54.163Z">
+<meta property="article:modified_time" content="2026-01-16T02:24:27.000Z">
 <meta property="article:author" content="DracoYu">
 <meta property="article:tag" content="Java">
 <meta property="article:tag" content="Generics">
@@ -317,7 +317,7 @@
 <table>
 <thead>
 <tr>
-<th align="left">转换方向 →<br>源类型 ↓</th>
+<th align="left">转换方向 → &#x2F; 源类型 ↓</th>
 <th align="center"><code>List&lt;String&gt;</code></th>
 <th align="center"><code>List&lt;Object&gt;</code></th>
 <th align="center"><code>List&lt;?&gt;</code></th>
